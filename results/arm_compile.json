@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "target": "Cortex-M4F, Thumb, hard-float, fpv4-sp-d16",
+  "scope": "C compilation and static archives only; no board-specific linking/execution or timing claim",
+  "compiler": "arm-none-eabi-gcc (15:10.3-2021.07-4) 10.3.1 20210621 (release)",
+  "flags": [
+    "-std=c11",
+    "-O2",
+    "-fno-fast-math",
+    "-ffreestanding",
+    "-mthumb",
+    "-mcpu=cortex-m4",
+    "-mfpu=fpv4-sp-d16",
+    "-mfloat-abi=hard",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wshadow",
+    "-Werror",
+    "-I",
+    "/home/lybm/dm4310-lqr-eso-controller/include",
+    "-I",
+    "/home/lybm/dm4310-lqr-eso-controller/examples/stm32",
+    "-I",
+    "/home/lybm/dm4310-lqr-eso-controller",
+    "-B/tmp/gimbal-arm-toolchain/usr/bin/",
+    "-isystem",
+    "/tmp/gimbal-arm-toolchain/usr/include/newlib"
+  ],
+  "object_count": 5,
+  "objects": {
+    "yaw_controller": {
+      "bytes": 7200,
+      "sha256": "90cfdc41e8eb8c6d04c812277c220da6bfd56b51954a46cc350a5dacfc3f3997"
+    },
+    "dm_mit": {
+      "bytes": 3540,
+      "sha256": "2b36cd6c4a5c61ea5329feb1184748f3aa4f89e2d26f73a789ef904a3bfbc8a1"
+    },
+    "gm6020": {
+      "bytes": 3580,
+      "sha256": "e26f6220bec812efc8cbee6c412eb3af4714a679fa6565faef32265012936383"
+    },
+    "yaw_periodic": {
+      "bytes": 2472,
+      "sha256": "f650afe0bdea107f8e16bfcb49304341cf1891ef26b091029ccb0c1f015cf205"
+    },
+    "profile_probe": {
+      "bytes": 1512,
+      "sha256": "b6807eb6f8827bb4084b3b877e7652b91f37c43e460e4665879a67ea262857d9"
+    }
+  },
+  "source_sha256": {
+    "src/yaw_controller.c": "5ade00dcb88b4bdbff2d00754cfbafac80e364f78a898349fcef3ac5013bb207",
+    "src/dm_mit.c": "0045e5b7bcc3195bcd11d6e3ddb5a577e7a68e80bba4d271948981770f8dbd16",
+    "src/gm6020.c": "2f239b43d430bb01e07aec10467937dbcf720b86607ec0bdf94d0ba3be74a8f6",
+    "examples/stm32/yaw_periodic.c": "1e4cb770b2b1a8ef06dd02bb05768a85b230dc8c415520a1d1be44aa10911ed6",
+    "include/yaw_controller.h": "1d9c259d18928dcc58c71b872a82f0791b20f416b71cb65638e8962260954deb",
+    "include/dm_mit.h": "ffca3ce125afeb5c143e5863b8f7f54fe8e82beddfe4f191b9d9d6343f7957ea",
+    "include/gm6020.h": "f4eccad8d36e35f920f4605905bc876f7803af0ecbbfeea51407134854b3f136",
+    "examples/stm32/yaw_periodic.h": "aa9fb4f14a9c3bfef576e2812abed2b5c233e2144b4b7655231ef394b7cf2ce1",
+    "variants/dm4310/simulation_config.h": "f58de887c86778d97cda6ad8592709eeab461ab980f23ad1d5b2bbbf21201017",
+    "variants/gm6020/simulation_config.h": "9117a5fc8909110fc4ffd72d7c8dd0a26a3c02ea3f756ec89b79e01ea1bd5122",
+    "tools/check_arm_build.py": "5de5147c5a8e86a9ab925bf18fd497de30f2242aa67c9675be8be47e945dbbf5"
+  }
+}

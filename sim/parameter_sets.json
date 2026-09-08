@@ -1,0 +1,976 @@
+{
+  "schema_version": 1,
+  "retrieved_on": "2026-09-08",
+  "purpose": "Evidence catalog for offline RoboMaster yaw simulations, including DM4310 and GM6020; not a final hardware configuration.",
+  "user_hardware_identified": false,
+  "population_distribution_available": false,
+  "limitations": [
+    "Motor specifications do not identify the inertia or damping of an assembled gimbal.",
+    "Code constants prove a team configuration, not independently verified physical identification.",
+    "The author-reported identified candidate lacks the referenced raw yawww.csv samples in the inspected fixed repository tree.",
+    "No normal distribution, statistical confidence interval, or empirical fleet range is inferred.",
+    "Synthetic sensitivity catalog entries are prospective; execution is evidenced only by benchmark result reports."
+  ],
+  "classifications": {
+    "hardware_spec": "Manufacturer specification or versioned protocol; applicability to the user's motor must be verified.",
+    "team_configuration": "Value actually present in a pinned team's code or documentation.",
+    "identified": "Author-reported identification result with explicit evidence limitations; independent validation status is a separate field.",
+    "assumption": "Analyst-selected or simplified synthetic scenario, not a measurement."
+  },
+  "sources": [
+    {
+      "id": "damiao_manual_2023",
+      "title": "DM-J4310-2EC V1.1 Gear Motor Instruction Manual",
+      "document_version": "V1.0",
+      "published_on": "2023-11-16",
+      "manufacturer": "Damiao Technology",
+      "host": "Seeed Studio mirror",
+      "url": "https://files.seeedstudio.com/products/Damiao/DM-J4310-en.pdf",
+      "retrieved_on": "2026-09-08",
+      "pdf_viewer_pages": [
+        1,
+        13,
+        14
+      ],
+      "printed_pages": [
+        1,
+        13,
+        14
+      ],
+      "sha256": "ee371c9197935544d62eb6249ffc449fffad5fc6d687100cda066c49eb131cd5"
+    },
+    {
+      "id": "gm6020_manual_v14",
+      "title": "RoboMaster GM6020 直流无刷电机使用说明",
+      "document_version": "v1.4",
+      "published_on": "2023-10",
+      "manufacturer": "DJI",
+      "url": "https://rm-static.djicdn.com/tem/17348/RoboMaster%20GM6020%E7%9B%B4%E6%B5%81%E6%97%A0%E5%88%B7%E7%94%B5%E6%9C%BA%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E20231013.pdf",
+      "retrieved_on": "2026-09-08",
+      "pdf_viewer_pages": [
+        1,
+        7,
+        8,
+        11,
+        12
+      ],
+      "printed_pages": [
+        6,
+        7,
+        10,
+        11
+      ],
+      "page_note": "Front cover is unnumbered; printed page 11 is PDF viewer page 12.",
+      "sha256": "8843f783a3a476dc0eb20347995a604e156a6b00d4e41551e0aba0d7e02262a9"
+    },
+    {
+      "id": "damiao_sdk_mapping",
+      "url": "https://github.com/dmBots/motor-sdk/blob/0b2ede457bdbf0882e29ab9958ab8fda047b7f4a/Python%E4%BE%8B%E7%A8%8B/u2can/DM_CAN.py",
+      "repository": "https://github.com/dmBots/motor-sdk",
+      "commit": "0b2ede457bdbf0882e29ab9958ab8fda047b7f4a",
+      "path": "Python%E4%BE%8B%E7%A8%8B/u2can/DM_CAN.py",
+      "line_numbers": null,
+      "retrieved_on": "2026-09-08"
+    },
+    {
+      "id": "standalone_tuning",
+      "url": "https://github.com/LamdaDay/YAW_Auto_Controller/blob/665c5b4ab1067d6cb63122c120822f27502953e5/yaw_auto_lqr_tune.m#L37-L42",
+      "repository": "https://github.com/LamdaDay/YAW_Auto_Controller",
+      "commit": "665c5b4ab1067d6cb63122c120822f27502953e5",
+      "path": "yaw_auto_lqr_tune.m",
+      "line_numbers": [
+        37,
+        42
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "30980bea057eaf848859c6fcac8f4f280a44039c8f1e8c807a79a862cde004dc"
+    },
+    {
+      "id": "full_vehicle_constants",
+      "url": "https://github.com/LamdaDay/Infantry_RMUC_2026/blob/f67ef28a8a6aedb047f1e65837330034313e0be8/modules/lqr_eso/lqr_eso.c#L31-L54",
+      "repository": "https://github.com/LamdaDay/Infantry_RMUC_2026",
+      "commit": "f67ef28a8a6aedb047f1e65837330034313e0be8",
+      "path": "modules/lqr_eso/lqr_eso.c",
+      "line_numbers": [
+        31,
+        54
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "6c51099ede09236a33ddaf32cd810dd28d4869097f5ff08e63f58323d7b09a88"
+    },
+    {
+      "id": "full_vehicle_identified_candidate",
+      "url": "https://github.com/LamdaDay/Infantry_RMUC_2026/blob/f67ef28a8a6aedb047f1e65837330034313e0be8/tools/yaw_auto_lqr_tune.m#L23-L26",
+      "repository": "https://github.com/LamdaDay/Infantry_RMUC_2026",
+      "commit": "f67ef28a8a6aedb047f1e65837330034313e0be8",
+      "path": "tools/yaw_auto_lqr_tune.m",
+      "line_numbers": [
+        23,
+        26
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "cf1a46a31bbb504c0f6c7735008066a6888cc2f316df08ef2fbcb727bcf3734c"
+    },
+    {
+      "id": "full_vehicle_task",
+      "url": "https://github.com/LamdaDay/Infantry_RMUC_2026/blob/f67ef28a8a6aedb047f1e65837330034313e0be8/application/robot_task.h#L103-L123",
+      "repository": "https://github.com/LamdaDay/Infantry_RMUC_2026",
+      "commit": "f67ef28a8a6aedb047f1e65837330034313e0be8",
+      "path": "application/robot_task.h",
+      "line_numbers": [
+        103,
+        123
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "f155573016e7636fc18dbc10fb6c99d5590d0a836160a56f5ed57df269a96cc5"
+    },
+    {
+      "id": "full_vehicle_tick",
+      "url": "https://github.com/LamdaDay/Infantry_RMUC_2026/blob/f67ef28a8a6aedb047f1e65837330034313e0be8/Core/Inc/FreeRTOSConfig.h#L68",
+      "repository": "https://github.com/LamdaDay/Infantry_RMUC_2026",
+      "commit": "f67ef28a8a6aedb047f1e65837330034313e0be8",
+      "path": "Core/Inc/FreeRTOSConfig.h",
+      "line_numbers": [
+        68
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "ccabc1e811f165493ed53f6a56dc09ae15aab75bb6329bbeb7c139e4ca91ec01"
+    },
+    {
+      "id": "author_forum",
+      "url": "https://bbs.robomaster.com/article/1935544",
+      "retrieved_on": "2026-09-08",
+      "title": "RM2026 南京理工大学江阴校区 Combat 战队云台控制方案",
+      "evidence_note": "Author reports one DM4310 on yaw and two on pitch, and describes unusually high inertia; graph labels do not establish a verified amplitude convention here."
+    },
+    {
+      "id": "reborn_hardware",
+      "url": "https://github.com/JerryGong0911/RM2024_Reborn_LegWheel_Gimbal/blob/74866ed236a093f3930ec85c38a594d5c23ec7b1/README.md#L4-L10",
+      "repository": "https://github.com/JerryGong0911/RM2024_Reborn_LegWheel_Gimbal",
+      "commit": "74866ed236a093f3930ec85c38a594d5c23ec7b1",
+      "path": "README.md",
+      "line_numbers": [
+        4,
+        10
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "99c3efc317dc15e4484d64985423921e93498ba4246801b47ddbe80a0d47a255"
+    },
+    {
+      "id": "reborn_task",
+      "url": "https://github.com/JerryGong0911/RM2024_Reborn_LegWheel_Gimbal/blob/74866ed236a093f3930ec85c38a594d5c23ec7b1/Core/Src/freertos.c#L194-L202",
+      "repository": "https://github.com/JerryGong0911/RM2024_Reborn_LegWheel_Gimbal",
+      "commit": "74866ed236a093f3930ec85c38a594d5c23ec7b1",
+      "path": "Core/Src/freertos.c",
+      "line_numbers": [
+        194,
+        202
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "3076683c389c4ebef76a9698f0602c15a2827fc119322888dc5a3bedf7a25fb7"
+    },
+    {
+      "id": "reborn_tick",
+      "url": "https://github.com/JerryGong0911/RM2024_Reborn_LegWheel_Gimbal/blob/74866ed236a093f3930ec85c38a594d5c23ec7b1/Core/Inc/FreeRTOSConfig.h#L64",
+      "repository": "https://github.com/JerryGong0911/RM2024_Reborn_LegWheel_Gimbal",
+      "commit": "74866ed236a093f3930ec85c38a594d5c23ec7b1",
+      "path": "Core/Inc/FreeRTOSConfig.h",
+      "line_numbers": [
+        64
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "f353294a8f3b83e7286368a0593f4326a530904b2a2b4ced06fe6d2c6408f013"
+    },
+    {
+      "id": "hebut_task",
+      "url": "https://github.com/BriMonzZY/mas-infantry-firmware/blob/184be192088e5cc1f2b049250409fa80344f0d9f/application/gimbal/gimbal_task.c#L36-L37",
+      "repository": "https://github.com/BriMonzZY/mas-infantry-firmware",
+      "commit": "184be192088e5cc1f2b049250409fa80344f0d9f",
+      "path": "application/gimbal/gimbal_task.c",
+      "line_numbers": [
+        36,
+        37
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "961c6dff38375aff686db4e679065ef6a77833ee3a8984dac1d705f20caf7fa6"
+    },
+    {
+      "id": "hebut_tick",
+      "url": "https://github.com/BriMonzZY/mas-infantry-firmware/blob/184be192088e5cc1f2b049250409fa80344f0d9f/bsp/cubemx/Core/Inc/FreeRTOSConfig.h#L64",
+      "repository": "https://github.com/BriMonzZY/mas-infantry-firmware",
+      "commit": "184be192088e5cc1f2b049250409fa80344f0d9f",
+      "path": "bsp/cubemx/Core/Inc/FreeRTOSConfig.h",
+      "line_numbers": [
+        64
+      ],
+      "retrieved_on": "2026-09-08",
+      "sha256": "881d2116e6e6539ea0547b759d9649b6e834285b2353aa8daa6332701db3c009"
+    }
+  ],
+  "motor_reference_points": [
+    {
+      "id": "dm_j4310_2ec_v11_24v",
+      "model": "DM-J4310-2EC V1.1",
+      "applicability": "This specific 24 V hardware/manual version; user's shorthand DM4310 is not enough to establish a match.",
+      "parameters": {
+        "rated_voltage_v": {
+          "value": 24,
+          "unit": "V",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ]
+        },
+        "rated_torque_nm": {
+          "value": 3,
+          "unit": "N*m",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ]
+        },
+        "peak_torque_nm": {
+          "value": 7,
+          "unit": "N*m",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ],
+          "notes": "Peak duration is not specified by this parameter table."
+        },
+        "rated_current_a": {
+          "value": 2.5,
+          "unit": "A",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ]
+        },
+        "peak_current_a": {
+          "value": 7.5,
+          "unit": "A",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ]
+        },
+        "rated_speed_rpm": {
+          "value": 120,
+          "unit": "rpm",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ]
+        },
+        "rated_speed_rad_s": {
+          "value": 12.56637061435917,
+          "unit": "rad/s",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ],
+          "notes": "Exact unit conversion from rated rpm."
+        },
+        "no_load_maximum_speed_rpm": {
+          "value": 200,
+          "unit": "rpm",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ]
+        },
+        "no_load_maximum_speed_rad_s": {
+          "value": 20.943951023931955,
+          "unit": "rad/s",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ],
+          "notes": "Exact unit conversion; not available simultaneously with peak torque."
+        },
+        "gear_ratio": {
+          "value": 10,
+          "unit": "input/output speed ratio",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ]
+        },
+        "can_bitrate_bps": {
+          "value": 1000000,
+          "unit": "bit/s",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_manual_2023"
+          ],
+          "notes": "Not a control-loop frequency."
+        }
+      },
+      "unknown_for_user": [
+        "actual suffix/voltage/firmware",
+        "assembled inertia",
+        "viscous and Coulomb friction",
+        "latency",
+        "peak torque duration",
+        "thermal duty cycle"
+      ]
+    },
+    {
+      "id": "gm6020_v14",
+      "model": "RoboMaster GM6020",
+      "applicability": "v1.4 manual; current mode additionally requires verified firmware and enabled current-loop switch.",
+      "parameters": {
+        "rated_voltage_v": {
+          "value": 24,
+          "unit": "V",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "rated_torque_nm": {
+          "value": 1.2,
+          "unit": "N*m",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ],
+          "notes": "Manufacturer calls this maximum continuous torque; sustained stall has a separate limit."
+        },
+        "rated_current_a": {
+          "value": 1.62,
+          "unit": "A",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "rated_torque_maximum_speed_rpm": {
+          "value": 132,
+          "unit": "rpm",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "rated_torque_maximum_speed_rad_s": {
+          "value": 13.82300767579509,
+          "unit": "rad/s",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "no_load_maximum_speed_rpm": {
+          "value": 320,
+          "unit": "rpm",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "no_load_maximum_speed_rad_s": {
+          "value": 33.510321638291124,
+          "unit": "rad/s",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "continuous_stall_torque_nm": {
+          "value": 0.86,
+          "unit": "N*m",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "continuous_stall_current_a": {
+          "value": 0.9,
+          "unit": "A",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ],
+          "notes": "Preserve this separately specified point; do not force it to equal torque/Kt."
+        },
+        "torque_constant_nm_a": {
+          "value": 0.741,
+          "unit": "N*m/A",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "speed_torque_gradient_rpm_nm": {
+          "value": 156,
+          "unit": "rpm/(N*m)",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ],
+          "notes": "Not assembled-gimbal viscous damping for a torque-input model."
+        },
+        "mechanical_time_constant_s": {
+          "value": 0.003,
+          "unit": "s",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ],
+          "notes": "Not the control period or a measured current-loop time constant."
+        },
+        "feedback_rate_hz": {
+          "value": 1000,
+          "unit": "Hz",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ],
+          "notes": "Nominal motor feedback broadcast frequency."
+        },
+        "current_command_maximum_a": {
+          "value": 3,
+          "unit": "A",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ],
+          "notes": "Protocol range, not continuous or rated current."
+        },
+        "current_command_integer_endpoint": {
+          "value": 16384,
+          "unit": "signed integer",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "current_group_can_ids": {
+          "value": [
+            "0x1FE",
+            "0x2FE"
+          ],
+          "unit": "CAN standard ID",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "minimum_current_mode_firmware": {
+          "value": "1.0.11.2",
+          "unit": "version",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        },
+        "minimum_assistant_version": {
+          "value": "2.7",
+          "unit": "version",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "gm6020_manual_v14"
+          ]
+        }
+      },
+      "unspecified": {
+        "manufacturer_peak_torque_nm": null,
+        "assembled_gimbal_inertia_kg_m2": null,
+        "assembled_gimbal_damping_nm_s_rad": null
+      },
+      "derived_simulation_only": {
+        "protocol_endpoint_nominal_torque_nm": {
+          "value": 2.223,
+          "unit": "N*m",
+          "classification": "assumption",
+          "source_ids": [],
+          "notes": "3 A * 0.741 N*m/A; nominal conversion only, NOT a manufacturer peak or continuous rating.",
+          "synthetic": true,
+          "basis_source_ids": [
+            "gm6020_manual_v14"
+          ]
+        }
+      }
+    }
+  ],
+  "protocol_mapping_examples": [
+    {
+      "id": "dm4310_official_sdk_example",
+      "classification": "hardware_spec",
+      "kind": "manufacturer_sdk_example_not_user_readback",
+      "source_ids": [
+        "damiao_sdk_mapping"
+      ],
+      "parameters": {
+        "position_endpoint_rad": {
+          "value": 12.5,
+          "unit": "rad",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_sdk_mapping"
+          ]
+        },
+        "velocity_endpoint_rad_s": {
+          "value": 30,
+          "unit": "rad/s",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_sdk_mapping"
+          ]
+        },
+        "torque_endpoint_nm": {
+          "value": 10,
+          "unit": "N*m",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_sdk_mapping"
+          ],
+          "notes": "Protocol mapping endpoint, not peak capability."
+        }
+      }
+    },
+    {
+      "id": "dm4310_48v_official_sdk_example",
+      "classification": "hardware_spec",
+      "kind": "manufacturer_sdk_example_not_user_readback",
+      "source_ids": [
+        "damiao_sdk_mapping"
+      ],
+      "parameters": {
+        "position_endpoint_rad": {
+          "value": 12.5,
+          "unit": "rad",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_sdk_mapping"
+          ]
+        },
+        "velocity_endpoint_rad_s": {
+          "value": 50,
+          "unit": "rad/s",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_sdk_mapping"
+          ]
+        },
+        "torque_endpoint_nm": {
+          "value": 10,
+          "unit": "N*m",
+          "classification": "hardware_spec",
+          "source_ids": [
+            "damiao_sdk_mapping"
+          ],
+          "notes": "The 24 V manual's torque/speed ratings are not asserted for this variant."
+        }
+      }
+    }
+  ],
+  "gimbal_reference_points": [
+    {
+      "id": "lamda_standalone_tuning",
+      "classification": "team_configuration",
+      "independent_identification_verified": false,
+      "parameters": {
+        "inertia_kg_m2": {
+          "value": 0.039,
+          "unit": "kg*m^2",
+          "classification": "team_configuration",
+          "source_ids": [
+            "standalone_tuning"
+          ]
+        },
+        "damping_nm_s_rad": {
+          "value": 0.3,
+          "unit": "N*m*s/rad",
+          "classification": "team_configuration",
+          "source_ids": [
+            "standalone_tuning"
+          ]
+        },
+        "nominal_period_s": {
+          "value": 0.001,
+          "unit": "s",
+          "classification": "team_configuration",
+          "source_ids": [
+            "standalone_tuning"
+          ]
+        },
+        "application_torque_limit_nm": {
+          "value": 7,
+          "unit": "N*m",
+          "classification": "team_configuration",
+          "source_ids": [
+            "standalone_tuning"
+          ],
+          "notes": "Code limit, not a continuous hardware rating."
+        }
+      }
+    },
+    {
+      "id": "lamda_full_vehicle_active_constants",
+      "classification": "team_configuration",
+      "independent_identification_verified": false,
+      "notes": "Actual active macros differ from the candidate tuning script in the same commit; volatile values may also be changed during runtime tuning.",
+      "parameters": {
+        "inertia_kg_m2": {
+          "value": 0.0610521813,
+          "unit": "kg*m^2",
+          "classification": "team_configuration",
+          "source_ids": [
+            "full_vehicle_constants"
+          ]
+        },
+        "damping_nm_s_rad": {
+          "value": 0.513734025,
+          "unit": "N*m*s/rad",
+          "classification": "team_configuration",
+          "source_ids": [
+            "full_vehicle_constants"
+          ]
+        },
+        "coulomb_nm": {
+          "value": 0.3,
+          "unit": "N*m",
+          "classification": "team_configuration",
+          "source_ids": [
+            "full_vehicle_constants"
+          ]
+        },
+        "nominal_period_s": {
+          "value": 0.001,
+          "unit": "s",
+          "classification": "team_configuration",
+          "source_ids": [
+            "full_vehicle_constants"
+          ]
+        },
+        "application_torque_limit_nm": {
+          "value": 7,
+          "unit": "N*m",
+          "classification": "team_configuration",
+          "source_ids": [
+            "full_vehicle_constants"
+          ]
+        }
+      }
+    },
+    {
+      "id": "lamda_full_vehicle_identified_candidate",
+      "classification": "identified",
+      "identification_evidence": "author_report_only",
+      "independent_identification_verified": false,
+      "raw_samples_available_in_inspected_tree": false,
+      "reported_dataset": "yawww.csv stage-2 motor_tor_nm fit",
+      "notes": "This is a candidate script, not the same commit's active firmware constants. No raw samples, residuals or confidence interval were verified.",
+      "parameters": {
+        "inertia_kg_m2": {
+          "value": 0.0422563489,
+          "unit": "kg*m^2",
+          "classification": "identified",
+          "source_ids": [
+            "full_vehicle_identified_candidate"
+          ]
+        },
+        "damping_nm_s_rad": {
+          "value": 0.286217284,
+          "unit": "N*m*s/rad",
+          "classification": "identified",
+          "source_ids": [
+            "full_vehicle_identified_candidate"
+          ]
+        },
+        "nominal_period_s": {
+          "value": 0.001,
+          "unit": "s",
+          "classification": "team_configuration",
+          "source_ids": [
+            "full_vehicle_identified_candidate"
+          ]
+        }
+      }
+    }
+  ],
+  "other_team_examples": [
+    {
+      "id": "reborn_2024_legwheel",
+      "team": "University of Science and Technology Beijing Reborn",
+      "classification": "team_configuration",
+      "parameters": {
+        "gimbal_motor_model": {
+          "value": "GM6020",
+          "unit": "model",
+          "classification": "team_configuration",
+          "source_ids": [
+            "reborn_hardware"
+          ]
+        },
+        "gimbal_motor_count": {
+          "value": 2,
+          "unit": "motors",
+          "classification": "team_configuration",
+          "source_ids": [
+            "reborn_hardware"
+          ]
+        },
+        "rtos_tick_hz": {
+          "value": 1000,
+          "unit": "Hz",
+          "classification": "team_configuration",
+          "source_ids": [
+            "reborn_tick"
+          ]
+        },
+        "task_delay_ticks": {
+          "value": 1,
+          "unit": "tick",
+          "classification": "team_configuration",
+          "source_ids": [
+            "reborn_task"
+          ],
+          "notes": "osDelay after GimbalTask; not an observed exact sample period."
+        },
+        "nominal_delay_s": {
+          "value": 0.001,
+          "unit": "s",
+          "classification": "team_configuration",
+          "source_ids": [
+            "reborn_task"
+          ],
+          "notes": "Derived using the independently cited 1000 Hz tick."
+        }
+      },
+      "identified_inertia_kg_m2": null,
+      "identified_damping_nm_s_rad": null,
+      "evidence_note": "No independently verified yaw J/B identification found in inspected gimbal files."
+    },
+    {
+      "id": "hebut_2023_rmul",
+      "team": "Hebei University of Technology",
+      "classification": "team_configuration",
+      "parameters": {
+        "rtos_tick_hz": {
+          "value": 1000,
+          "unit": "Hz",
+          "classification": "team_configuration",
+          "source_ids": [
+            "hebut_tick"
+          ]
+        },
+        "task_period_ticks": {
+          "value": 5,
+          "unit": "ticks",
+          "classification": "team_configuration",
+          "source_ids": [
+            "hebut_task"
+          ]
+        },
+        "nominal_period_s": {
+          "value": 0.005,
+          "unit": "s",
+          "classification": "team_configuration",
+          "source_ids": [
+            "hebut_task"
+          ],
+          "notes": "GIMBAL_PERIOD=5 and osDelayUntil at lines 239-242; 1000 Hz RTOS tick."
+        }
+      },
+      "gimbal_motor_model": null,
+      "identified_inertia_kg_m2": null,
+      "identified_damping_nm_s_rad": null,
+      "evidence_note": "Used only as a task-period example; motor model and yaw J/B are not inferred."
+    }
+  ],
+  "synthetic_sensitivity_catalog": {
+    "classification": "assumption",
+    "synthetic": true,
+    "execution_status": "prospective_catalog_check_reports_for_actual_executed_cases",
+    "base_reference_id": "lamda_standalone_tuning",
+    "instructions": "Each factor/noise/delay/lag below is deliberately chosen, not a measured normal range. Reference-point transfer to another motor/assembly is itself a synthetic scenario. Keep nominal controller gains fixed when testing plant mismatch.",
+    "values": {
+      "inertia_multipliers": {
+        "value": [
+          0.5,
+          0.75,
+          1,
+          1.5,
+          2
+        ],
+        "unit": "dimensionless",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Analyst-selected sensitivity factors, not an empirical fleet distribution.",
+        "synthetic": true,
+        "basis_source_ids": [
+          "standalone_tuning"
+        ]
+      },
+      "damping_multipliers": {
+        "value": [
+          0.5,
+          0.75,
+          1,
+          1.5,
+          2
+        ],
+        "unit": "dimensionless",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Analyst-selected sensitivity factors.",
+        "synthetic": true,
+        "basis_source_ids": [
+          "standalone_tuning"
+        ]
+      },
+      "position_noise_std_deg": {
+        "value": [
+          0,
+          0.02,
+          0.05
+        ],
+        "unit": "degree",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Synthetic Gaussian measurement-noise standard deviation.",
+        "synthetic": true,
+        "basis_source_ids": []
+      },
+      "command_delay_s": {
+        "value": [
+          0,
+          0.001,
+          0.003,
+          0.005
+        ],
+        "unit": "s",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Synthetic command transport delay, not a measured CAN delay.",
+        "synthetic": true,
+        "basis_source_ids": []
+      },
+      "actuator_first_order_lag_s": {
+        "value": [
+          0,
+          0.001,
+          0.003,
+          0.006
+        ],
+        "unit": "s",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Synthetic actuator lag; GM6020's 3 ms mechanical constant is NOT evidence for this parameter.",
+        "synthetic": true,
+        "basis_source_ids": []
+      },
+      "candidate_control_period_s": {
+        "value": [
+          0.001,
+          0.002,
+          0.005
+        ],
+        "unit": "s",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Prospective timing study; controller timing/gain constraints must be checked explicitly.",
+        "synthetic": true,
+        "basis_source_ids": [
+          "full_vehicle_task",
+          "reborn_task",
+          "hebut_task"
+        ]
+      },
+      "dm4310_constant_cap_scenarios_nm": {
+        "value": [
+          3,
+          7
+        ],
+        "unit": "N*m",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Simplified rated/peak-cap sensitivity only; no thermal or full speed-torque envelope model.",
+        "synthetic": true,
+        "basis_source_ids": [
+          "damiao_manual_2023"
+        ]
+      },
+      "gm6020_constant_cap_scenarios_nm": {
+        "value": [
+          0.86,
+          1.2
+        ],
+        "unit": "N*m",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Separate sustained-stall and rated-cap simplifications, not universal safe experiment limits.",
+        "synthetic": true,
+        "basis_source_ids": [
+          "gm6020_manual_v14"
+        ]
+      }
+    }
+  },
+  "reference_feasibility_examples": {
+    "classification": "assumption",
+    "synthetic": true,
+    "amplitude_convention": "20 degrees is explicitly a ONE-SIDED sinusoidal peak in these calculations; this does not resolve the original author's figure-label convention.",
+    "formula": "omega_pk=2*pi*f*A; alpha_pk=(2*pi*f)^2*A; tau_linear_pk=hypot(J*alpha_pk,B*omega_pk), excluding Coulomb friction.",
+    "parameters": {
+      "amplitude_deg": {
+        "value": 20,
+        "unit": "degree",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Explicit calculation assumption.",
+        "synthetic": true,
+        "basis_source_ids": []
+      },
+      "inertia_kg_m2": {
+        "value": 0.039,
+        "unit": "kg*m^2",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Use of the old script's nominal point in a synthetic calculation.",
+        "synthetic": true,
+        "basis_source_ids": [
+          "standalone_tuning"
+        ]
+      },
+      "damping_nm_s_rad": {
+        "value": 0.3,
+        "unit": "N*m*s/rad",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Use of the old script's nominal point in a synthetic calculation.",
+        "synthetic": true,
+        "basis_source_ids": [
+          "standalone_tuning"
+        ]
+      },
+      "frequencies_hz": {
+        "value": [
+          3,
+          5
+        ],
+        "unit": "Hz",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Calculation scenarios.",
+        "synthetic": true,
+        "basis_source_ids": []
+      },
+      "linear_torque_amplitudes_nm": {
+        "value": [
+          5.22424454406651,
+          13.832959144241402
+        ],
+        "unit": "N*m",
+        "classification": "assumption",
+        "source_ids": [],
+        "notes": "Calculated for 3 Hz and 5 Hz respectively; no hardware tracking claim.",
+        "synthetic": true,
+        "basis_source_ids": []
+      }
+    }
+  }
+}

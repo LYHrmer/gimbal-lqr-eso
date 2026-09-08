@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "simulation_only": true,
+  "nominal_model_source": "https://github.com/LamdaDay/YAW_Auto_Controller/blob/665c5b4ab1067d6cb63122c120822f27502953e5/yaw_auto_lqr_tune.m",
+  "nominal_model_scope": "Teaching/reference model, not a measured typical RoboMaster gimbal; same load for controlled motor comparison.",
+  "dt_s": 0.001,
+  "required_hardware_verification": [
+    "load J/B and coordinate direction",
+    "drive firmware and selected mode",
+    "actual protocol mapping",
+    "allowable torque, current, speed and temperature",
+    "timestamps, measured loop timing and drive watchdog"
+  ],
+  "actuator_dynamic_assumptions": {
+    "torque_lag_s": 0.002,
+    "command_delay_samples": 1,
+    "note": "Illustrative actuator lag; not the datasheet mechanical time constant."
+  },
+  "name": "gm6020_current_v1_4",
+  "controller": {
+    "inertia_kg_m2": 0.039,
+    "damping_nm_s_rad": 0.3,
+    "k_position": 85.87696424,
+    "k_velocity": 3.07876864,
+    "k_integral": 171.75392848,
+    "integral_limit_nm": 0.2,
+    "antiwindup_rate_s": 2.0,
+    "coulomb_nm": 0.0,
+    "coulomb_velocity_rad_s": 0.04,
+    "eso_bandwidth_rad_s": 80.0,
+    "eso_gain": 0.8,
+    "disturbance_limit_nm": 1.2,
+    "compensation_limit_nm": 0.4,
+    "compensation_slew_nm_s": 40.0,
+    "torque_limit_nm": 1.2,
+    "torque_slew_nm_s": 100.0,
+    "dt_min_s": 0.0005,
+    "dt_max_s": 0.002,
+    "feedback_timeout_s": 0.005,
+    "reference_timeout_s": 0.005,
+    "position_min_rad": -3.141592653589793,
+    "position_max_rad": 3.141592653589793,
+    "velocity_limit_rad_s": 33.5,
+    "tracking_error_limit_rad": 3.141592653589793,
+    "velocity_error_filter_tau_s": 0.0
+  },
+  "protocol": {
+    "kind": "gm6020_current_v1_4",
+    "torque_constant_nm_a": 0.741,
+    "torque_limit_nm": 1.2,
+    "current_limit_a": 1.62,
+    "current_mode_confirmed": true,
+    "motor_id": 1,
+    "scope": "Simulation assumes current mode is enabled. Hardware requires firmware >=1.0.11.2 and Assistant >=2.7 current-loop switch, verified explicitly."
+  },
+  "motor": {
+    "rated_torque_nm": 1.2,
+    "rated_current_a": 1.62,
+    "continuous_stall_torque_nm": 0.86,
+    "no_load_speed_rad_s": 33.510321638291124,
+    "speed_torque_gradient_rpm_nm": 156.0,
+    "motoring_envelope": "datasheet_linear_speed_torque_gradient",
+    "zero_speed_anchor_nm": 2.051282051282051,
+    "source": "https://rm-static.djicdn.com/tem/17348/RoboMaster%20GM6020%E7%9B%B4%E6%B5%81%E6%97%A0%E5%88%B7%E7%94%B5%E6%9C%BA%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E20231013.pdf",
+    "source_version": "v1.4 2023.10",
+    "scope": "Linear speed/torque approximation plus application limit; not a thermal model. Maximum continuous torque is not continuous stall torque."
+  },
+  "sensor": {
+    "position_quantum_rad": 0.0007669903939428206,
+    "velocity_quantum_rad_s": 0.10471975511965977,
+    "position_noise_std_rad": 7e-05,
+    "velocity_noise_std_rad_s": 0.01
+  },
+  "comparison_baseline_controller_overrides": {
+    "k_integral": 0.0,
+    "integral_limit_nm": 0.0,
+    "antiwindup_rate_s": 20.0
+  },
+  "tuning_scope": {
+    "slow_integral_rule": "Ki=2*Kposition, torque integral cap=0.2 N.m, tracking rate=2/s; nominal integral time scale=0.5s.",
+    "selection": "Selected on development seeds 4310..4314 and explicitly reported stress tests, before validation seeds 4315..4319.",
+    "attribution": "Primary original baseline retains Ki=0. Also run unchanged upstream C with this same integral configuration to separate tuning from kernel effects.",
+    "timing_scope": "Nominal assumed command delay is 1 ms plus 2 ms actuator lag. 10 ms delay and saturated high-frequency cases include regressions; no all-delay or hardware claim.",
+    "filter": "Velocity error filtering is disabled; the tested 2 ms filter did not pass development performance criteria."
+  }
+}

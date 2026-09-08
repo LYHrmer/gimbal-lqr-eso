@@ -1,0 +1,71 @@
+{
+  "model": "J * acceleration + B * velocity = torque; exact ZOH",
+  "feedback_convention": "torque = K @ (reference_state - measured_state)",
+  "parameters": {
+    "inertia": 0.039,
+    "damping": 0.3,
+    "dt": 0.001,
+    "q_position": 1600.0,
+    "q_velocity": 1.0,
+    "r_torque": 0.2
+  },
+  "state_units": [
+    "rad",
+    "rad/s"
+  ],
+  "input_units": "N.m",
+  "ad": [
+    [
+      1.0,
+      0.0009961636891506693
+    ],
+    [
+      0.0,
+      0.9923372023911486
+    ]
+  ],
+  "bd": [
+    [
+      1.2787702831102297e-05
+    ],
+    [
+      0.02554265869617101
+    ]
+  ],
+  "q": [
+    [
+      1600.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0
+    ]
+  ],
+  "r": [
+    [
+      0.2
+    ]
+  ],
+  "gain": {
+    "k_position": 85.87696423835901,
+    "k_velocity": 3.0787686432645462
+  },
+  "closed_loop_poles": [
+    {
+      "real": 0.9562995483165257,
+      "imag": 0.016846261011394185
+    },
+    {
+      "real": 0.9562995483165257,
+      "imag": -0.016846261011394185
+    }
+  ],
+  "spectral_radius": 0.9564479194501158,
+  "dare_residual_max_abs": 2.2509993868879974e-11,
+  "dependencies": {
+    "numpy": "1.21.5",
+    "scipy": "1.8.0"
+  },
+  "scope": "nominal linear unsaturated model; not a hardware stability certificate"
+}

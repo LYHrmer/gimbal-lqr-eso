@@ -1,0 +1,10 @@
+/build*/
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+.pytest_cache/
+*.so
+*.o
+*.a
+/hardware_data/

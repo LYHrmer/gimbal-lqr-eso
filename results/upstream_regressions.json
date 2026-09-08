@@ -1,0 +1,318 @@
+{
+  "data_type": "SYNTHETIC deterministic C API regression replays; no hardware measurements",
+  "upstream_repository": "https://github.com/LamdaDay/YAW_Auto_Controller",
+  "upstream_commit": "665c5b4ab1067d6cb63122c120822f27502953e5",
+  "upstream_expected_source_sha256": {
+    "yaw_auto_lqr_eso_controller.c": "e4ae2e11cc7ec425aed152dba6ce43d0dad4c490086253464d33e912475bfa61",
+    "yaw_auto_lqr_eso_controller.h": "ce70e33074ffb5708a72074bf027cebb507fc0f251f16ebdd6c17f6ee708fe3b"
+  },
+  "upstream_build": {
+    "repository": "https://github.com/LamdaDay/YAW_Auto_Controller",
+    "commit": "665c5b4ab1067d6cb63122c120822f27502953e5",
+    "source_dir": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/source",
+    "files": {
+      "yaw_auto_lqr_eso_controller.c": {
+        "sha256": "e4ae2e11cc7ec425aed152dba6ce43d0dad4c490086253464d33e912475bfa61",
+        "path": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/source/yaw_auto_lqr_eso_controller.c"
+      },
+      "yaw_auto_lqr_eso_controller.h": {
+        "sha256": "ce70e33074ffb5708a72074bf027cebb507fc0f251f16ebdd6c17f6ee708fe3b",
+        "path": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/source/yaw_auto_lqr_eso_controller.h"
+      }
+    },
+    "bridge_sha256": "05646fbab98341256c81ab8aba32177cd2e9c01f063eab83733f3bd26197aea5",
+    "build_key": "2a0813fc0407818c314149d7d49fd2e39cd20be0b0aee294295943d5adc1d58d",
+    "compiler": [
+      "cc"
+    ],
+    "compiler_version": "cc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "interface_sha256": "1d9c259d18928dcc58c71b872a82f0791b20f416b71cb65638e8962260954deb",
+    "library_sha256": "252e5edfa5d1a7e9379aa24c87d0dc99579b997fff73fe3e05b35b7c167f4757",
+    "options": [
+      "-std=c99",
+      "-O2",
+      "-fno-fast-math",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fPIC",
+      "-shared"
+    ],
+    "upstream_commit": "665c5b4ab1067d6cb63122c120822f27502953e5",
+    "upstream_sha256": {
+      "yaw_auto_lqr_eso_controller.c": "e4ae2e11cc7ec425aed152dba6ce43d0dad4c490086253464d33e912475bfa61",
+      "yaw_auto_lqr_eso_controller.h": "ce70e33074ffb5708a72074bf027cebb507fc0f251f16ebdd6c17f6ee708fe3b"
+    },
+    "library": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/libupstream_reference_2a0813fc0407818c.so",
+    "source_unmodified": true,
+    "status_unavailable": -1,
+    "comparison_contract": {
+      "same_config_fields": [
+        "J",
+        "B",
+        "K_position",
+        "K_velocity",
+        "K_integral",
+        "Coulomb",
+        "ESO bandwidth/gain",
+        "ESO compensation magnitude limit",
+        "hard torque limit",
+        "torque slew"
+      ],
+      "old_bias_gain": 0,
+      "old_soft_limit": 0,
+      "old_deadband": 0,
+      "old_eso_gates": "disabled",
+      "old_eso_input": "previous limited command",
+      "unsupported_old_features": [
+        "feedback/reference age",
+        "reference valid flag",
+        "latched faults",
+        "position/velocity/tracking guards",
+        "disturbance state limit",
+        "compensation slew",
+        "integral anti-windup",
+        "measured applied torque in ESO"
+      ],
+      "flags": "Only original soft/hard limit and slew flags map to bits 0 and 1",
+      "integral": "Config k_integral maps directly; use zero for the primary comparison",
+      "nonfinite_policy": "Do not filter original inputs or outputs"
+    }
+  },
+  "source_verification": "UpstreamCore verifies pinned upstream source before compilation/loading",
+  "comparison": "fixed unmodified upstream C via adapter versus this repository's real C core",
+  "scope": "four defensive-behavior regressions; does not establish tracking/RMSE superiority or physical stopping",
+  "new_status_names": {
+    "0": "ok",
+    "1": "warmup",
+    "4": "bad_timing",
+    "6": "stale_feedback",
+    "7": "bad_reference"
+  },
+  "nonfinite_encoding": "NaN and +/-Infinity are represented by strings, not invalid JSON numbers",
+  "new_source_sha256": "5ade00dcb88b4bdbff2d00754cfbafac80e364f78a898349fcef3ac5013bb207",
+  "new_header_sha256": "1d9c259d18928dcc58c71b872a82f0791b20f416b71cb65638e8962260954deb",
+  "new_shared_library_sha256": "49d8dd54e15a0aace447f6949af27550544ecab61d81791bf75d1b0842cdbf0d",
+  "test_source_sha256": "d66cc17c01c058f37d8dda6d6f7ca728377c9f0f9e1ac476640a1718a28ffc40",
+  "adapter_source_sha256": "c43adbf471f186ca7bdefeb017cc2b34c5c8cd82d53a3bb26c295ecbca89d0a1",
+  "python": "3.10.12",
+  "base_config": {
+    "inertia_kg_m2": 0.039000000804662704,
+    "damping_nm_s_rad": 0.30000001192092896,
+    "k_position": 20.0,
+    "k_velocity": 2.0,
+    "k_integral": 0.0,
+    "integral_limit_nm": 0.0,
+    "antiwindup_rate_s": 20.0,
+    "coulomb_nm": 0.0,
+    "coulomb_velocity_rad_s": 0.03999999910593033,
+    "eso_bandwidth_rad_s": 0.0,
+    "eso_gain": 0.0,
+    "disturbance_limit_nm": 3.0,
+    "compensation_limit_nm": 2.0,
+    "compensation_slew_nm_s": 100.0,
+    "torque_limit_nm": 5.0,
+    "torque_slew_nm_s": 100.0,
+    "dt_min_s": 0.0005000000237487257,
+    "dt_max_s": 0.0020000000949949026,
+    "feedback_timeout_s": 0.004999999888241291,
+    "reference_timeout_s": 0.004999999888241291,
+    "position_min_rad": -3.1415927410125732,
+    "position_max_rad": 3.1415927410125732,
+    "velocity_limit_rad_s": 60.0,
+    "tracking_error_limit_rad": 3.1415927410125732,
+    "velocity_error_filter_tau_s": 0.0
+  },
+  "cases": {
+    "nan_reference": {
+      "input": {
+        "reference_position_rad": "NaN",
+        "dt_s": 0.001
+      },
+      "upstream": {
+        "torque_nm": "NaN",
+        "disturbance_nm": 0.0
+      },
+      "new": {
+        "torque_nm": 0.0,
+        "disturbance_nm": 0.0,
+        "status": 7,
+        "flags": 0
+      },
+      "new_after_valid_reference_without_reset": {
+        "torque_nm": 0.0,
+        "disturbance_nm": 0.0,
+        "status": 7,
+        "flags": 0
+      },
+      "assertion": "upstream propagates NaN; new emits zero and latches bad_reference"
+    },
+    "online_torque_derating": {
+      "input": {
+        "old_limit_nm": 5.0,
+        "new_limit_nm": 1.0,
+        "slew_rate_nm_s": 100.0,
+        "dt_s": 0.001,
+        "warmup_steps": 1,
+        "preconditioning_steps": 60
+      },
+      "upstream_before": {
+        "torque_nm": 5.0,
+        "disturbance_nm": 0.0
+      },
+      "new_before": {
+        "torque_nm": 5.0,
+        "disturbance_nm": 0.0,
+        "status": 0,
+        "flags": 0
+      },
+      "upstream_after": {
+        "torque_nm": 4.900000095367432,
+        "disturbance_nm": 0.0
+      },
+      "new_after": {
+        "torque_nm": 1.0,
+        "disturbance_nm": 0.0,
+        "status": 0,
+        "flags": 3
+      },
+      "assertion": "new hard torque limit takes precedence over slew continuity"
+    },
+    "out_of_contract_timing": {
+      "input": {
+        "observer_bandwidth_rad_s": 80.0,
+        "eso_compensation_gain": 0.0,
+        "measurement_step_rad": 0.01,
+        "velocity_rad_s": 0.0,
+        "new_allowed_dt_s": [
+          0.0005000000237487257,
+          0.0020000000949949026
+        ],
+        "maximum_replay_steps": 300
+      },
+      "replays": [
+        {
+          "dt_s": 0.02,
+          "upstream": {
+            "first_outputs": [
+              {
+                "step": 1,
+                "torque_nm": 0.0,
+                "disturbance_nm": 3.9935998916625977
+              },
+              {
+                "step": 2,
+                "torque_nm": 0.0,
+                "disturbance_nm": -11.182079315185547
+              },
+              {
+                "step": 3,
+                "torque_nm": 0.0,
+                "disturbance_nm": 15.814647674560547
+              }
+            ],
+            "steps_executed": 245,
+            "first_abs_disturbance_gt_1e6_nm_step": 38,
+            "first_nonfinite_disturbance_step": 245,
+            "max_abs_finite_disturbance_nm": 1.6954250393170277e+35,
+            "last_finite_output": {
+              "step": 244,
+              "torque_nm": 0.0,
+              "disturbance_nm": 1.6954250393170277e+35
+            },
+            "last_output": {
+              "torque_nm": 0.0,
+              "disturbance_nm": "-Infinity"
+            }
+          },
+          "new_first_rejected_step": {
+            "torque_nm": 0.0,
+            "disturbance_nm": 0.0,
+            "status": 4,
+            "flags": 0
+          },
+          "new_after_valid_dt_without_reset": {
+            "torque_nm": 0.0,
+            "disturbance_nm": 0.0,
+            "status": 4,
+            "flags": 0
+          }
+        },
+        {
+          "dt_s": 0.05,
+          "upstream": {
+            "first_outputs": [
+              {
+                "step": 1,
+                "torque_nm": 0.0,
+                "disturbance_nm": 9.984000205993652
+              },
+              {
+                "step": 2,
+                "torque_nm": 0.0,
+                "disturbance_nm": -99.84000396728516
+              },
+              {
+                "step": 3,
+                "torque_nm": 0.0,
+                "disturbance_nm": 628.991943359375
+              }
+            ],
+            "steps_executed": 53,
+            "first_abs_disturbance_gt_1e6_nm_step": 9,
+            "first_nonfinite_disturbance_step": 53,
+            "max_abs_finite_disturbance_nm": 1.2192108978078208e+35,
+            "last_finite_output": {
+              "step": 52,
+              "torque_nm": 0.0,
+              "disturbance_nm": 1.2192108978078208e+35
+            },
+            "last_output": {
+              "torque_nm": 0.0,
+              "disturbance_nm": "+Infinity"
+            }
+          },
+          "new_first_rejected_step": {
+            "torque_nm": 0.0,
+            "disturbance_nm": 0.0,
+            "status": 4,
+            "flags": 0
+          },
+          "new_after_valid_dt_without_reset": {
+            "torque_nm": 0.0,
+            "disturbance_nm": 0.0,
+            "status": 4,
+            "flags": 0
+          }
+        }
+      ],
+      "assertion": "upstream observer grows beyond 1e6 Nm; new rejects and latches bad_timing",
+      "scope": "fixed measurement replay, not a plant or same-dt closed-loop stability comparison; new does not execute these periods"
+    },
+    "stale_feedback": {
+      "input": {
+        "feedback_age_s": 0.009999999776482582,
+        "feedback_timeout_s": 0.004999999888241291,
+        "dt_s": 0.001
+      },
+      "upstream": {
+        "torque_nm": 0.10000000149011612,
+        "disturbance_nm": 0.0
+      },
+      "new": {
+        "torque_nm": 0.0,
+        "disturbance_nm": 0.0,
+        "status": 6,
+        "flags": 0
+      },
+      "new_after_fresh_feedback_without_reset": {
+        "torque_nm": 0.0,
+        "disturbance_nm": 0.0,
+        "status": 6,
+        "flags": 0
+      },
+      "assertion": "new emits zero and latches stale_feedback",
+      "scope": "upstream API has feedback_ok but no age field; the adapter drops age rather than adding a policy"
+    }
+  }
+}

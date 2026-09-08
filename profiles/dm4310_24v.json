@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "simulation_only": true,
+  "nominal_model_source": "https://github.com/LamdaDay/YAW_Auto_Controller/blob/665c5b4ab1067d6cb63122c120822f27502953e5/yaw_auto_lqr_tune.m",
+  "nominal_model_scope": "Teaching/reference model, not a measured typical RoboMaster gimbal; same load for controlled motor comparison.",
+  "dt_s": 0.001,
+  "required_hardware_verification": [
+    "load J/B and coordinate direction",
+    "drive firmware and selected mode",
+    "actual protocol mapping",
+    "allowable torque, current, speed and temperature",
+    "timestamps, measured loop timing and drive watchdog"
+  ],
+  "actuator_dynamic_assumptions": {
+    "torque_lag_s": 0.002,
+    "command_delay_samples": 1,
+    "note": "Illustrative actuator lag; not the datasheet mechanical time constant."
+  },
+  "name": "dm4310_24v",
+  "controller": {
+    "inertia_kg_m2": 0.039,
+    "damping_nm_s_rad": 0.3,
+    "k_position": 85.87696424,
+    "k_velocity": 3.07876864,
+    "k_integral": 0.0,
+    "integral_limit_nm": 0.0,
+    "antiwindup_rate_s": 20.0,
+    "coulomb_nm": 0.0,
+    "coulomb_velocity_rad_s": 0.04,
+    "eso_bandwidth_rad_s": 80.0,
+    "eso_gain": 0.8,
+    "disturbance_limit_nm": 3.0,
+    "compensation_limit_nm": 2.0,
+    "compensation_slew_nm_s": 100.0,
+    "torque_limit_nm": 3.0,
+    "torque_slew_nm_s": 100.0,
+    "dt_min_s": 0.0005,
+    "dt_max_s": 0.002,
+    "feedback_timeout_s": 0.005,
+    "reference_timeout_s": 0.005,
+    "position_min_rad": -3.141592653589793,
+    "position_max_rad": 3.141592653589793,
+    "velocity_limit_rad_s": 20.9,
+    "tracking_error_limit_rad": 3.141592653589793,
+    "velocity_error_filter_tau_s": 0.0
+  },
+  "protocol": {
+    "kind": "dm_mit",
+    "p_max_rad": 12.5,
+    "v_max_rad_s": 30.0,
+    "t_max_nm": 10.0,
+    "torque_limit_nm": 3.0,
+    "motor_can_id": 1,
+    "master_can_id": 17,
+    "scope": "Explicit simulation mapping; hardware PMAX/VMAX/TMAX must be read back."
+  },
+  "motor": {
+    "rated_torque_nm": 3.0,
+    "peak_torque_nm": 7.0,
+    "no_load_speed_rad_s": 20.943951023931955,
+    "motoring_envelope": "piecewise_linear_through_rated_point",
+    "zero_speed_anchor_nm": 7.0,
+    "source": "https://files.seeedstudio.com/products/Damiao/DM-J4310-en.pdf",
+    "source_version": "DM-J4310-2EC V1.1, manual V1.0 2023-11-16",
+    "scope": "24 V reference: piecewise approximation through (zero speed, assumed peak 7 N.m), (120 rpm, rated 3 N.m), (200 rpm, zero torque). Passing rated point does not establish a measured full curve or thermal model.",
+    "rated_speed_rad_s": 12.56637061435917
+  },
+  "sensor": {
+    "position_quantum_rad": 0.00038147554741741054,
+    "velocity_quantum_rad_s": 0.014652014652014652,
+    "position_noise_std_rad": 7e-05,
+    "velocity_noise_std_rad_s": 0.01
+  },
+  "comparison_baseline_controller_overrides": {}
+}

@@ -1,0 +1,60 @@
+name: controller-tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  arm-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install ARM C compiler and headers
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi libnewlib-dev
+      - name: Compile Cortex-M4F C library and STM32 adapter
+        run: python3 tools/check_arm_build.py --newlib-include /usr/include/newlib --report build/ci-arm-compile.json
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Build and test C
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j 2
+          ctest --test-dir build --output-on-failure
+      - name: Address and undefined behavior checks
+        run: |
+          cmake -S . -B build-sanitize -DCMAKE_BUILD_TYPE=Debug -DYAW_SANITIZERS=ON
+          cmake --build build-sanitize -j 2
+          ctest --test-dir build-sanitize --output-on-failure
+      - name: Python numerical tests
+        run: |
+          python -m pip install -r requirements.txt
+          python tools/fetch_upstream.py
+          python tools/generate_profile_headers.py --check
+          python -m unittest discover -s tests -p 'test_*.py'
+      - name: Recompute synthetic benchmarks
+        run: |
+          python sim/run_benchmarks.py --output build/ci-results
+          python sim/compare_upstream.py --output build/ci-upstream
+          python sim/run_sensitivity.py --output build/ci-sensitivity
+          python sim/analyze_local_dynamics.py --output build/ci-local-dynamics.json
+          python sim/run_motor_profiles.py --output build/ci-motor-profiles
+          python tools/check_performance.py --report build/ci-motor-profiles/metrics.json --output build/ci-performance.json
+          python tools/check_integration_convergence.py --output build/ci-convergence.json

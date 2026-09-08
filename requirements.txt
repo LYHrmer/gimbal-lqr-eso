@@ -1,0 +1,5 @@
+# Tested also with Ubuntu system numpy 1.21.5 / scipy 1.8.0 / matplotlib 3.5.1.
+# Prefer a fresh venv; do not mix user NumPy 2 with system NumPy 1 extensions.
+numpy>=1.21,<3
+scipy>=1.8,<2
+matplotlib>=3.5,<4

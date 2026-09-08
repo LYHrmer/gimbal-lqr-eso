@@ -1,0 +1,582 @@
+{
+  "data_type": "SYNTHETIC: no hardware measurements or original forum CSV",
+  "comparison": "pinned upstream C versus new C; same DLQR gains and ESO gain 0.8",
+  "scope": [
+    "Common-condition software comparison, not original-author hardware reproduction.",
+    "A normalized configuration, not a claim to compare each design's best achievable tuning.",
+    "Forum /plan_yaw is not the sinusoidal benchmark used here; its original CSV is unavailable.",
+    "Shared plant, reference derivatives, seed, DLQR gains, nominal J/B, hard torque and slew limits.",
+    "Integral and upstream bias are disabled; unsupported upstream safeguards are not added by the adapter.",
+    "Upstream status is unavailable; its fault and warmup counts are null, not evidence of fault detection."
+  ],
+  "upstream": {
+    "repository": "https://github.com/LamdaDay/YAW_Auto_Controller",
+    "commit": "665c5b4ab1067d6cb63122c120822f27502953e5",
+    "source_dir": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/source",
+    "files": {
+      "yaw_auto_lqr_eso_controller.c": {
+        "sha256": "e4ae2e11cc7ec425aed152dba6ce43d0dad4c490086253464d33e912475bfa61",
+        "path": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/source/yaw_auto_lqr_eso_controller.c"
+      },
+      "yaw_auto_lqr_eso_controller.h": {
+        "sha256": "ce70e33074ffb5708a72074bf027cebb507fc0f251f16ebdd6c17f6ee708fe3b",
+        "path": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/source/yaw_auto_lqr_eso_controller.h"
+      }
+    },
+    "bridge_sha256": "05646fbab98341256c81ab8aba32177cd2e9c01f063eab83733f3bd26197aea5",
+    "build_key": "2a0813fc0407818c314149d7d49fd2e39cd20be0b0aee294295943d5adc1d58d",
+    "compiler": [
+      "cc"
+    ],
+    "compiler_version": "cc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "interface_sha256": "1d9c259d18928dcc58c71b872a82f0791b20f416b71cb65638e8962260954deb",
+    "library_sha256": "252e5edfa5d1a7e9379aa24c87d0dc99579b997fff73fe3e05b35b7c167f4757",
+    "options": [
+      "-std=c99",
+      "-O2",
+      "-fno-fast-math",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fPIC",
+      "-shared"
+    ],
+    "upstream_commit": "665c5b4ab1067d6cb63122c120822f27502953e5",
+    "upstream_sha256": {
+      "yaw_auto_lqr_eso_controller.c": "e4ae2e11cc7ec425aed152dba6ce43d0dad4c490086253464d33e912475bfa61",
+      "yaw_auto_lqr_eso_controller.h": "ce70e33074ffb5708a72074bf027cebb507fc0f251f16ebdd6c17f6ee708fe3b"
+    },
+    "library": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/libupstream_reference_2a0813fc0407818c.so",
+    "source_unmodified": true,
+    "status_unavailable": -1,
+    "comparison_contract": {
+      "same_config_fields": [
+        "J",
+        "B",
+        "K_position",
+        "K_velocity",
+        "K_integral",
+        "Coulomb",
+        "ESO bandwidth/gain",
+        "ESO compensation magnitude limit",
+        "hard torque limit",
+        "torque slew"
+      ],
+      "old_bias_gain": 0,
+      "old_soft_limit": 0,
+      "old_deadband": 0,
+      "old_eso_gates": "disabled",
+      "old_eso_input": "previous limited command",
+      "unsupported_old_features": [
+        "feedback/reference age",
+        "reference valid flag",
+        "latched faults",
+        "position/velocity/tracking guards",
+        "disturbance state limit",
+        "compensation slew",
+        "integral anti-windup",
+        "measured applied torque in ESO"
+      ],
+      "flags": "Only original soft/hard limit and slew flags map to bits 0 and 1",
+      "integral": "Config k_integral maps directly; use zero for the primary comparison",
+      "nonfinite_policy": "Do not filter original inputs or outputs"
+    }
+  },
+  "upstream_adapter_source_sha256": "c43adbf471f186ca7bdefeb017cc2b34c5c8cd82d53a3bb26c295ecbca89d0a1",
+  "upstream_fetch_source_sha256": "e998edd7c3e3fcf42705b885c6c2421d4f7a53998703cc04a9d690a119d76d97",
+  "new_core": {
+    "source_sha256": "5ade00dcb88b4bdbff2d00754cfbafac80e364f78a898349fcef3ac5013bb207",
+    "header_sha256": "1d9c259d18928dcc58c71b872a82f0791b20f416b71cb65638e8962260954deb",
+    "shared_library_sha256": "49d8dd54e15a0aace447f6949af27550544ecab61d81791bf75d1b0842cdbf0d",
+    "abi_struct_sizes_bytes": {
+      "YawConfig": 100,
+      "YawFeedback": 20,
+      "YawReference": 20,
+      "YawOutput": 44,
+      "YawController": 140
+    }
+  },
+  "simulation_source_sha256": "6f53d7d5eb2ec7ec2ecc13bb5d00a07d695a69bd7bb2d967ba5fbafae4a2da4e",
+  "comparison_source_sha256": "63de3b5471fc14bb3bca758481c56de45e169a06e86109cab0ef96580c0a7f9c",
+  "clock": {
+    "dt_s": 0.001,
+    "duration_s": 8.0,
+    "startup_s": 2.0,
+    "feedback_age_s": 0,
+    "reference_age_s": 0,
+    "applied_torque_valid": false,
+    "sample_semantics": "reference and measurement at t; issue command at t; evolve to t+dt"
+  },
+  "seed": 4310,
+  "integration": {
+    "method": "RK4",
+    "substeps": 5
+  },
+  "common_requested_config": {
+    "inertia_kg_m2": 0.039000000804662704,
+    "damping_nm_s_rad": 0.30000001192092896,
+    "k_position": 85.87696075439453,
+    "k_velocity": 3.078768730163574,
+    "k_integral": 0.0,
+    "integral_limit_nm": 0.0,
+    "antiwindup_rate_s": 20.0,
+    "coulomb_nm": 0.0,
+    "coulomb_velocity_rad_s": 0.03999999910593033,
+    "eso_bandwidth_rad_s": 80.0,
+    "eso_gain": 0.800000011920929,
+    "disturbance_limit_nm": 3.0,
+    "compensation_limit_nm": 2.0,
+    "compensation_slew_nm_s": 100.0,
+    "torque_limit_nm": 7.0,
+    "torque_slew_nm_s": 1000.0,
+    "dt_min_s": 0.0005000000237487257,
+    "dt_max_s": 0.0020000000949949026,
+    "feedback_timeout_s": 0.004999999888241291,
+    "reference_timeout_s": 0.004999999888241291,
+    "position_min_rad": -3.1415927410125732,
+    "position_max_rad": 3.1415927410125732,
+    "velocity_limit_rad_s": 60.0,
+    "tracking_error_limit_rad": 3.1415927410125732,
+    "velocity_error_filter_tau_s": 0.0
+  },
+  "lqr_design": {
+    "model": "J * acceleration + B * velocity = torque; exact ZOH",
+    "feedback_convention": "torque = K @ (reference_state - measured_state)",
+    "parameters": {
+      "inertia": 0.039,
+      "damping": 0.3,
+      "dt": 0.001,
+      "q_position": 1600.0,
+      "q_velocity": 1.0,
+      "r_torque": 0.2
+    },
+    "state_units": [
+      "rad",
+      "rad/s"
+    ],
+    "input_units": "N.m",
+    "ad": [
+      [
+        1.0,
+        0.0009961636891506693
+      ],
+      [
+        0.0,
+        0.9923372023911486
+      ]
+    ],
+    "bd": [
+      [
+        1.2787702831102297e-05
+      ],
+      [
+        0.02554265869617101
+      ]
+    ],
+    "q": [
+      [
+        1600.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "r": [
+      [
+        0.2
+      ]
+    ],
+    "gain": {
+      "k_position": 85.87696423835901,
+      "k_velocity": 3.0787686432645462
+    },
+    "closed_loop_poles": [
+      {
+        "real": 0.9562995483165257,
+        "imag": 0.016846261011394185
+      },
+      {
+        "real": 0.9562995483165257,
+        "imag": -0.016846261011394185
+      }
+    ],
+    "spectral_radius": 0.9564479194501158,
+    "dare_residual_max_abs": 2.2509993868879974e-11,
+    "dependencies": {
+      "numpy": "1.21.5",
+      "scipy": "1.8.0"
+    },
+    "scope": "nominal linear unsaturated model; not a hardware stability certificate"
+  },
+  "dependencies": {
+    "python": "3.10.12",
+    "numpy": "1.21.5",
+    "scipy": "1.8.0",
+    "matplotlib": "3.5.1",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+  },
+  "cases": {
+    "nominal_1hz_5deg": {
+      "frequency_hz": 1.0,
+      "amplitude_deg": 5.0,
+      "plant": {
+        "inertia_kg_m2": 0.039,
+        "damping_nm_s_rad": 0.3,
+        "external_torque_nm": 0.0,
+        "coulomb_nm": 0.0,
+        "coulomb_velocity_rad_s": 0.04,
+        "torque_lag_s": 0.0,
+        "command_delay_samples": 0,
+        "position_quantum_rad": 0.0,
+        "velocity_quantum_rad_s": 0.0,
+        "position_noise_std_rad": 0.0,
+        "velocity_noise_std_rad_s": 0.0
+      },
+      "steady_linear_required_torque_amplitude_nm": 0.2123931107114647,
+      "torque_infeasible_linear_reference": false,
+      "variants": {
+        "Original core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 0.0009074879951648934,
+          "position_mae_deg": 0.0008170768456494135,
+          "position_p95_abs_error_deg": 0.0012793107719582572,
+          "position_max_abs_error_deg": 0.0012835379879308616,
+          "command_rms_nm": 0.1502226490449659,
+          "command_peak_abs_nm": 0.21244283020496368,
+          "actuator_peak_abs_nm": 0.21244283020496368,
+          "torque_limit_fraction": 0.0,
+          "slew_limit_fraction": 0.0,
+          "disturbance_limit_fraction": null,
+          "compensation_limit_fraction": null,
+          "fault_count": null,
+          "warmup_count": null,
+          "observed_command_at_limit_fraction": 0.0
+        },
+        "New core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 0.00024398236110052,
+          "position_mae_deg": 0.0002196616942625792,
+          "position_p95_abs_error_deg": 0.00034400214680055456,
+          "position_max_abs_error_deg": 0.0003456197960314514,
+          "command_rms_nm": 0.15019187352425187,
+          "command_peak_abs_nm": 0.21239911019802094,
+          "actuator_peak_abs_nm": 0.21239911019802094,
+          "torque_limit_fraction": 0.0,
+          "slew_limit_fraction": 0.0,
+          "disturbance_limit_fraction": 0.0,
+          "compensation_limit_fraction": 0.0,
+          "fault_count": 0,
+          "warmup_count": 1,
+          "observed_command_at_limit_fraction": 0.0
+        }
+      },
+      "new_rmse_change_percent": -73.11453568526957
+    },
+    "nominal_3hz_20deg": {
+      "frequency_hz": 3.0,
+      "amplitude_deg": 20.0,
+      "plant": {
+        "inertia_kg_m2": 0.039,
+        "damping_nm_s_rad": 0.3,
+        "external_torque_nm": 0.0,
+        "coulomb_nm": 0.0,
+        "coulomb_velocity_rad_s": 0.04,
+        "torque_lag_s": 0.0,
+        "command_delay_samples": 0,
+        "position_quantum_rad": 0.0,
+        "velocity_quantum_rad_s": 0.0,
+        "position_noise_std_rad": 0.0,
+        "velocity_noise_std_rad_s": 0.0
+      },
+      "steady_linear_required_torque_amplitude_nm": 5.22424454406651,
+      "torque_infeasible_linear_reference": false,
+      "variants": {
+        "Original core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 0.060939111974820624,
+          "position_mae_deg": 0.054860439714197046,
+          "position_p95_abs_error_deg": 0.08591873812269088,
+          "position_max_abs_error_deg": 0.08620140401674062,
+          "command_rms_nm": 3.7098260667193874,
+          "command_peak_abs_nm": 5.246804714202881,
+          "actuator_peak_abs_nm": 5.246804714202881,
+          "torque_limit_fraction": 0.0,
+          "slew_limit_fraction": 0.0,
+          "disturbance_limit_fraction": null,
+          "compensation_limit_fraction": null,
+          "fault_count": null,
+          "warmup_count": null,
+          "observed_command_at_limit_fraction": 0.0
+        },
+        "New core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 0.022914569312407634,
+          "position_mae_deg": 0.02063062739414964,
+          "position_p95_abs_error_deg": 0.03230678005530386,
+          "position_max_abs_error_deg": 0.03241731773167235,
+          "command_rms_nm": 3.6984804361169457,
+          "command_peak_abs_nm": 5.230759143829346,
+          "actuator_peak_abs_nm": 5.230759143829346,
+          "torque_limit_fraction": 0.0,
+          "slew_limit_fraction": 0.0,
+          "disturbance_limit_fraction": 0.0,
+          "compensation_limit_fraction": 0.0,
+          "fault_count": 0,
+          "warmup_count": 1,
+          "observed_command_at_limit_fraction": 0.0
+        }
+      },
+      "new_rmse_change_percent": -62.39759889859293
+    },
+    "nominal_5hz_20deg": {
+      "frequency_hz": 5.0,
+      "amplitude_deg": 20.0,
+      "plant": {
+        "inertia_kg_m2": 0.039,
+        "damping_nm_s_rad": 0.3,
+        "external_torque_nm": 0.0,
+        "coulomb_nm": 0.0,
+        "coulomb_velocity_rad_s": 0.04,
+        "torque_lag_s": 0.0,
+        "command_delay_samples": 0,
+        "position_quantum_rad": 0.0,
+        "velocity_quantum_rad_s": 0.0,
+        "position_noise_std_rad": 0.0,
+        "velocity_noise_std_rad_s": 0.0
+      },
+      "steady_linear_required_torque_amplitude_nm": 13.832959144241402,
+      "torque_infeasible_linear_reference": true,
+      "variants": {
+        "Original core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 13.111900819661923,
+          "position_mae_deg": 11.715776829928275,
+          "position_p95_abs_error_deg": 18.937185831585566,
+          "position_max_abs_error_deg": 19.115616362601294,
+          "command_rms_nm": 6.6671401820394856,
+          "command_peak_abs_nm": 7.0,
+          "actuator_peak_abs_nm": 7.0,
+          "torque_limit_fraction": 0.9200133311114814,
+          "slew_limit_fraction": 0.1299783369438427,
+          "disturbance_limit_fraction": null,
+          "compensation_limit_fraction": null,
+          "fault_count": null,
+          "warmup_count": null,
+          "observed_command_at_limit_fraction": 0.8700216630561574
+        },
+        "New core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 13.112222033612806,
+          "position_mae_deg": 11.716162021387724,
+          "position_p95_abs_error_deg": 18.910057697620555,
+          "position_max_abs_error_deg": 19.149334648494847,
+          "command_rms_nm": 6.6671401820394856,
+          "command_peak_abs_nm": 7.0,
+          "actuator_peak_abs_nm": 7.0,
+          "torque_limit_fraction": 0.9200133311114814,
+          "slew_limit_fraction": 0.1299783369438427,
+          "disturbance_limit_fraction": 0.0,
+          "compensation_limit_fraction": 0.0,
+          "fault_count": 0,
+          "warmup_count": 1,
+          "observed_command_at_limit_fraction": 0.8700216630561574
+        }
+      },
+      "new_rmse_change_percent": 0.0024497893577946073
+    },
+    "stressed_1hz_5deg": {
+      "frequency_hz": 1.0,
+      "amplitude_deg": 5.0,
+      "plant": {
+        "inertia_kg_m2": 0.04875,
+        "damping_nm_s_rad": 0.24,
+        "external_torque_nm": 0.35,
+        "coulomb_nm": 0.12,
+        "coulomb_velocity_rad_s": 0.04,
+        "torque_lag_s": 0.002,
+        "command_delay_samples": 1,
+        "position_quantum_rad": 0.00038147554741741054,
+        "velocity_quantum_rad_s": 0.014652014652014652,
+        "position_noise_std_rad": 7e-05,
+        "velocity_noise_std_rad_s": 0.01
+      },
+      "steady_linear_required_torque_amplitude_nm": 0.21336494025830816,
+      "torque_infeasible_linear_reference": false,
+      "variants": {
+        "Original core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 0.05371468823309394,
+          "position_mae_deg": 0.049213330115158035,
+          "position_p95_abs_error_deg": 0.10111533706957843,
+          "position_max_abs_error_deg": 0.12214720242945448,
+          "command_rms_nm": 0.4251858710669704,
+          "command_peak_abs_nm": 0.8220004439353943,
+          "actuator_peak_abs_nm": 0.7703501228177078,
+          "torque_limit_fraction": 0.0,
+          "slew_limit_fraction": 0.0,
+          "disturbance_limit_fraction": null,
+          "compensation_limit_fraction": null,
+          "fault_count": null,
+          "warmup_count": null,
+          "observed_command_at_limit_fraction": 0.0
+        },
+        "New core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 0.05314463699190808,
+          "position_mae_deg": 0.04890364412774379,
+          "position_p95_abs_error_deg": 0.09732452035929956,
+          "position_max_abs_error_deg": 0.11793105292676288,
+          "command_rms_nm": 0.4251579880913391,
+          "command_peak_abs_nm": 0.8030331134796143,
+          "actuator_peak_abs_nm": 0.7703795586729769,
+          "torque_limit_fraction": 0.0,
+          "slew_limit_fraction": 0.0,
+          "disturbance_limit_fraction": 0.0,
+          "compensation_limit_fraction": 0.0,
+          "fault_count": 0,
+          "warmup_count": 1,
+          "observed_command_at_limit_fraction": 0.0
+        }
+      },
+      "new_rmse_change_percent": -1.0612576558429065
+    },
+    "stressed_3hz_20deg": {
+      "frequency_hz": 3.0,
+      "amplitude_deg": 20.0,
+      "plant": {
+        "inertia_kg_m2": 0.04875,
+        "damping_nm_s_rad": 0.24,
+        "external_torque_nm": 0.35,
+        "coulomb_nm": 0.12,
+        "coulomb_velocity_rad_s": 0.04,
+        "torque_lag_s": 0.002,
+        "command_delay_samples": 1,
+        "position_quantum_rad": 0.00038147554741741054,
+        "velocity_quantum_rad_s": 0.014652014652014652,
+        "position_noise_std_rad": 7e-05,
+        "velocity_noise_std_rad_s": 0.01
+      },
+      "steady_linear_required_torque_amplitude_nm": 6.249039671515249,
+      "torque_infeasible_linear_reference": false,
+      "variants": {
+        "Original core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 0.48102092979076244,
+          "position_mae_deg": 0.43392919842302224,
+          "position_p95_abs_error_deg": 0.7156254392188546,
+          "position_max_abs_error_deg": 0.7279586848004899,
+          "command_rms_nm": 4.59851451301063,
+          "command_peak_abs_nm": 6.946280002593994,
+          "actuator_peak_abs_nm": 6.88968915924608,
+          "torque_limit_fraction": 0.0,
+          "slew_limit_fraction": 0.0,
+          "disturbance_limit_fraction": null,
+          "compensation_limit_fraction": null,
+          "fault_count": null,
+          "warmup_count": null,
+          "observed_command_at_limit_fraction": 0.0
+        },
+        "New core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 0.4224664193088696,
+          "position_mae_deg": 0.38012311822832795,
+          "position_p95_abs_error_deg": 0.6367255726747034,
+          "position_max_abs_error_deg": 0.6495480708675844,
+          "command_rms_nm": 4.5758413291642235,
+          "command_peak_abs_nm": 6.906661033630371,
+          "actuator_peak_abs_nm": 6.859597062236796,
+          "torque_limit_fraction": 0.0,
+          "slew_limit_fraction": 0.0,
+          "disturbance_limit_fraction": 0.0,
+          "compensation_limit_fraction": 0.0,
+          "fault_count": 0,
+          "warmup_count": 1,
+          "observed_command_at_limit_fraction": 0.0
+        }
+      },
+      "new_rmse_change_percent": -12.172965219489152
+    },
+    "stressed_5hz_20deg": {
+      "frequency_hz": 5.0,
+      "amplitude_deg": 20.0,
+      "plant": {
+        "inertia_kg_m2": 0.04875,
+        "damping_nm_s_rad": 0.24,
+        "external_torque_nm": 0.35,
+        "coulomb_nm": 0.12,
+        "coulomb_velocity_rad_s": 0.04,
+        "torque_lag_s": 0.002,
+        "command_delay_samples": 1,
+        "position_quantum_rad": 0.00038147554741741054,
+        "velocity_quantum_rad_s": 0.014652014652014652,
+        "position_noise_std_rad": 7e-05,
+        "velocity_noise_std_rad_s": 0.01
+      },
+      "steady_linear_required_torque_amplitude_nm": 17.000033194564157,
+      "torque_infeasible_linear_reference": true,
+      "variants": {
+        "Original core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 16.215328421448586,
+          "position_mae_deg": 14.4363468786287,
+          "position_p95_abs_error_deg": 25.21230109045208,
+          "position_max_abs_error_deg": 25.644243341832485,
+          "command_rms_nm": 6.667116634769392,
+          "command_peak_abs_nm": 7.0,
+          "actuator_peak_abs_nm": 6.999999999999996,
+          "torque_limit_fraction": 0.9300116647225463,
+          "slew_limit_fraction": 0.1299783369438427,
+          "disturbance_limit_fraction": null,
+          "compensation_limit_fraction": null,
+          "fault_count": null,
+          "warmup_count": null,
+          "observed_command_at_limit_fraction": 0.8693551074820863
+        },
+        "New core": {
+          "completed": true,
+          "evaluation_start_s": 2.0,
+          "evaluation_end_s": 8.0,
+          "position_rmse_deg": 16.209046874535733,
+          "position_mae_deg": 14.43359204072381,
+          "position_p95_abs_error_deg": 25.16930487521773,
+          "position_max_abs_error_deg": 25.61118024637328,
+          "command_rms_nm": 6.667116100172948,
+          "command_peak_abs_nm": 7.0,
+          "actuator_peak_abs_nm": 6.999999999999996,
+          "torque_limit_fraction": 0.9300116647225463,
+          "slew_limit_fraction": 0.1299783369438427,
+          "disturbance_limit_fraction": 0.0,
+          "compensation_limit_fraction": 0.0,
+          "fault_count": 0,
+          "warmup_count": 1,
+          "observed_command_at_limit_fraction": 0.8693551074820863
+        }
+      },
+      "new_rmse_change_percent": -0.0387383267830943
+    }
+  }
+}

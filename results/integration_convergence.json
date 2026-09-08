@@ -1,0 +1,1002 @@
+{
+  "data_type": "SYNTHETIC; actual C controllers and C command codecs; no motor traffic",
+  "scope": "RK4 4-vs-8 substep sensitivity only; quantized/noisy nonlinear trajectories need not exhibit formal fourth-order convergence",
+  "fixed_verification_case": {
+    "seed": 4320,
+    "frequency_hz": 2.0,
+    "amplitude_deg": 5.0,
+    "control_dt_s": 0.001,
+    "duration_s": 6.0,
+    "evaluation_start_s": 2.0,
+    "rk4_substeps": [
+      4,
+      8
+    ],
+    "rk4_step_sizes_s": [
+      0.00025,
+      0.000125
+    ],
+    "scalar_relative_difference_limit_percent": 1.0,
+    "trajectory_max_abs_difference_limit_deg": 0.01
+  },
+  "baseline_rule": "Original core applies the profile comparison_baseline_controller_overrides to its controller configuration; New core uses the full controller configuration unchanged. The plant, trajectory and seeded measurement draws match. If these overrides differ, the comparison includes controller tuning, not implementation alone.",
+  "numerical_comparison": "Each variant compared against itself with 4 vs 8 RK4 substeps; percentages use the 8-substep metric as denominator. Tracking errors and position differences are measured at matching 1 ms timestamps after startup.",
+  "source_sha256": {
+    "src/yaw_controller.c": "5ade00dcb88b4bdbff2d00754cfbafac80e364f78a898349fcef3ac5013bb207",
+    "include/yaw_controller.h": "1d9c259d18928dcc58c71b872a82f0791b20f416b71cb65638e8962260954deb",
+    "sim/c_core.py": "d089b251f9eef8535d23c6f1c6af27127ff61a92337b01c7eeda54c04929c476",
+    "sim/run_benchmarks.py": "6f53d7d5eb2ec7ec2ecc13bb5d00a07d695a69bd7bb2d967ba5fbafae4a2da4e",
+    "sim/run_sensitivity.py": "bbc1d8b88169bb0a13dd6bac7744868a609bb927844a77c6ecd337245698c618",
+    "sim/run_motor_profiles.py": "c88642ab143955b3f826feb57d24835944ffa377677502d70e8db0cb2fb251e0",
+    "sim/upstream_reference.py": "c43adbf471f186ca7bdefeb017cc2b34c5c8cd82d53a3bb26c295ecbca89d0a1",
+    "sim/motor_envelope.py": "fdda80370b79633b96689edbe91896155652226f2057a8afb36d294258942d0a",
+    "src/dm_mit.c": "0045e5b7bcc3195bcd11d6e3ddb5a577e7a68e80bba4d271948981770f8dbd16",
+    "include/dm_mit.h": "ffca3ce125afeb5c143e5863b8f7f54fe8e82beddfe4f191b9d9d6343f7957ea",
+    "src/gm6020.c": "2f239b43d430bb01e07aec10467937dbcf720b86607ec0bdf94d0ba3be74a8f6",
+    "include/gm6020.h": "f4eccad8d36e35f920f4605905bc876f7803af0ecbbfeea51407134854b3f136",
+    "profiles/dm4310_24v.json": "2248e2d4d7af9c3e2ae6537cf3e5ed5c0305809874c7e0e24e6d5e23e8908f4b",
+    "profiles/gm6020_current.json": "0b384280635cef0c3422d0cd00482c04f6365f786a7f2968f4b581d78230530a"
+  },
+  "verification_script_sha256": "3cd6a53e31862d576ad2a949c5cc6892f947ece7cc5baeebe7b34064313df7b0",
+  "shared_library_sha256": "49d8dd54e15a0aace447f6949af27550544ecab61d81791bf75d1b0842cdbf0d",
+  "upstream": {
+    "repository": "https://github.com/LamdaDay/YAW_Auto_Controller",
+    "commit": "665c5b4ab1067d6cb63122c120822f27502953e5",
+    "source_dir": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/source",
+    "files": {
+      "yaw_auto_lqr_eso_controller.c": {
+        "sha256": "e4ae2e11cc7ec425aed152dba6ce43d0dad4c490086253464d33e912475bfa61",
+        "path": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/source/yaw_auto_lqr_eso_controller.c"
+      },
+      "yaw_auto_lqr_eso_controller.h": {
+        "sha256": "ce70e33074ffb5708a72074bf027cebb507fc0f251f16ebdd6c17f6ee708fe3b",
+        "path": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/source/yaw_auto_lqr_eso_controller.h"
+      }
+    },
+    "bridge_sha256": "05646fbab98341256c81ab8aba32177cd2e9c01f063eab83733f3bd26197aea5",
+    "build_key": "2a0813fc0407818c314149d7d49fd2e39cd20be0b0aee294295943d5adc1d58d",
+    "compiler": [
+      "cc"
+    ],
+    "compiler_version": "cc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "interface_sha256": "1d9c259d18928dcc58c71b872a82f0791b20f416b71cb65638e8962260954deb",
+    "library_sha256": "252e5edfa5d1a7e9379aa24c87d0dc99579b997fff73fe3e05b35b7c167f4757",
+    "options": [
+      "-std=c99",
+      "-O2",
+      "-fno-fast-math",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fPIC",
+      "-shared"
+    ],
+    "upstream_commit": "665c5b4ab1067d6cb63122c120822f27502953e5",
+    "upstream_sha256": {
+      "yaw_auto_lqr_eso_controller.c": "e4ae2e11cc7ec425aed152dba6ce43d0dad4c490086253464d33e912475bfa61",
+      "yaw_auto_lqr_eso_controller.h": "ce70e33074ffb5708a72074bf027cebb507fc0f251f16ebdd6c17f6ee708fe3b"
+    },
+    "library": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/libupstream_reference_2a0813fc0407818c.so",
+    "source_unmodified": true,
+    "status_unavailable": -1,
+    "comparison_contract": {
+      "same_config_fields": [
+        "J",
+        "B",
+        "K_position",
+        "K_velocity",
+        "K_integral",
+        "Coulomb",
+        "ESO bandwidth/gain",
+        "ESO compensation magnitude limit",
+        "hard torque limit",
+        "torque slew"
+      ],
+      "old_bias_gain": 0,
+      "old_soft_limit": 0,
+      "old_deadband": 0,
+      "old_eso_gates": "disabled",
+      "old_eso_input": "previous limited command",
+      "unsupported_old_features": [
+        "feedback/reference age",
+        "reference valid flag",
+        "latched faults",
+        "position/velocity/tracking guards",
+        "disturbance state limit",
+        "compensation slew",
+        "integral anti-windup",
+        "measured applied torque in ESO"
+      ],
+      "flags": "Only original soft/hard limit and slew flags map to bits 0 and 1",
+      "integral": "Config k_integral maps directly; use zero for the primary comparison",
+      "nonfinite_policy": "Do not filter original inputs or outputs"
+    }
+  },
+  "core_abi_sizes_bytes": {
+    "YawConfig": 100,
+    "YawFeedback": 20,
+    "YawReference": 20,
+    "YawOutput": 44,
+    "YawController": 140
+  },
+  "dependencies": {
+    "python": "3.10.12",
+    "numpy": "1.21.5"
+  },
+  "profiles": {
+    "dm4310_24v": {
+      "profile": {
+        "schema_version": 1,
+        "simulation_only": true,
+        "nominal_model_source": "https://github.com/LamdaDay/YAW_Auto_Controller/blob/665c5b4ab1067d6cb63122c120822f27502953e5/yaw_auto_lqr_tune.m",
+        "nominal_model_scope": "Teaching/reference model, not a measured typical RoboMaster gimbal; same load for controlled motor comparison.",
+        "dt_s": 0.001,
+        "required_hardware_verification": [
+          "load J/B and coordinate direction",
+          "drive firmware and selected mode",
+          "actual protocol mapping",
+          "allowable torque, current, speed and temperature",
+          "timestamps, measured loop timing and drive watchdog"
+        ],
+        "actuator_dynamic_assumptions": {
+          "torque_lag_s": 0.002,
+          "command_delay_samples": 1,
+          "note": "Illustrative actuator lag; not the datasheet mechanical time constant."
+        },
+        "name": "dm4310_24v",
+        "controller": {
+          "inertia_kg_m2": 0.039,
+          "damping_nm_s_rad": 0.3,
+          "k_position": 85.87696424,
+          "k_velocity": 3.07876864,
+          "k_integral": 0.0,
+          "integral_limit_nm": 0.0,
+          "antiwindup_rate_s": 20.0,
+          "coulomb_nm": 0.0,
+          "coulomb_velocity_rad_s": 0.04,
+          "eso_bandwidth_rad_s": 80.0,
+          "eso_gain": 0.8,
+          "disturbance_limit_nm": 3.0,
+          "compensation_limit_nm": 2.0,
+          "compensation_slew_nm_s": 100.0,
+          "torque_limit_nm": 3.0,
+          "torque_slew_nm_s": 100.0,
+          "dt_min_s": 0.0005,
+          "dt_max_s": 0.002,
+          "feedback_timeout_s": 0.005,
+          "reference_timeout_s": 0.005,
+          "position_min_rad": -3.141592653589793,
+          "position_max_rad": 3.141592653589793,
+          "velocity_limit_rad_s": 20.9,
+          "tracking_error_limit_rad": 3.141592653589793,
+          "velocity_error_filter_tau_s": 0.0
+        },
+        "protocol": {
+          "kind": "dm_mit",
+          "p_max_rad": 12.5,
+          "v_max_rad_s": 30.0,
+          "t_max_nm": 10.0,
+          "torque_limit_nm": 3.0,
+          "motor_can_id": 1,
+          "master_can_id": 17,
+          "scope": "Explicit simulation mapping; hardware PMAX/VMAX/TMAX must be read back."
+        },
+        "motor": {
+          "rated_torque_nm": 3.0,
+          "peak_torque_nm": 7.0,
+          "no_load_speed_rad_s": 20.943951023931955,
+          "motoring_envelope": "piecewise_linear_through_rated_point",
+          "zero_speed_anchor_nm": 7.0,
+          "source": "https://files.seeedstudio.com/products/Damiao/DM-J4310-en.pdf",
+          "source_version": "DM-J4310-2EC V1.1, manual V1.0 2023-11-16",
+          "scope": "24 V reference: piecewise approximation through (zero speed, assumed peak 7 N.m), (120 rpm, rated 3 N.m), (200 rpm, zero torque). Passing rated point does not establish a measured full curve or thermal model.",
+          "rated_speed_rad_s": 12.56637061435917
+        },
+        "sensor": {
+          "position_quantum_rad": 0.00038147554741741054,
+          "velocity_quantum_rad_s": 0.014652014652014652,
+          "position_noise_std_rad": 7e-05,
+          "velocity_noise_std_rad_s": 0.01
+        },
+        "comparison_baseline_controller_overrides": {}
+      },
+      "plant": {
+        "inertia_kg_m2": 0.039,
+        "damping_nm_s_rad": 0.3,
+        "external_torque_nm": 0.15,
+        "coulomb_nm": 0.06,
+        "coulomb_velocity_rad_s": 0.04,
+        "torque_lag_s": 0.002,
+        "command_delay_samples": 1,
+        "position_quantum_rad": 0.00038147554741741054,
+        "velocity_quantum_rad_s": 0.014652014652014652,
+        "position_noise_std_rad": 7e-05,
+        "velocity_noise_std_rad_s": 0.01
+      },
+      "motor_envelope": {
+        "current_torque_limit_nm": 3.0,
+        "peak_torque_anchor_nm": 7.0,
+        "no_load_velocity_rad_s": 20.943951023931955,
+        "rated_velocity_rad_s": 12.56637061435917,
+        "rated_torque_nm": 3.0
+      },
+      "variants": {
+        "Original core": {
+          "runs": {
+            "4": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 3.1415927410125732,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "position_rmse_deg": 0.02712524354103755,
+              "position_max_abs_error_deg": 0.06300939822730943,
+              "command_rms_nm": 0.5029043720040354,
+              "actual_torque_rms_nm": 0.5018133588958662,
+              "command_peak_abs_nm": 0.9805514812469482,
+              "actual_torque_peak_abs_nm": 0.919995112802762,
+              "actual_velocity_peak_abs_rad_s": 1.1048359022835654,
+              "command_at_limit_fraction": 0.0,
+              "controller_hard_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.04948762809297676,
+              "integral_mean_nm": 0.0,
+              "integral_rms_nm": 0.0,
+              "integral_peak_abs_nm": 0.0,
+              "actuation_residual_mean_nm": -0.00015113361773863937,
+              "actuation_residual_rms_nm": 0.005375641159641298,
+              "envelope_limited_interval_fraction": 0.0,
+              "envelope_limited_rk4_evaluation_fraction": 0.0,
+              "command_quantization_max_abs_nm": 0.002441952953408544,
+              "fault_sample_count": null,
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 1847,
+                "raw_code_max": 2180,
+                "wire_torque_peak_abs_nm": 0.9792429792429792
+              }
+            },
+            "8": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 3.1415927410125732,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "position_rmse_deg": 0.02712524366539246,
+              "position_max_abs_error_deg": 0.06300939881508945,
+              "command_rms_nm": 0.5029043720040354,
+              "actual_torque_rms_nm": 0.5018133602932757,
+              "command_peak_abs_nm": 0.9805514812469482,
+              "actual_torque_peak_abs_nm": 0.9199951831750501,
+              "actual_velocity_peak_abs_rad_s": 1.1048359042868074,
+              "command_at_limit_fraction": 0.0,
+              "controller_hard_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.04948762809297676,
+              "integral_mean_nm": 0.0,
+              "integral_rms_nm": 0.0,
+              "integral_peak_abs_nm": 0.0,
+              "actuation_residual_mean_nm": -0.00015113361773863937,
+              "actuation_residual_rms_nm": 0.005375641159641298,
+              "envelope_limited_interval_fraction": 0.0,
+              "envelope_limited_rk4_evaluation_fraction": 0.0,
+              "command_quantization_max_abs_nm": 0.002441952953408544,
+              "fault_sample_count": null,
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 1847,
+                "raw_code_max": 2180,
+                "wire_torque_peak_abs_nm": 0.9792429792429792
+              }
+            }
+          },
+          "metric_differences": {
+            "position_rmse_deg": {
+              "substeps_4": 0.02712524354103755,
+              "substeps_8": 0.02712524366539246,
+              "relative_difference_percent": -4.5844716911602745e-07,
+              "absolute_difference": 1.2435491178464098e-10,
+              "within_limit": true
+            },
+            "position_max_abs_error_deg": {
+              "substeps_4": 0.06300939822730943,
+              "substeps_8": 0.06300939881508945,
+              "relative_difference_percent": -9.328449901424563e-07,
+              "absolute_difference": 5.877800191012028e-10,
+              "within_limit": true
+            },
+            "command_rms_nm": {
+              "substeps_4": 0.5029043720040354,
+              "substeps_8": 0.5029043720040354,
+              "relative_difference_percent": 0.0,
+              "absolute_difference": 0.0,
+              "within_limit": true
+            },
+            "actual_torque_rms_nm": {
+              "substeps_4": 0.5018133588958662,
+              "substeps_8": 0.5018133602932757,
+              "relative_difference_percent": -2.7847196770736105e-07,
+              "absolute_difference": 1.397409521430859e-09,
+              "within_limit": true
+            }
+          },
+          "trajectory_differences": {
+            "position_difference_rmse_deg": 8.501251897209104e-10,
+            "position_difference_max_abs_deg": 2.4479353793324957e-09,
+            "velocity_difference_rmse_rad_s": 1.9820615208175434e-09,
+            "actual_torque_difference_rmse_nm": 3.7877580486807995e-08
+          },
+          "meets_predeclared_refinement_limits": true
+        },
+        "New core": {
+          "runs": {
+            "4": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 3.1415927410125732,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "position_rmse_deg": 0.025342751280868284,
+              "position_max_abs_error_deg": 0.05751627927784178,
+              "command_rms_nm": 0.5023530638436573,
+              "actual_torque_rms_nm": 0.5012610218537118,
+              "command_peak_abs_nm": 0.9640977382659912,
+              "actual_torque_peak_abs_nm": 0.9164996868840444,
+              "actual_velocity_peak_abs_rad_s": 1.1039862335565982,
+              "command_at_limit_fraction": 0.0,
+              "controller_hard_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.048987753061734564,
+              "integral_mean_nm": 0.0,
+              "integral_rms_nm": 0.0,
+              "integral_peak_abs_nm": 0.0,
+              "actuation_residual_mean_nm": -2.2563831012447427e-05,
+              "actuation_residual_rms_nm": 0.005098027594589778,
+              "envelope_limited_interval_fraction": 0.0,
+              "envelope_limited_rk4_evaluation_fraction": 0.0,
+              "command_quantization_max_abs_nm": 0.0024411438148973508,
+              "fault_sample_count": 0,
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 1850,
+                "raw_code_max": 2182,
+                "wire_torque_peak_abs_nm": 0.9645909645909646
+              }
+            },
+            "8": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 3.1415927410125732,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "position_rmse_deg": 0.025342750886144277,
+              "position_max_abs_error_deg": 0.05751627734780169,
+              "command_rms_nm": 0.5023530638436573,
+              "actual_torque_rms_nm": 0.5012610232168923,
+              "command_peak_abs_nm": 0.9640977382659912,
+              "actual_torque_peak_abs_nm": 0.9164997550934251,
+              "actual_velocity_peak_abs_rad_s": 1.103986235909457,
+              "command_at_limit_fraction": 0.0,
+              "controller_hard_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.048987753061734564,
+              "integral_mean_nm": 0.0,
+              "integral_rms_nm": 0.0,
+              "integral_peak_abs_nm": 0.0,
+              "actuation_residual_mean_nm": -2.2563831012447427e-05,
+              "actuation_residual_rms_nm": 0.005098027594589778,
+              "envelope_limited_interval_fraction": 0.0,
+              "envelope_limited_rk4_evaluation_fraction": 0.0,
+              "command_quantization_max_abs_nm": 0.0024411438148973508,
+              "fault_sample_count": 0,
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 1850,
+                "raw_code_max": 2182,
+                "wire_torque_peak_abs_nm": 0.9645909645909646
+              }
+            }
+          },
+          "metric_differences": {
+            "position_rmse_deg": {
+              "substeps_4": 0.025342751280868284,
+              "substeps_8": 0.025342750886144277,
+              "relative_difference_percent": 1.5575420730939982e-06,
+              "absolute_difference": 3.9472400695239607e-10,
+              "within_limit": true
+            },
+            "position_max_abs_error_deg": {
+              "substeps_4": 0.05751627927784178,
+              "substeps_8": 0.05751627734780169,
+              "relative_difference_percent": 3.355641542412968e-06,
+              "absolute_difference": 1.930040093023333e-09,
+              "within_limit": true
+            },
+            "command_rms_nm": {
+              "substeps_4": 0.5023530638436573,
+              "substeps_8": 0.5023530638436573,
+              "relative_difference_percent": 0.0,
+              "absolute_difference": 0.0,
+              "within_limit": true
+            },
+            "actual_torque_rms_nm": {
+              "substeps_4": 0.5012610218537118,
+              "substeps_8": 0.5012610232168923,
+              "relative_difference_percent": -2.7195021790049623e-07,
+              "absolute_difference": 1.3631804574032458e-09,
+              "within_limit": true
+            }
+          },
+          "trajectory_differences": {
+            "position_difference_rmse_deg": 1.3384609872836305e-09,
+            "position_difference_max_abs_deg": 2.8260411113575515e-09,
+            "velocity_difference_rmse_rad_s": 1.9584664169134284e-09,
+            "actual_torque_difference_rmse_nm": 3.73994296334238e-08
+          },
+          "meets_predeclared_refinement_limits": true
+        }
+      },
+      "new_rmse_change_percent_by_substeps": {
+        "4": -6.571341036892619,
+        "8": -6.5713429204043
+      },
+      "lower_new_rmse_at_both_resolutions": true
+    },
+    "gm6020_current_v1_4": {
+      "profile": {
+        "schema_version": 1,
+        "simulation_only": true,
+        "nominal_model_source": "https://github.com/LamdaDay/YAW_Auto_Controller/blob/665c5b4ab1067d6cb63122c120822f27502953e5/yaw_auto_lqr_tune.m",
+        "nominal_model_scope": "Teaching/reference model, not a measured typical RoboMaster gimbal; same load for controlled motor comparison.",
+        "dt_s": 0.001,
+        "required_hardware_verification": [
+          "load J/B and coordinate direction",
+          "drive firmware and selected mode",
+          "actual protocol mapping",
+          "allowable torque, current, speed and temperature",
+          "timestamps, measured loop timing and drive watchdog"
+        ],
+        "actuator_dynamic_assumptions": {
+          "torque_lag_s": 0.002,
+          "command_delay_samples": 1,
+          "note": "Illustrative actuator lag; not the datasheet mechanical time constant."
+        },
+        "name": "gm6020_current_v1_4",
+        "controller": {
+          "inertia_kg_m2": 0.039,
+          "damping_nm_s_rad": 0.3,
+          "k_position": 85.87696424,
+          "k_velocity": 3.07876864,
+          "k_integral": 171.75392848,
+          "integral_limit_nm": 0.2,
+          "antiwindup_rate_s": 2.0,
+          "coulomb_nm": 0.0,
+          "coulomb_velocity_rad_s": 0.04,
+          "eso_bandwidth_rad_s": 80.0,
+          "eso_gain": 0.8,
+          "disturbance_limit_nm": 1.2,
+          "compensation_limit_nm": 0.4,
+          "compensation_slew_nm_s": 40.0,
+          "torque_limit_nm": 1.2,
+          "torque_slew_nm_s": 100.0,
+          "dt_min_s": 0.0005,
+          "dt_max_s": 0.002,
+          "feedback_timeout_s": 0.005,
+          "reference_timeout_s": 0.005,
+          "position_min_rad": -3.141592653589793,
+          "position_max_rad": 3.141592653589793,
+          "velocity_limit_rad_s": 33.5,
+          "tracking_error_limit_rad": 3.141592653589793,
+          "velocity_error_filter_tau_s": 0.0
+        },
+        "protocol": {
+          "kind": "gm6020_current_v1_4",
+          "torque_constant_nm_a": 0.741,
+          "torque_limit_nm": 1.2,
+          "current_limit_a": 1.62,
+          "current_mode_confirmed": true,
+          "motor_id": 1,
+          "scope": "Simulation assumes current mode is enabled. Hardware requires firmware >=1.0.11.2 and Assistant >=2.7 current-loop switch, verified explicitly."
+        },
+        "motor": {
+          "rated_torque_nm": 1.2,
+          "rated_current_a": 1.62,
+          "continuous_stall_torque_nm": 0.86,
+          "no_load_speed_rad_s": 33.510321638291124,
+          "speed_torque_gradient_rpm_nm": 156.0,
+          "motoring_envelope": "datasheet_linear_speed_torque_gradient",
+          "zero_speed_anchor_nm": 2.051282051282051,
+          "source": "https://rm-static.djicdn.com/tem/17348/RoboMaster%20GM6020%E7%9B%B4%E6%B5%81%E6%97%A0%E5%88%B7%E7%94%B5%E6%9C%BA%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E20231013.pdf",
+          "source_version": "v1.4 2023.10",
+          "scope": "Linear speed/torque approximation plus application limit; not a thermal model. Maximum continuous torque is not continuous stall torque."
+        },
+        "sensor": {
+          "position_quantum_rad": 0.0007669903939428206,
+          "velocity_quantum_rad_s": 0.10471975511965977,
+          "position_noise_std_rad": 7e-05,
+          "velocity_noise_std_rad_s": 0.01
+        },
+        "comparison_baseline_controller_overrides": {
+          "k_integral": 0.0,
+          "integral_limit_nm": 0.0,
+          "antiwindup_rate_s": 20.0
+        },
+        "tuning_scope": {
+          "slow_integral_rule": "Ki=2*Kposition, torque integral cap=0.2 N.m, tracking rate=2/s; nominal integral time scale=0.5s.",
+          "selection": "Selected on development seeds 4310..4314 and explicitly reported stress tests, before validation seeds 4315..4319.",
+          "attribution": "Primary original baseline retains Ki=0. Also run unchanged upstream C with this same integral configuration to separate tuning from kernel effects.",
+          "timing_scope": "Nominal assumed command delay is 1 ms plus 2 ms actuator lag. 10 ms delay and saturated high-frequency cases include regressions; no all-delay or hardware claim.",
+          "filter": "Velocity error filtering is disabled; the tested 2 ms filter did not pass development performance criteria."
+        }
+      },
+      "plant": {
+        "inertia_kg_m2": 0.039,
+        "damping_nm_s_rad": 0.3,
+        "external_torque_nm": 0.15,
+        "coulomb_nm": 0.06,
+        "coulomb_velocity_rad_s": 0.04,
+        "torque_lag_s": 0.002,
+        "command_delay_samples": 1,
+        "position_quantum_rad": 0.0007669903939428206,
+        "velocity_quantum_rad_s": 0.10471975511965977,
+        "position_noise_std_rad": 7e-05,
+        "velocity_noise_std_rad_s": 0.01
+      },
+      "motor_envelope": {
+        "current_torque_limit_nm": 1.2,
+        "peak_torque_anchor_nm": 2.051282051282051,
+        "no_load_velocity_rad_s": 33.510321638291124,
+        "rated_velocity_rad_s": null,
+        "rated_torque_nm": null
+      },
+      "variants": {
+        "Original core": {
+          "runs": {
+            "4": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 3.1415927410125732,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "position_rmse_deg": 0.025982243832792438,
+              "position_max_abs_error_deg": 0.07313506557737495,
+              "command_rms_nm": 0.5079104308389417,
+              "actual_torque_rms_nm": 0.5043381855451775,
+              "command_peak_abs_nm": 1.0816901922225952,
+              "actual_torque_peak_abs_nm": 1.0078273212332935,
+              "actual_velocity_peak_abs_rad_s": 1.1206550387305203,
+              "command_at_limit_fraction": 0.0,
+              "controller_hard_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.24043989002749314,
+              "integral_mean_nm": 0.0,
+              "integral_rms_nm": 0.0,
+              "integral_peak_abs_nm": 0.0,
+              "actuation_residual_mean_nm": -0.00063170056712833,
+              "actuation_residual_rms_nm": 0.06847386194986874,
+              "envelope_limited_interval_fraction": 0.0,
+              "envelope_limited_rk4_evaluation_fraction": 0.0,
+              "command_quantization_max_abs_nm": 6.780195236211206e-05,
+              "fault_sample_count": null,
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -7972,
+                "raw_code_max": 5344,
+                "wire_torque_peak_abs_nm": 1.081650146484375,
+                "wire_current_peak_abs_a": 1.459716796875,
+                "wire_current_rms_a": 0.685440447560429
+              }
+            },
+            "8": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 3.1415927410125732,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "position_rmse_deg": 0.025982244889082174,
+              "position_max_abs_error_deg": 0.07313506856956367,
+              "command_rms_nm": 0.5079104308389417,
+              "actual_torque_rms_nm": 0.5043381916648089,
+              "command_peak_abs_nm": 1.0816901922225952,
+              "actual_torque_peak_abs_nm": 1.007827467704603,
+              "actual_velocity_peak_abs_rad_s": 1.1206550509960167,
+              "command_at_limit_fraction": 0.0,
+              "controller_hard_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.24043989002749314,
+              "integral_mean_nm": 0.0,
+              "integral_rms_nm": 0.0,
+              "integral_peak_abs_nm": 0.0,
+              "actuation_residual_mean_nm": -0.00063170056712833,
+              "actuation_residual_rms_nm": 0.06847386194986874,
+              "envelope_limited_interval_fraction": 0.0,
+              "envelope_limited_rk4_evaluation_fraction": 0.0,
+              "command_quantization_max_abs_nm": 6.780195236211206e-05,
+              "fault_sample_count": null,
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -7972,
+                "raw_code_max": 5344,
+                "wire_torque_peak_abs_nm": 1.081650146484375,
+                "wire_current_peak_abs_a": 1.459716796875,
+                "wire_current_rms_a": 0.685440447560429
+              }
+            }
+          },
+          "metric_differences": {
+            "position_rmse_deg": {
+              "substeps_4": 0.025982243832792438,
+              "substeps_8": 0.025982244889082174,
+              "relative_difference_percent": -4.065429071165028e-06,
+              "absolute_difference": 1.0562897362342838e-09,
+              "within_limit": true
+            },
+            "position_max_abs_error_deg": {
+              "substeps_4": 0.07313506557737495,
+              "substeps_8": 0.07313506856956367,
+              "relative_difference_percent": -4.0913186727387085e-06,
+              "absolute_difference": 2.9921887190198504e-09,
+              "within_limit": true
+            },
+            "command_rms_nm": {
+              "substeps_4": 0.5079104308389417,
+              "substeps_8": 0.5079104308389417,
+              "relative_difference_percent": 0.0,
+              "absolute_difference": 0.0,
+              "within_limit": true
+            },
+            "actual_torque_rms_nm": {
+              "substeps_4": 0.5043381855451775,
+              "substeps_8": 0.5043381916648089,
+              "relative_difference_percent": -1.2133983595674636e-06,
+              "absolute_difference": 6.119631357215383e-09,
+              "within_limit": true
+            }
+          },
+          "trajectory_differences": {
+            "position_difference_rmse_deg": 1.8528674859540334e-09,
+            "position_difference_max_abs_deg": 4.5300179147656055e-09,
+            "velocity_difference_rmse_rad_s": 4.1500518440799584e-09,
+            "actual_torque_difference_rmse_nm": 7.927170303036313e-08
+          },
+          "meets_predeclared_refinement_limits": true
+        },
+        "New core": {
+          "runs": {
+            "4": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 171.75392150878906,
+                "integral_limit_nm": 0.20000000298023224,
+                "antiwindup_rate_s": 2.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 3.1415927410125732,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "position_rmse_deg": 0.01614823929356639,
+              "position_max_abs_error_deg": 0.054672328310383225,
+              "command_rms_nm": 0.5077219016114233,
+              "actual_torque_rms_nm": 0.5041163507302493,
+              "command_peak_abs_nm": 1.0806939601898193,
+              "actual_torque_peak_abs_nm": 0.9963540513695746,
+              "actual_velocity_peak_abs_rad_s": 1.1193080260066257,
+              "command_at_limit_fraction": 0.0,
+              "controller_hard_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.23044238940264933,
+              "integral_mean_nm": -0.031623521937959136,
+              "integral_rms_nm": 0.031848907171077585,
+              "integral_peak_abs_nm": 0.04144105315208435,
+              "actuation_residual_mean_nm": -0.000236348492730948,
+              "actuation_residual_rms_nm": 0.06820332761612896,
+              "envelope_limited_interval_fraction": 0.0,
+              "envelope_limited_rk4_evaluation_fraction": 0.0,
+              "command_quantization_max_abs_nm": 6.780076026918769e-05,
+              "fault_sample_count": 0,
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -7965,
+                "raw_code_max": 5718,
+                "wire_torque_peak_abs_nm": 1.0807003784179687,
+                "wire_current_peak_abs_a": 1.45843505859375,
+                "wire_current_rms_a": 0.6851849390032423
+              }
+            },
+            "8": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 171.75392150878906,
+                "integral_limit_nm": 0.20000000298023224,
+                "antiwindup_rate_s": 2.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 3.1415927410125732,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "position_rmse_deg": 0.016148239313367434,
+              "position_max_abs_error_deg": 0.05467232456257105,
+              "command_rms_nm": 0.5077219016114233,
+              "actual_torque_rms_nm": 0.5041163570362927,
+              "command_peak_abs_nm": 1.0806939601898193,
+              "actual_torque_peak_abs_nm": 0.9963542016767221,
+              "actual_velocity_peak_abs_rad_s": 1.119308036887323,
+              "command_at_limit_fraction": 0.0,
+              "controller_hard_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.23044238940264933,
+              "integral_mean_nm": -0.031623521937959136,
+              "integral_rms_nm": 0.031848907171077585,
+              "integral_peak_abs_nm": 0.04144105315208435,
+              "actuation_residual_mean_nm": -0.000236348492730948,
+              "actuation_residual_rms_nm": 0.06820332761612896,
+              "envelope_limited_interval_fraction": 0.0,
+              "envelope_limited_rk4_evaluation_fraction": 0.0,
+              "command_quantization_max_abs_nm": 6.780076026918769e-05,
+              "fault_sample_count": 0,
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -7965,
+                "raw_code_max": 5718,
+                "wire_torque_peak_abs_nm": 1.0807003784179687,
+                "wire_current_peak_abs_a": 1.45843505859375,
+                "wire_current_rms_a": 0.6851849390032423
+              }
+            }
+          },
+          "metric_differences": {
+            "position_rmse_deg": {
+              "substeps_4": 0.01614823929356639,
+              "substeps_8": 0.016148239313367434,
+              "relative_difference_percent": -1.2262044712940678e-07,
+              "absolute_difference": 1.9801042749900688e-11,
+              "within_limit": true
+            },
+            "position_max_abs_error_deg": {
+              "substeps_4": 0.054672328310383225,
+              "substeps_8": 0.05467232456257105,
+              "relative_difference_percent": 6.855044509812558e-06,
+              "absolute_difference": 3.7478121786560514e-09,
+              "within_limit": true
+            },
+            "command_rms_nm": {
+              "substeps_4": 0.5077219016114233,
+              "substeps_8": 0.5077219016114233,
+              "relative_difference_percent": 0.0,
+              "absolute_difference": 0.0,
+              "within_limit": true
+            },
+            "actual_torque_rms_nm": {
+              "substeps_4": 0.5041163507302493,
+              "substeps_8": 0.5041163570362927,
+              "relative_difference_percent": -1.250910286465512e-06,
+              "absolute_difference": 6.3060433541650696e-09,
+              "within_limit": true
+            }
+          },
+          "trajectory_differences": {
+            "position_difference_rmse_deg": 4.057845270006052e-09,
+            "position_difference_max_abs_deg": 6.237829473196167e-09,
+            "velocity_difference_rmse_rad_s": 4.215561193487283e-09,
+            "actual_torque_difference_rmse_nm": 8.048909321893048e-08
+          },
+          "meets_predeclared_refinement_limits": true
+        }
+      },
+      "new_rmse_change_percent_by_substeps": {
+        "4": -37.848942541346084,
+        "8": -37.84894499184334
+      },
+      "lower_new_rmse_at_both_resolutions": true
+    }
+  },
+  "all_variants_meet_refinement_limits": true,
+  "new_rmse_is_lower_at_both_resolutions_for_both_profiles": true,
+  "pass": true
+}
