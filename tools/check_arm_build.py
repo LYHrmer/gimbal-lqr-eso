@@ -33,8 +33,9 @@ def main():
              "-mcpu=cortex-m4", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard",
              "-ffunction-sections", "-fdata-sections", "-Wall", "-Wextra", "-Wpedantic",
              "-Wconversion", "-Wshadow", "-Werror", "-I", str(ROOT/"include"),
-             "-I", str(ROOT/"examples/stm32"), "-I", str(ROOT),
-             "-B"+str(compiler.parent)+"/"]
+             "-I", str(ROOT/"examples/stm32"), "-I", str(ROOT)]
+    # Keep GCC's configured cross-tool search. For an installed /usr/bin GCC,
+    # -B/usr/bin/ would select the host assembler instead of the ARM assembler.
     if args.newlib_include:
         flags += ["-isystem", str(args.newlib_include.resolve())]
     sources = ("src/yaw_controller.c", "src/dm_mit.c", "src/gm6020.c",
@@ -64,6 +65,8 @@ def main():
     result = {"passed": True, "target": "Cortex-M4F, Thumb, hard-float, fpv4-sp-d16",
         "scope": "C compilation and static archives only; no board-specific linking/execution or timing claim",
         "compiler": subprocess.check_output([str(compiler), "--version"], text=True).splitlines()[0],
+        "compiler_reported_assembler": subprocess.check_output(
+            [str(compiler), "-print-prog-name=as"], text=True).strip(),
         "flags": flags, "object_count": len(objects),
         "objects": {name: {"bytes": path.stat().st_size,
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest()} for name, path in objects.items()},

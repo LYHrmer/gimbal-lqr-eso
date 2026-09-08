@@ -3,6 +3,7 @@
   "target": "Cortex-M4F, Thumb, hard-float, fpv4-sp-d16",
   "scope": "C compilation and static archives only; no board-specific linking/execution or timing claim",
   "compiler": "arm-none-eabi-gcc (15:10.3-2021.07-4) 10.3.1 20210621 (release)",
+  "compiler_reported_assembler": "/tmp/gimbal-arm-toolchain/usr/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/as",
   "flags": [
     "-std=c11",
     "-O2",
@@ -26,7 +27,6 @@
     "/home/lybm/dm4310-lqr-eso-controller/examples/stm32",
     "-I",
     "/home/lybm/dm4310-lqr-eso-controller",
-    "-B/tmp/gimbal-arm-toolchain/usr/bin/",
     "-isystem",
     "/tmp/gimbal-arm-toolchain/usr/include/newlib"
   ],
@@ -64,6 +64,6 @@
     "examples/stm32/yaw_periodic.h": "aa9fb4f14a9c3bfef576e2812abed2b5c233e2144b4b7655231ef394b7cf2ce1",
     "variants/dm4310/simulation_config.h": "f58de887c86778d97cda6ad8592709eeab461ab980f23ad1d5b2bbbf21201017",
     "variants/gm6020/simulation_config.h": "9117a5fc8909110fc4ffd72d7c8dd0a26a3c02ea3f756ec89b79e01ea1bd5122",
-    "tools/check_arm_build.py": "5de5147c5a8e86a9ab925bf18fd497de30f2242aa67c9675be8be47e945dbbf5"
+    "tools/check_arm_build.py": "481dcaebd70b4bf6e3aedb5fe71924b1ba5774de77417d61cef7d7779df89de3"
   }
 }
