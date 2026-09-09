@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "simulation_only": true,
+  "axis": "pitch",
+  "name": "dm4310_24v_pitch",
+  "motor_profile": "dm4310_24v.json",
+  "parameter_scope": "Synthetic illustrative pitched load, not identified from a RoboMaster vehicle. The motor protocol and envelope are inherited from the linked simulation-only motor profile.",
+  "coordinate_convention": "theta=0 is horizontal; positive theta and positive motor torque raise the barrel. Plant equation J*theta_ddot=tau_motor-B*theta_dot-C*tanh(theta_dot/vc)-G(theta)+tau_external; G=A*cos(theta)+B*sin(theta).",
+  "controller_overrides": {
+    "tracking_error_limit_rad": 0.4363323129985824
+  },
+  "gravity_model": {
+    "cos_nm": 0.45,
+    "sin_nm": 0.1
+  },
+  "plant_assumptions": {
+    "gravity_cos_nm": 0.45,
+    "gravity_sin_nm": 0.1,
+    "external_torque_nm": 0.05,
+    "coulomb_nm": 0.06,
+    "coulomb_velocity_rad_s": 0.04,
+    "physical_min_rad": -0.4363323129985824,
+    "physical_max_rad": 0.7853981633974483
+  },
+  "fixed_comparison_contract": "All three variants receive identical J/B/Kp/Kv/Ki, integral cap, ESO settings and total torque/slew limits. Original means the unchanged pinned upstream C with matching Ki. The two new variants differ only in the gravity model. No Ki0 baseline is substituted for GM6020.",
+  "preselected_primary": {
+    "center_deg": 20.0,
+    "frequency_hz": 1.0,
+    "amplitude_deg": 5.0,
+    "dt_s": 0.001,
+    "duration_s": 6.0,
+    "evaluation_start_s": 2.0,
+    "development_seeds": [
+      5300,
+      5301,
+      5302
+    ],
+    "holdout_seeds": [
+      5303,
+      5304,
+      5305,
+      5306,
+      5307
+    ]
+  },
+  "preselected_success_criteria": {
+    "minimum_mean_paired_rmse_improvement_percent": 2.0,
+    "minimum_improved_holdout_seeds": 4,
+    "maximum_mean_command_rms_ratio": 1.05,
+    "no_faults_or_physical_limit_crossings": true,
+    "mean_peak_error_must_not_increase": true
+  },
+  "scope_notes": [
+    "Gravity amplitude sqrt(0.45^2+0.10^2)=0.461 Nm corresponds to an illustrative mass-offset product 0.047 kg m; it is not a typical population parameter.",
+    "No hard-stop contact, elastic backlash, gravity vector estimation, chassis tilt or coupled yaw-pitch dynamics is simulated. A boundary crossing is a failed trajectory and is never clipped into a successful trace.",
+    "A zero software torque after a pitch fault is not a brake or safe hold. Mechanical support and system-level power/brake handling remain required."
+  ],
+  "joint_margin_rad": 0.017453292519943295
+}

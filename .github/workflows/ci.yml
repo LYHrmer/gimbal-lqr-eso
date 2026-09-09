@@ -58,3 +58,45 @@ jobs:
           python sim/run_motor_profiles.py --output build/ci-motor-profiles
           python tools/check_performance.py --report build/ci-motor-profiles/metrics.json --output build/ci-performance.json
           python tools/check_integration_convergence.py --output build/ci-convergence.json
+      - name: Recompute complete pitch experiment and check declared holdout groups
+        run: |
+          python sim/run_pitch_profiles.py --phase full --output build/ci-pitch
+          python - <<'PY'
+          import json
+          import math
+          from dataclasses import asdict
+          from pathlib import Path
+          from sim.run_pitch_profiles import (load_profiles, assess_group, cases, PitchCase,
+              Config, config_dict, LABELS, DEVELOPMENT_SEEDS, HOLDOUT_SEEDS)
+
+          report = json.loads(Path("build/ci-pitch/metrics.json").read_text())
+          assert report["phase"] == "full" and report["source_unchanged_during_run"] is True
+          profiles = load_profiles()
+          assert set(report["profiles"]) == {profile["name"] for profile in profiles}
+          complete_gate = []
+          for profile in profiles:
+              entry = report["profiles"][profile["name"]]
+              assert entry["integration_convergence"]["passed"] is True
+              assert [row["case"] for row in entry["cases"]] == [asdict(case) for case in cases()]
+              assert [row["seed"] for row in entry["development"]] == list(DEVELOPMENT_SEEDS)
+              for row in entry["development"]:
+                  assert row["case"] == asdict(PitchCase())
+                  for label in LABELS:
+                      metric = row["variants"][label]
+                      assert metric["completed"] and not metric["first_latched_fault"]
+                      assert not metric["first_physical_limit_crossing"]
+                      assert metric["actual_c_config"] == config_dict(Config(**profile["controller"]))
+                      for key in ("position_rmse_deg", "position_max_abs_error_deg", "command_rms_nm"):
+                          value = metric[key]
+                          assert type(value) in (int, float) and math.isfinite(value) and value >= 0
+              development = assess_group(profile, entry["development"], DEVELOPMENT_SEEDS)
+              holdout = assess_group(profile, entry["holdout"], HOLDOUT_SEEDS)
+              assert development == entry["development_acceptance"]
+              assert holdout == entry["holdout_acceptance"]
+              complete_gate.extend((development["passed"], holdout["passed"]))
+              print(profile["name"], "development:", development, "holdout:", holdout)
+              assert holdout["passed"], "Preselected pitch holdout performance gate failed"
+          assert report["all_primary_acceptance_passed"] == all(complete_gate)
+          print("Full development + holdout performance acceptance:", report["all_primary_acceptance_passed"])
+          print("Pitch CI asserts holdout performance only; retained GM development failure is not a pass.")
+          PY

@@ -22,8 +22,8 @@
   "baseline_rule": "Original core applies the profile comparison_baseline_controller_overrides to its controller configuration; New core uses the full controller configuration unchanged. The plant, trajectory and seeded measurement draws match. If these overrides differ, the comparison includes controller tuning, not implementation alone.",
   "numerical_comparison": "Each variant compared against itself with 4 vs 8 RK4 substeps; percentages use the 8-substep metric as denominator. Tracking errors and position differences are measured at matching 1 ms timestamps after startup.",
   "source_sha256": {
-    "src/yaw_controller.c": "5ade00dcb88b4bdbff2d00754cfbafac80e364f78a898349fcef3ac5013bb207",
-    "include/yaw_controller.h": "1d9c259d18928dcc58c71b872a82f0791b20f416b71cb65638e8962260954deb",
+    "src/yaw_controller.c": "72a8a23ef9d545e5de183c607725dfff7b004d0c8b2ac765f7915bb604bbac75",
+    "include/yaw_controller.h": "45b4c41d82d110346292665e0b48d74dd1941760e8a1fb69738a9020a1620a34",
     "sim/c_core.py": "d089b251f9eef8535d23c6f1c6af27127ff61a92337b01c7eeda54c04929c476",
     "sim/run_benchmarks.py": "6f53d7d5eb2ec7ec2ecc13bb5d00a07d695a69bd7bb2d967ba5fbafae4a2da4e",
     "sim/run_sensitivity.py": "bbc1d8b88169bb0a13dd6bac7744868a609bb927844a77c6ecd337245698c618",
@@ -38,7 +38,7 @@
     "profiles/gm6020_current.json": "0b384280635cef0c3422d0cd00482c04f6365f786a7f2968f4b581d78230530a"
   },
   "verification_script_sha256": "3cd6a53e31862d576ad2a949c5cc6892f947ece7cc5baeebe7b34064313df7b0",
-  "shared_library_sha256": "49d8dd54e15a0aace447f6949af27550544ecab61d81791bf75d1b0842cdbf0d",
+  "shared_library_sha256": "f6e78928302664200cdfa7cf2eaddd2389525a9a4b133ad343af581b78bdea10",
   "upstream": {
     "repository": "https://github.com/LamdaDay/YAW_Auto_Controller",
     "commit": "665c5b4ab1067d6cb63122c120822f27502953e5",
@@ -54,12 +54,12 @@
       }
     },
     "bridge_sha256": "05646fbab98341256c81ab8aba32177cd2e9c01f063eab83733f3bd26197aea5",
-    "build_key": "2a0813fc0407818c314149d7d49fd2e39cd20be0b0aee294295943d5adc1d58d",
+    "build_key": "38d7c9eaf3beafab532f49faa579691986e3bfe3741d33d852f60fa2b88d708b",
     "compiler": [
       "cc"
     ],
     "compiler_version": "cc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
-    "interface_sha256": "1d9c259d18928dcc58c71b872a82f0791b20f416b71cb65638e8962260954deb",
+    "interface_sha256": "45b4c41d82d110346292665e0b48d74dd1941760e8a1fb69738a9020a1620a34",
     "library_sha256": "252e5edfa5d1a7e9379aa24c87d0dc99579b997fff73fe3e05b35b7c167f4757",
     "options": [
       "-std=c99",
@@ -76,7 +76,7 @@
       "yaw_auto_lqr_eso_controller.c": "e4ae2e11cc7ec425aed152dba6ce43d0dad4c490086253464d33e912475bfa61",
       "yaw_auto_lqr_eso_controller.h": "ce70e33074ffb5708a72074bf027cebb507fc0f251f16ebdd6c17f6ee708fe3b"
     },
-    "library": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/libupstream_reference_2a0813fc0407818c.so",
+    "library": "/home/lybm/dm4310-lqr-eso-controller/build/upstream/665c5b4ab1067d6cb63122c120822f27502953e5/libupstream_reference_38d7c9eaf3beafab.so",
     "source_unmodified": true,
     "status_unavailable": -1,
     "comparison_contract": {

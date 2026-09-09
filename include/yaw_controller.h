@@ -125,6 +125,20 @@ YawStatus yaw_controller_step(YawController *controller,
                               const YawFeedback *feedback,
                               const YawReference *reference,
                               float dt_s, YawOutput *output);
+/* Known passive load: plant J*a = motor_torque - drag - load + residual.
+ * current_load is added BEFORE all output limits and integral back-calculation.
+ * previous_load is the held model load over the PREVIOUS interval, subtracted
+ * in the observer. Feedback applied_torque remains total motor torque.
+ * Both loads must be finite. The legacy step uses zero for both. */
+YawStatus yaw_controller_step_with_load(YawController *controller,
+                              const YawFeedback *feedback,
+                              const YawReference *reference,
+                              float dt_s, float current_load_nm,
+                              float previous_load_nm, YawOutput *output);
+/* Host/axis adapter fault injection; preserves an existing fault. Only fault
+ * statuses are accepted. This outputs software zero, not a physical stop. */
+YawStatus yaw_controller_latch_fault(YawController *controller, YawStatus reason,
+                                    YawOutput *output);
 const char *yaw_status_string(YawStatus status);
 
 #ifdef __cplusplus

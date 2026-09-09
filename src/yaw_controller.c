@@ -111,6 +111,16 @@ static YawStatus fault(YawController *c, YawOutput *out, YawStatus reason)
     return reason;
 }
 
+YawStatus yaw_controller_latch_fault(YawController *c, YawStatus reason, YawOutput *out)
+{
+    if (c == NULL) return fault(c, out, YAW_BAD_ARGUMENT);
+    if (!c->initialized) return fault(c, out, YAW_BAD_CONFIG);
+    if (c->fault != YAW_OK) return fault(c, out, c->fault);
+    if (reason < YAW_BAD_ARGUMENT || reason > YAW_NUMERIC_FAULT)
+        reason = YAW_BAD_ARGUMENT;
+    return fault(c, out, reason);
+}
+
 static float friction(const YawConfig *c, float velocity)
 {
     return c->coulomb_nm * tanhf(velocity / c->coulomb_velocity_rad_s);
@@ -132,6 +142,7 @@ static bool finite_history(const YawController *c)
  * p=exp(-w*h). This is NOT a proof for the full nonlinear saturated loop.
  */
 static bool update_observer(YawController *c, const YawFeedback *f, float h,
+                            float previous_load_nm,
                             uint32_t *flags)
 {
     const YawConfig *cfg = &c->config;
@@ -143,7 +154,7 @@ static bool update_observer(YawController *c, const YawFeedback *f, float h,
     }
     const float u = f->applied_torque_valid ? f->applied_torque_nm : c->last_torque_nm;
     const float net = u - cfg->damping_nm_s_rad * c->last_velocity_rad_s -
-        friction(cfg, c->last_velocity_rad_s) + c->observer_disturbance_nm;
+        friction(cfg, c->last_velocity_rad_s) + c->observer_disturbance_nm - previous_load_nm;
     const float acceleration = net / cfg->inertia_kg_m2;
     const float pred_p = c->observer_position_rad + h * c->observer_velocity_rad_s +
         0.5f * h * h * acceleration;
@@ -168,11 +179,20 @@ static bool update_observer(YawController *c, const YawFeedback *f, float h,
 YawStatus yaw_controller_step(YawController *c, const YawFeedback *f,
                               const YawReference *r, float h, YawOutput *out)
 {
+    return yaw_controller_step_with_load(c, f, r, h, 0.0f, 0.0f, out);
+}
+
+YawStatus yaw_controller_step_with_load(YawController *c, const YawFeedback *f,
+                              const YawReference *r, float h, float current_load_nm,
+                              float previous_load_nm, YawOutput *out)
+{
     if (out != NULL) memset(out, 0, sizeof(*out));
     if (c == NULL || f == NULL || r == NULL || out == NULL)
         return fault(c, out, YAW_BAD_ARGUMENT);
     if (!c->initialized) return fault(c, out, YAW_BAD_CONFIG);
     if (c->fault != YAW_OK) return fault(c, out, c->fault);
+    if (!isfinite(current_load_nm) || !isfinite(previous_load_nm))
+        return fault(c, out, YAW_NUMERIC_FAULT);
     const YawConfig *cfg = &c->config;
     if (!isfinite(h) || h < cfg->dt_min_s || h > cfg->dt_max_s)
         return fault(c, out, YAW_BAD_TIMING);
@@ -208,7 +228,7 @@ YawStatus yaw_controller_step(YawController *c, const YawFeedback *f,
         out->status = YAW_WARMUP;
         return YAW_WARMUP;
     }
-    if (!update_observer(c, f, h, &out->flags))
+    if (!update_observer(c, f, h, previous_load_nm, &out->flags))
         return fault(c, out, YAW_NUMERIC_FAULT);
 
     /* Filter the velocity error, so the reference and measurement receive the
@@ -240,7 +260,8 @@ YawStatus yaw_controller_step(YawController *c, const YawFeedback *f,
     const float i_used = clampf(i_unbounded, -cfg->integral_limit_nm, cfg->integral_limit_nm);
     if (i_unbounded != i_used) out->flags |= YAW_INTEGRAL_LIMITED;
     out->feedforward_nm = cfg->inertia_kg_m2 * r->acceleration_rad_s2 +
-        cfg->damping_nm_s_rad * r->velocity_rad_s + friction(cfg, r->velocity_rad_s);
+        cfg->damping_nm_s_rad * r->velocity_rad_s + friction(cfg, r->velocity_rad_s) +
+        current_load_nm;
     out->feedback_nm = cfg->k_position * ep + cfg->k_velocity * ev;
     out->integral_nm = i_used;
     out->compensation_nm = c->compensation_nm;

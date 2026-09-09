@@ -38,15 +38,21 @@ def main():
     # -B/usr/bin/ would select the host assembler instead of the ARM assembler.
     if args.newlib_include:
         flags += ["-isystem", str(args.newlib_include.resolve())]
-    sources = ("src/yaw_controller.c", "src/dm_mit.c", "src/gm6020.c",
-               "examples/stm32/yaw_periodic.c")
+    sources = ("src/yaw_controller.c", "src/gimbal_controller.c", "src/gimbal_coordinates.c",
+               "src/dm_mit.c", "src/gm6020.c",
+               "examples/stm32/yaw_periodic.c", "examples/stm32/gimbal_periodic.c")
     probe = args.output/"profile_probe.c"
     probe.write_text('#include "variants/dm4310/simulation_config.h"\n'
                      '#include "variants/gm6020/simulation_config.h"\n'
+                     '#include "variants/dm4310/pitch_simulation_config.h"\n'
+                     '#include "variants/gm6020/pitch_simulation_config.h"\n'
                      'int compile_profile_probe(void) {\n'
                      '    YawConfig d = dm4310_simulation_config();\n'
                      '    YawConfig g = gm6020_simulation_config();\n'
-                     '    return yaw_config_valid(&d) && yaw_config_valid(&g);\n}\n')
+                     '    GimbalConfig dp = dm4310_pitch_simulation_config();\n'
+                     '    GimbalConfig gp = gm6020_pitch_simulation_config();\n'
+                     '    return yaw_config_valid(&d) && yaw_config_valid(&g) &&\n'
+                     '           gimbal_config_valid(&dp) && gimbal_config_valid(&gp);\n}\n')
     objects = {}
     for source in [ROOT/name for name in sources]+[probe]:
         target = args.output/(source.stem+".o")
@@ -58,10 +64,14 @@ def main():
         objects[source.stem] = target
     for motor, codec in (("dm4310", "dm_mit"), ("gm6020", "gm6020")):
         subprocess.run([str(archiver), "rcs", str(args.output/f"libgimbal_{motor}.a"),
-                        str(objects["yaw_controller"]), str(objects[codec])], check=True)
-    source_names = list(sources)+["include/yaw_controller.h", "include/dm_mit.h", "include/gm6020.h",
+                        str(objects["yaw_controller"]), str(objects["gimbal_controller"]),
+                        str(objects["gimbal_coordinates"]),
+                        str(objects[codec])], check=True)
+    source_names = list(sources)+["include/yaw_controller.h", "include/gimbal_controller.h", "include/gimbal_coordinates.h",
+        "include/dm_mit.h", "include/gm6020.h", "examples/stm32/gimbal_periodic.h",
         "examples/stm32/yaw_periodic.h", "variants/dm4310/simulation_config.h",
-        "variants/gm6020/simulation_config.h", "tools/check_arm_build.py"]
+        "variants/gm6020/simulation_config.h", "variants/dm4310/pitch_simulation_config.h",
+        "variants/gm6020/pitch_simulation_config.h", "tools/check_arm_build.py"]
     result = {"passed": True, "target": "Cortex-M4F, Thumb, hard-float, fpv4-sp-d16",
         "scope": "C compilation and static archives only; no board-specific linking/execution or timing claim",
         "compiler": subprocess.check_output([str(compiler), "--version"], text=True).splitlines()[0],

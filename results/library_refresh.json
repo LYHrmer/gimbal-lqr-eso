@@ -1,0 +1,135 @@
+{
+  "scope": "Local host rerun after known-load/Pitch additions; no hardware performance claim",
+  "comparison_baseline_commit": "042eea43476695863ffafa1ff81c672582e6a863",
+  "yaw_reports": [
+    {
+      "report": "results/metrics.json",
+      "previous_report_sha256": "30f66b12a187b479146afa5e3f491fa2724451164378b713f68a6e9e1992dca6",
+      "current_report_sha256": "b663cd435d73157acf5593ad5681982572c5c498937608fc33badd2071074f9d",
+      "numeric_results_unchanged": true,
+      "changed_provenance_paths": [
+        "/core_header_sha256",
+        "/core_source_sha256",
+        "/shared_library_sha256"
+      ]
+    },
+    {
+      "report": "results/upstream_comparison/metrics.json",
+      "previous_report_sha256": "db43d3bd112a4669ab500b026c90342e80f5774c07d265925dbe150582c7986b",
+      "current_report_sha256": "0dd5dc144a6c920ceb171a1d6b381929018b0d54cf5a2688f4d6dd61569efbe2",
+      "numeric_results_unchanged": true,
+      "changed_provenance_paths": [
+        "/new_core/header_sha256",
+        "/new_core/shared_library_sha256",
+        "/new_core/source_sha256",
+        "/upstream/build_key",
+        "/upstream/interface_sha256",
+        "/upstream/library"
+      ]
+    },
+    {
+      "report": "results/robustness/metrics.json",
+      "previous_report_sha256": "ae62c2f0bb7bea74293240fad45c9eabb63e73147a5fbcc7b3ccdeb5719427c2",
+      "current_report_sha256": "74216a3258ffa6a0e7d28f47cc85abccf51a1c7ccf76d5777feddd711f2fc1ed",
+      "numeric_results_unchanged": true,
+      "changed_provenance_paths": [
+        "/new_core_source_sha256",
+        "/new_library_sha256",
+        "/source_sha256/include/yaw_controller.h",
+        "/upstream/build_key",
+        "/upstream/interface_sha256",
+        "/upstream/library"
+      ]
+    },
+    {
+      "report": "results/local_dynamics.json",
+      "previous_report_sha256": "11935bf88c5ed3e248393e7300dcee369a090b3611d932ff94c706e16b9fcda8",
+      "current_report_sha256": "3ea52af5a9b79e3c0fa1e8b5c36666deadf5473e59c98926c9e439f4483f71b7",
+      "numeric_results_unchanged": true,
+      "changed_provenance_paths": [
+        "/provenance/controller_c_sha256",
+        "/provenance/controller_h_sha256",
+        "/provenance/library_sha256"
+      ]
+    },
+    {
+      "report": "results/motor_profiles/metrics.json",
+      "previous_report_sha256": "e9feed9116f7e6edec0f9a6f992e7249f5ba8451c786b6ba09ad05e86fceff05",
+      "current_report_sha256": "a634053a47c1c25f511f3ed0767155c771a038266ed9cc623c23b374f5c9c964",
+      "numeric_results_unchanged": true,
+      "changed_provenance_paths": [
+        "/new_core_source_sha256",
+        "/shared_library_sha256",
+        "/source_sha256/include/yaw_controller.h",
+        "/upstream/build_key",
+        "/upstream/interface_sha256",
+        "/upstream/library"
+      ]
+    },
+    {
+      "report": "results/performance_acceptance.json",
+      "previous_report_sha256": "0641aed895a3d92fb8aa873fa3ec2ee199a7e68543134d08f08b0eb851e4f132",
+      "current_report_sha256": "0641aed895a3d92fb8aa873fa3ec2ee199a7e68543134d08f08b0eb851e4f132",
+      "numeric_results_unchanged": true,
+      "changed_provenance_paths": []
+    },
+    {
+      "report": "results/integration_convergence.json",
+      "previous_report_sha256": "6d002cdf6a6c9ef67cadcac4b57350589823ab679a2340be7a3d80baed664f7e",
+      "current_report_sha256": "70c866b80664f3c2c92e5ba6dcbf962d2337d66f54cb300ea446464e8bc958d1",
+      "numeric_results_unchanged": true,
+      "changed_provenance_paths": [
+        "/shared_library_sha256",
+        "/source_sha256/include/yaw_controller.h",
+        "/source_sha256/src/yaw_controller.c",
+        "/upstream/build_key",
+        "/upstream/interface_sha256",
+        "/upstream/library"
+      ]
+    }
+  ],
+  "all_yaw_numeric_results_unchanged": true,
+  "frozen_source_profile_library_sha256": {
+    "src/dm_mit.c": "0045e5b7bcc3195bcd11d6e3ddb5a577e7a68e80bba4d271948981770f8dbd16",
+    "src/gimbal_controller.c": "d1d07b53a6cee03c1cfc1e3ebcbe1dc4fd020afeb0899e14169dc46c7bf5f5b9",
+    "src/gimbal_coordinates.c": "f0bdb2ec6b0cabd276e6c98be7764753844f65be03261adf624eab8bb40f846c",
+    "src/yaw_controller.c": "72a8a23ef9d545e5de183c607725dfff7b004d0c8b2ac765f7915bb604bbac75",
+    "src/gm6020.c": "2f239b43d430bb01e07aec10467937dbcf720b86607ec0bdf94d0ba3be74a8f6",
+    "include/gimbal_controller.h": "a5739408502c114e3030fee973ec5c9b2631f087b411ccedc1b50ed7101ea046",
+    "include/dm_mit.h": "ffca3ce125afeb5c143e5863b8f7f54fe8e82beddfe4f191b9d9d6343f7957ea",
+    "include/gm6020.h": "f4eccad8d36e35f920f4605905bc876f7803af0ecbbfeea51407134854b3f136",
+    "include/gimbal_coordinates.h": "9a19c4ceb63220fe441c011455a56a587e1bc771badb9c00ad3cda980101b96b",
+    "include/yaw_controller.h": "45b4c41d82d110346292665e0b48d74dd1941760e8a1fb69738a9020a1620a34",
+    "profiles/gm6020_current_pitch.json": "58152a315fdd489df9cc62493e0cef44dcf13d895cada8964b08e9642a9beb18",
+    "profiles/gm6020_current.json": "0b384280635cef0c3422d0cd00482c04f6365f786a7f2968f4b581d78230530a",
+    "profiles/dm4310_24v.json": "2248e2d4d7af9c3e2ae6537cf3e5ed5c0305809874c7e0e24e6d5e23e8908f4b",
+    "profiles/dm4310_24v_pitch.json": "cce88adcc145a5fadb11039b2665e4c6dc9d2e1cce8d8ae00f36f36bae054c7f",
+    "variants/dm4310/simulation_config.h": "f58de887c86778d97cda6ad8592709eeab461ab980f23ad1d5b2bbbf21201017",
+    "variants/dm4310/pitch_simulation_config.h": "083756567feda588cf2f9ddf272e9c2f6605d2654a15d70f1f1437ae35e05e87",
+    "variants/gm6020/simulation_config.h": "9117a5fc8909110fc4ffd72d7c8dd0a26a3c02ea3f756ec89b79e01ea1bd5122",
+    "variants/gm6020/pitch_simulation_config.h": "077ad2cb1d616ff8aef676f117880e16aac3f1d89659893ab75b783d3f2fe0f4",
+    "build/libyaw_controller.so": "f6e78928302664200cdfa7cf2eaddd2389525a9a4b133ad343af581b78bdea10"
+  },
+  "frozen_inputs_changed_during_refresh": [],
+  "pitch_report_byte_identical": true,
+  "pitch_experiment_plan_byte_identical": true,
+  "pitch_full_performance_acceptance": false,
+  "checks": {
+    "release_ctest_passed": 7,
+    "python_unittest_passed": 34,
+    "address_undefined_sanitizer_ctest_passed": 7,
+    "leak_sanitizer": "disabled locally: execution environment uses ptrace",
+    "arm_compiler": "13.2.1",
+    "arm_object_count": 8,
+    "arm_scope": "Cortex-M4F compilation/static archives; no board firmware link or execution",
+    "ci_pitch_holdout_assertions_rechecked_locally": true,
+    "ci_pitch_invalid_development_or_missing_stress_rejected": true
+  },
+  "passed": true,
+  "defensive_regression_evidence": {
+    "report": "results/upstream_regressions.json",
+    "previous_report_sha256": "3fb03fd0b1b85f6661c2cfa504a6d6e00ca5951fe470faa7028cbfbe60ea1cf5",
+    "current_report_sha256": "d4a9dcc2c51d844884c6bb56e1fcbe40d7011ccb7f32a87abbb884bf126424da",
+    "cases_configuration_and_status_names_unchanged": true
+  }
+}
