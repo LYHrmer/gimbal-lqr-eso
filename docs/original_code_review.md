@@ -1,6 +1,6 @@
 # 原代码解读与改动依据
 
-阅读基准为 [LamdaDay/YAW_Auto_Controller，665c5b4](https://github.com/LamdaDay/YAW_Auto_Controller/tree/665c5b4ab1067d6cb63122c120822f27502953e5)，不随远端 main 变化。该方案作者为戴子轩 / 南京理工大学 Combat 战队。
+阅读基准为 [LamdaDay/YAW_Auto_Controller，665c5b4](https://github.com/LamdaDay/YAW_Auto_Controller/tree/665c5b4ab1067d6cb63122c120822f27502953e5)，不随远端 main 变化。该方案来自南京理工大学 Combat 战队。
 
 ## 原项目每个文件负责什么
 

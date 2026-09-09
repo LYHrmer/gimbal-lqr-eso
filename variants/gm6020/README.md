@@ -1,28 +1,62 @@
-# GM6020 适配版本
+# GM6020 · 电流控制版本
 
-本版使用 GM6020 官方 v1.4 手册描述的**转矩电流控制**，支持独立 Yaw/Pitch 实例；手瞄和自瞄均由上层生成参考后接入。公共 LQR–ESO 内核输出 N·m，适配器按显式转矩常数换算为 A，再编码为电流命令。编译的静态库是 `build/libgimbal_gm6020.a`；源码按使用的接口移植：
+[项目首页](../../README.md) · [文档导航](../../docs/README.md) · [DM4310 版本](../dm4310/README.md)
 
-- `include/yaw_controller.h`、`src/yaw_controller.c`
-- `include/gm6020.h`、`src/gm6020.c`
-- Pitch 便利适配：`include/gimbal_controller.h`、`src/gimbal_controller.c`
-- 最近等价圈方向目标助手：`include/gimbal_coordinates.h`、`src/gimbal_coordinates.c`
+本版将公共 C 内核的力矩输出换算为 GM6020 电流命令。Yaw、Pitch 各用独立实例；手瞄和自瞄在上层生成参考后接入同一控制器。
 
-先确认电机固件 `>=1.0.11.2`，并在 RoboMaster Assistant `>=2.7` 中开启电流环。适配器要求显式确认此模式；不能仅根据电机名假定支持，也不自动降级为电压控制。
+| 项目 | 本版约定 |
+| --- | --- |
+| 命令通道 | 官方 v1.4 手册中的转矩电流控制，`I = τ / Kt` |
+| 协议前提 | 电机固件 `≥1.0.11.2`，通过 RoboMaster Assistant `≥2.7` 开启电流环 |
+| 电流组帧 | 电机 1–4：`0x1FE`；电机 5–7：`0x2FE` |
+| 静态库 | `build/libgimbal_gm6020.a` |
 
-电机 1–4 的电流组帧是 `0x1FE`，5–7 是 `0x2FE`，指令 ±16384 对应 ±3 A。官方转矩常数参考为 `0.741 N·m/A`；±3 A 是协议范围，不是连续工作电流。仿真配置单独设置 1.62 A / 1.2 N·m 上限，仍不构成实际散热条件下的连续运行保证。
+适配器要求上层显式确认实物已开启电流模式，写入确认标志本身不会配置电机。传统 `0x1FF/0x2FF` 是电压帧；本库不自动降级到电压模式，也不直接把 N·m 缩放为电压指令。
 
-本目录 `simulation_config.h` 由 [仿真 JSON](../../profiles/gm6020_current.json) 生成，`gm6020_simulation_config()` 只用于仿真示例。负载 `J/B` 没有根据型号自动确定，必须针对自己的整车重新辨识。
+## 需要移植哪些文件
 
-另有由 [Pitch JSON](../../profiles/gm6020_current_pitch.json) 生成的 `pitch_simulation_config.h`。Pitch 重力角与机械编码器零位分别标定，重力前馈必须进入最终限幅和抗饱和之前；不要把它追加到已限制的电流命令后面。完整接口见 [Pitch 接入](../../docs/pitch_integration.md)。
+可使用目标 STM32 工具链编译的静态库，也可按所需功能将以下 C 文件与头文件加入原工程；电脑端构建的库不能直接链接到固件。
 
-本次选择慢积分 `Ki=2Kp`、积分上限 0.2 N·m、回算速率 2 s⁻¹，速度误差滤波关闭。主工况收益包含这项配置变化；同积分原版的额外对照和延时退化边界见 [最终验收报告](../../docs/validation_report.md)。这组参数仍需结合实际 CAN 延时与负载重新验证。
+| 功能 | 源码 | 接口 |
+| --- | --- | --- |
+| 实时控制内核，必选 | [yaw_controller.c](../../src/yaw_controller.c) | [yaw_controller.h](../../include/yaw_controller.h) |
+| 电流协议适配，必选 | [gm6020.c](../../src/gm6020.c) | [gm6020.h](../../include/gm6020.h) |
+| Pitch 重力与关节边界，可选 | [gimbal_controller.c](../../src/gimbal_controller.c) | [gimbal_controller.h](../../include/gimbal_controller.h) |
+| 最近等价圈方向参考，可选 | [gimbal_coordinates.c](../../src/gimbal_coordinates.c) | [gimbal_coordinates.h](../../include/gimbal_coordinates.h) |
 
-上段归因针对 Yaw。独立 Pitch 比较保持原/新相同 Ki：留出组平均配对 RMSE 降低 2.94%，4/5 改善；但开发组只有 1/3 改善且未通过预定门槛，因此 Pitch 总验收仍为 false，不能宣传为 GM Pitch 在全部分组稳定改善。CI 完整重跑实验，性能断言只覆盖预定留出组，并保留开发失败；[完整报告](../../docs/pitch_validation.md)也公开长延迟与高重力退化。
+已有 STM32 任务与 CAN 驱动可继续使用；[Yaw/Pitch 周期薄层](../../examples/stm32/gimbal_periodic.c) 提供回调对接示例。构建与周期接口见 [STM32 接入说明](../../docs/stm32_integration.md)。
 
-接入时，先对每个电机单独做 N·m→电流编码，再由整车的统一 CAN 调度器收集**同组全部电机**的命令，最后发送完整组帧。不能在 yaw 单轴周期中把其他槽位清零并发送，否则会覆盖同组 pitch 或其他电机的输出。第 5–7 组的第四个槽位保留为零。
+## 接入顺序
 
-反馈编码器 0–8191 对应一圈、速度单位 rpm；适配层转换为 rad/rad/s。实际转矩电流反馈先保留原始整数，只有确认本固件的反馈比例后再转换；命令比例不能无证据地套给反馈。
+1. **确认驱动配置。** 核对固件、电流模式、CAN ID、转矩常数与应用限额，并由上层管理使能、失能和通信看门狗。
+2. **准备每轴输入。** 将反馈编码器 0–8191 与 rpm 转换为连续输出轴 rad / rad·s⁻¹，传入源数据年龄和一致参考；Pitch 另需机械关节姿态与重力倾角。
+3. **计算并转换力矩。** 仅在上层允许驱动且周期状态为 `YAW_OK` 或 `YAW_WARMUP` 时，逐轴调用 `gm6020_torque_to_word()`，成功后将有效电流命令交给该组 CAN 帧的统一所有者。
+4. **集中发送完整组帧。** 收集同组全部电机命令后调用 `gm6020_pack_current_group()`；5–7 组的第四槽位显式保留为零。单轴周期不能清零其他电机槽位后独自发送。
+5. **处理停止与恢复。** 故障进入上层停止/失能流程，原因消除后显式复位；协议适配器不自动发送帧或使能电机。
 
-传统 `0x1FF/0x2FF` 是电压帧。本控制器不会把 N·m 直接缩放成电压指令；如果保留旧固件电压模式，需要额外的电流闭环或经过验证的执行器模型。详细接口见 [GM6020 接入说明](../../docs/gm6020_integration.md)。
+电流命令 `±16384` 对应 `±3 A`，官方转矩常数参考为 `0.741 N·m/A`。**协议范围不等于允许连续工作电流。** 实际转矩电流反馈先保留原始整数，确认本固件的反馈比例后再换算，不能直接套用命令比例。完整协议、版本与单位说明见 [GM6020 接入说明](../../docs/gm6020_integration.md)。
 
-接入层可使用 [STM32 Yaw/Pitch 周期薄层](../../examples/stm32/gimbal_periodic.c)。多于两轴时先由宿主完成关节参考/重力分配，不能把同一末端世界误差直接发给两个串联关节；三个独立实例的软件测试尚未验证耦合三轴性能，见 [多轴接入](../../docs/multiaxis_integration.md)。
+## 仿真配置与结果
+
+| 轴 | JSON 参数来源 | 生成的 C 参数示例 |
+| --- | --- | --- |
+| Yaw | [gm6020_current.json](../../profiles/gm6020_current.json) | [simulation_config.h](simulation_config.h) |
+| Pitch | [gm6020_current_pitch.json](../../profiles/gm6020_current_pitch.json) | [pitch_simulation_config.h](pitch_simulation_config.h) |
+
+**两份配置都标为 `simulation_only`。** `gm6020_simulation_config()` 及 Pitch 参数仅用于所声明的仿真负载；上机需重新辨识惯量、阻尼与延迟。仿真单独设置 1.62 A / 1.2 N·m 上限，不构成真实散热条件下的连续运行保证。
+
+| 验证组 | 对照方式 | 平均配对位置 RMSE 变化 |
+| --- | --- | --- |
+| Yaw：2 Hz、±5° | 新版慢积分配置，对原 Ki=0 基准 | 降低 **33.68%**，5/5 改善 |
+| Yaw：相同工况，额外对照 | 新版，对相同积分参数的原版 | **增加 4.00%**，未证明内核精度优势 |
+| Pitch：中心 +20°、1 Hz、±5° | 新版重力开启，对同 Ki 原版 | 降低 **2.94%**，4/5 改善 |
+
+**Yaw 主收益包含积分配置变化。** 当前采用慢积分 `Ki=2Kp`、积分上限 0.2 N·m、回算速率 2 s⁻¹，并关闭速度误差滤波；33.68% 不能归因于新内核本身，详见 [Yaw 验收报告](../../docs/validation_report.md)。
+
+**Pitch 总验收仍为 `false`。** 上表为预定留出组；开发组只有 1/3 改善，未通过预定门槛。CI 完整重跑实验并保留该失败，CI 通过不等于所有分组性能通过。长延迟、高重力等退化也保留在 [Pitch 完整验证](../../docs/pitch_validation.md) 中，尚无本项目的电机实测。
+
+## Pitch 与多轴使用
+
+Pitch 的重力角与机械编码器零点需要分别标定；重力前馈必须在总力矩限幅和抗饱和之前加入，不能追加到已限制的电流命令后，详见 [Pitch 接入](../../docs/pitch_integration.md)。Warmup 和故障零力矩不提供重力保持，物理保持措施由整车实现。
+
+大 Yaw、小 Yaw、Pitch 可各分配一个实例，上层负责参考分配与耦合负载；不能把同一末端世界误差直接发给两个串联关节。三个独立实例的软件支持不代表已实现大小 Yaw 协调或验证三轴闭环，见 [多轴接入边界](../../docs/multiaxis_integration.md)。
