@@ -2,6 +2,8 @@
 
 目前已有 Rudder 整车源码接入核对，但仍没有本装置的实物标定与实测记录。后续以实际装置参数替换仿真假设。以下每一步都保存配置与原始数据，便于 GitHub 结果追溯。
 
+**按电机阅读：** [GM6020 电流模式的辨识步骤](gm6020_identification.md) · [DM4310 MIT 的辨识步骤](dm4310_identification.md)。本页保留两者共用的实验阶段与 A/B 原则。
+
 辨识方法、参数映射和在线估计边界见 [模型辨识与整定](system_identification.md)。[RLS 实验工程](../experimental/online_rls/README.md) 可先在主机验证候选参数估计；它尚未实现本节所需的板级日志前端或自动增益切换。
 
 上机前已修复的编译选项、Pitch 浮点边界和 RLS 异常恢复问题，以及对应复跑入口，见 [实机前软件检查](prehardware_review.md)。
@@ -37,7 +39,7 @@
 
 ## 5. 记录格式
 
-以实际接收和使用的数据为准：[实机数据留存规范](test_data_recording.md) 已逐项核对 Rudder 原版及移植版，可直接复制[空白模板](../examples/test_data_template/README.md)。每个运行保留完整 `config.json`、`metadata.json`、`gimbal.csv` 和 `notes.md`；发送事件、视觉和控制器诊断按测试目的增加。
+以实际接收和使用的数据为准：[实机数据留存规范](test_data_recording.md) 已逐项核对 Rudder 原版及移植版，可直接复制[空白模板](../examples/gm6020_rudder_template/README.md)。每个运行保留完整 `config.json`、`metadata.json`、`gimbal.csv` 和 `notes.md`；发送事件、视觉和控制器诊断按测试目的增加。
 
 Rudder 两轴 GM6020 已有 IMU 姿态/gyro、电机角度/速度/电流原码和计算命令；温度需在收包处取单字节。真实轴端力矩、设备采样时间、CAN 完成时间和双温度不是现成字段，不列作必填。MIT 台架按 [DM4310 辨识](dm4310_identification.md) 使用独立记录格式。
 

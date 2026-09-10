@@ -8,7 +8,7 @@
 
 ```bash
 mkdir -p hardware_data
-cp -r examples/test_data_template hardware_data/my-run-001
+cp -r examples/gm6020_rudder_template hardware_data/my-run-001
 ```
 
 每次上电/实验使用新目录名。`hardware_data/` 已被 Git 忽略。

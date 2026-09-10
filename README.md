@@ -1,12 +1,14 @@
-# RoboMaster 云台控制器 · LQR + ESO
+# 云台控制器 · LQR + ESO
 
-[![软件测试与 ARM 编译](https://github.com/LYHrmer/robomaster-gimbal-lqr-eso/actions/workflows/ci.yml/badge.svg)](https://github.com/LYHrmer/robomaster-gimbal-lqr-eso/actions/workflows/ci.yml)
+[![软件测试与 ARM 编译](https://github.com/LYHrmer/gimbal-lqr-eso/actions/workflows/ci.yml/badge.svg)](https://github.com/LYHrmer/gimbal-lqr-eso/actions/workflows/ci.yml)
 [![C11](https://img.shields.io/badge/C-11-00599C)](include/yaw_controller.h)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **面向 STM32 的 C11 云台控制器库，适配 DM4310 MIT 与 GM6020 电流模式，支持 Yaw / Pitch。**
 
 输入位置、速度、加速度参考和反馈，输出电机总力矩；通过协议适配层接入已有 CAN 任务。手瞄与自瞄共用控制内核，Python 用于电脑端设计和仿真。
+
+**准备实机辨识：** [GM6020 怎么辨识 →](docs/gm6020_identification.md) · [DM4310 怎么辨识 →](docs/dm4310_identification.md)
 
 [1. 选择电机](#选择电机) → [2. 跑 C 测试](#先在电脑上跑通) → [3. 辨识参数](#模型辨识与参数整定) → [4. 接入 STM32](#接入-stm32) → [5. 核对收益](#验证结果怎么读)
 
@@ -47,8 +49,8 @@ DM4310 当前实现 MIT 通道，未实现一拖四模式。GM6020 传统电压�
 以下为 Linux 主机测试，只需 C 编译器、CMake ≥ 3.16 和数学库；不需要电机、CAN 设备或 Python。
 
 ```bash
-git clone https://github.com/LYHrmer/robomaster-gimbal-lqr-eso.git
-cd robomaster-gimbal-lqr-eso
+git clone https://github.com/LYHrmer/gimbal-lqr-eso.git
+cd gimbal-lqr-eso
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel
 ctest --test-dir build --output-on-failure
@@ -62,11 +64,16 @@ Python 环境、两种电机的仿真和固定原版 C 对照命令见 [快速�
 
 先校准力矩标度、时序和机构坐标，再估计每轴的惯量、阻尼、摩擦与 Pitch 重力。现有 LQR 工具可接收辨识后的 `J/B/dt`；权重、ESO 带宽和积分仍需经过独立闭环验证。
 
-- [辨识与整定说明](docs/system_identification.md)：数据怎样变成模型，以及哪些工作已经实现。
-- [DM4310 专项辨识](docs/dm4310_identification.md)：MIT 反馈、Yaw / Pitch 实验、最小二乘与一拖四的区别。
-- [实机应保留的数据](docs/test_data_recording.md)：按 Rudder 老工程核实字段来源，附可复制的空白模板。
-- [在线 RLS 实验工程](experimental/online_rls/README.md)：纯 C 候选参数估计、独立构建、逐样本合成实验与复现命令。
-- [RLS 数值验证与反例](results/online_rls/README.md)：同时保留正确数据下的参数恢复，以及噪声、时序错位和标度错误造成的偏差。
+[辨识与整定总览](docs/system_identification.md) 解释数据怎样变成模型，以及哪些工作已经实现。实机操作先选下面对应的一行：
+
+| 使用哪种电机 | 从哪里开始 | 数据与标度重点 |
+| --- | --- | --- |
+| **GM6020 电流模式** | [6020 辨识步骤](docs/gm6020_identification.md) → [Rudder 数据模板](examples/gm6020_rudder_template/README.md) | 电流反馈原码；先核准反馈比例和转矩常数，命令比例不能直接代用 |
+| **DM4310 MIT 模式** | [4310 辨识步骤](docs/dm4310_identification.md) → [MIT 数据模板](examples/dm4310_identification_template/README.md) | 位置/速度/转矩回读；先核准 PMAX/VMAX/TMAX，转矩回读不等于轴端实测 |
+
+两条路径都按 **核准信号与标度 → Yaw/Pitch 分步辨识 → 独立验证 → 整定控制器** 进行。Rudder 模板专门对应已核对的两轴 GM6020 工程；其他宿主需重新映射取样点。模板的字段来源见 [实机数据留存](docs/test_data_recording.md)。
+
+[在线 RLS 实验](experimental/online_rls/README.md) 可先验证 C 候选参数递推；[数值验证与反例](results/online_rls/README.md) 同时保留噪声、时序错位和标度错误造成的偏差。
 
 完整实测日志前端、实测参数导出、自动整定与运行中增益切换尚未实现。辨识得到的候选参数仍需独立轨迹和闭环检验：**参数拟合成功不等于控制性能改善**。
 

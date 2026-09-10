@@ -4,11 +4,13 @@
 
 第一次接入，按下面五步阅读；已有工程可以直接进入对应环节。仓库提供 C 控制器、协议适配和电脑端实验，宿主工程负责参考与坐标、模式管理及 CAN 调度。
 
+**只想开始辨识：** [GM6020 电流模式](gm6020_identification.md) · [DM4310 MIT 模式](dm4310_identification.md)。两者有各自的记录入口，先按电机选路，再读共用原理。
+
 | 步骤 | 首选入口 | 要解决的问题 |
 | --- | --- | --- |
 | 1. 选择电机 | [DM4310 MIT](../variants/dm4310/README.md) · [GM6020 电流版](../variants/gm6020/README.md) | 驱动模式、协议范围、所需文件是否匹配 |
 | 2. 跑通 C 测试 | [快速开始](quickstart.md) → [仿真说明](simulation.md) | 先编译实际 C 代码，再运行电脑端实验 |
-| 3. 辨识参数 | [辨识与整定](system_identification.md) → [单轴实验步骤](experiment_plan.md) | 如何校准数据、得到每轴模型并验证候选参数 |
+| 3. 辨识参数 | [GM6020](gm6020_identification.md) / [DM4310](dm4310_identification.md) → [共用原理](system_identification.md) | 如何校准各自反馈、得到每轴模型并验证候选参数 |
 | 4. 接入 STM32 | [周期接口](stm32_integration.md) → [实机前软件检查](prehardware_review.md) | 参考、反馈、力矩提交和故障恢复怎样接入 |
 | 5. 核对验证收益 | [Yaw 验证](validation_report.md) · [Pitch 验证](pitch_validation.md) | 改善来自哪里，哪些对照与工况仍未通过 |
 
@@ -29,6 +31,7 @@
 ## 模型辨识与参数整定
 
 - [辨识与整定](system_identification.md)：力矩标度、时间对齐、惯量/阻尼/摩擦/重力，以及哪些环节已经实现。
+- [GM6020 专项辨识](gm6020_identification.md)：电流模式、命令/反馈比例、Yaw/Pitch 实验与 Rudder 数据取样。
 - [DM4310 专项辨识](dm4310_identification.md)：MIT 模式的真实反馈、分阶段辨识、最小二乘与一拖四区别。
 - [在线 RLS 实验工程](../experimental/online_rls/README.md)：独立 C 估计器、主机数据窗口、构建与复现命令。
 - [RLS 合成验证与反例](../results/online_rls/README.md)：参数恢复、更新冻结，以及噪声、标度和时序错误带来的偏差。

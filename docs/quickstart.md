@@ -9,8 +9,8 @@
 以下命令面向 Linux / Bash；已验证 GCC 11、CMake 3.22、Python 3.10。C 构建需要支持 C11 的编译器和 CMake ≥ 3.16；此步骤不需要 Python。
 
 ```bash
-git clone https://github.com/LYHrmer/robomaster-gimbal-lqr-eso.git
-cd robomaster-gimbal-lqr-eso
+git clone https://github.com/LYHrmer/gimbal-lqr-eso.git
+cd gimbal-lqr-eso
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j 2
 ctest --test-dir build --output-on-failure

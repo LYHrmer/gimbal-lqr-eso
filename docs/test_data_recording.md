@@ -1,6 +1,6 @@
-# 实机测试需要保留什么数据
+# Rudder / GM6020：实机测试数据留存
 
-[项目首页](../README.md) · [实验步骤](experiment_plan.md) · [DM4310 辨识](dm4310_identification.md) · [空白记录模板](../examples/test_data_template/README.md)
+[项目首页](../README.md) · [GM6020 辨识](gm6020_identification.md) · [DM4310 辨识](dm4310_identification.md) · [空白记录模板](../examples/gm6020_rudder_template/README.md)
 
 **先保留一份主日志、实际配置和测试说明。字段以老工程真正接收或计算的量为准。** 本页核对了用户提供的 Rudder 云台源码及此前交付的 LQR 移植版，追踪实际赋值路径，而不只看结构体声明。公开仓库提供字段映射和空白模板，整车源码不在此仓库中。
 
@@ -30,7 +30,7 @@
 
 ## 2. 第一轮最小主日志
 
-模板 [gimbal.csv](../examples/test_data_template/gimbal.csv) 一行同时保留两轴，字段均对应上表已有数据，另加记录器自身的序号和记录时刻：
+模板 [gimbal.csv](../examples/gm6020_rudder_template/gimbal.csv) 一行同时保留两轴，字段均对应上表已有数据，另加记录器自身的序号和记录时刻：
 
 | 字段组 | CSV 字段 |
 | --- | --- |
@@ -101,7 +101,7 @@
 
 ## 4. 实验配置、说明与对比条件
 
-复制 [模板目录](../examples/test_data_template/README.md)，每次实验至少保留：
+复制 [模板目录](../examples/gm6020_rudder_template/README.md)，每次实验至少保留：
 
 - `metadata.json`：唯一运行/上电编号、原版或移植版、代码提交/未提交补丁、实际固件及哈希、编译选项、实际电机/驱动模式、安装负载、测试轨迹和对照分组。未知实物参数填 null，不能用源码假设冒充已确认。
 - `config.json`：实际生效的完整参数。旧版保留 PID 增益、增强项、滤波参数、参考限制及自瞄模型/补偿系数；移植版保留完整两轴 YawConfig、原重力曲线、输出映射、bridge 超时和构建开关。模板是空记录，不是配置加载器。
