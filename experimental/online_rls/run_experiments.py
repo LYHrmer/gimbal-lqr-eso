@@ -108,8 +108,8 @@ def build_library(build_dir, compiler, snapshot):
         raise ValueError('The compiler command is empty.')
     version = subprocess.run(command + ['--version'], check=True, text=True,
                              capture_output=True).stdout.strip().splitlines()[0]
-    # Use a generated host-only translation unit. The estimator itself remains
-    # byte-identical to the standalone C prototype and has no platform metadata.
+    # Use a generated host-only translation unit. The estimator remains
+    # independent of host provenance metadata.
     substitutions = {
         'RLS_SOURCE_SHA256': snapshot['src/rls_shadow.c'],
         'RLS_HEADER_SHA256': snapshot['include/rls_shadow.h'],
@@ -237,19 +237,35 @@ def run(lib, dataset, lam):
         raise RuntimeError(f'C RLS initialization failed with status {init_status}.')
     start_theta, start_p = bytes(s.theta), bytes(s.p)
     estimates, statuses, flags, evs = [], [], [], []
-    recent, matrix = [], np.zeros((2, 2))
+    recent = []
     accepted = []
     preserved = True
     for k, (x, label) in enumerate(zip(phi, y)):
         finite = np.isfinite(x).all() and np.isfinite(label)
         good = bool(valid[k] and finite and abs(label) < 100)
-        contribution = np.outer(x, x) if good else np.zeros((2, 2))
+        contribution = np.zeros((2, 2))
+        if good:
+            # Accumulate in float64 even when an input array uses float32.
+            # Finite features can still overflow their outer product; such a
+            # contribution must not poison the subsequent observation window.
+            with np.errstate(over='ignore', invalid='ignore'):
+                candidate = np.outer(np.asarray(x, dtype=np.float64),
+                                     np.asarray(x, dtype=np.float64))
+            if np.isfinite(candidate).all():
+                contribution = candidate
         recent.append(contribution)
-        matrix += contribution
         if len(recent) > 100:
-            matrix -= recent.pop(0)
-        eig = np.linalg.eigvalsh(matrix / max(len(recent), 1))
-        informative = len(recent) == 100 and eig[0] > 0.002 and eig[1] / eig[0] < 1e4
+            recent.pop(0)
+        # Rebuild the small past-window Gram matrix instead of subtracting an
+        # expired large value from an accumulated sum. Otherwise cancellation
+        # can permanently erase the clean samples still in the window. Scale
+        # before summation so averaging finite contributions need not overflow.
+        with np.errstate(over='ignore', invalid='ignore'):
+            matrix = np.sum(np.asarray(recent) / len(recent), axis=0)
+        eig = (np.linalg.eigvalsh(matrix) if np.isfinite(matrix).all()
+               else np.full(2, np.nan))
+        informative = (len(recent) == 100 and np.isfinite(eig).all()
+                       and eig[0] > 0.002 and eig[1] / 1e4 < eig[0])
         arr = (ct.c_float * 2)(*x)
         before = (bytes(s.theta), bytes(s.p))
         status = lib.rls_shadow_update(ct.byref(s), arr, ct.c_float(label), int(valid[k]), int(informative))

@@ -1,0 +1,48 @@
+{
+  "scope": "Same GM6020 fixture and endpoint-velocity probe against baseline and repaired C. No hardware execution.",
+  "baseline_commit": "2901a83f335ffacf97564755109edef79cdb7a0e",
+  "before": {
+    "exact_low": -0.418879022821784,
+    "exact_high": 0.7679448928683996,
+    "representable_low": -0.4188790023326874,
+    "representable_high": 0.767944872379303,
+    "cases": [
+      {
+        "side": "lower",
+        "outward_velocity": -0.100000001,
+        "status": 1,
+        "expected_status": 9
+      },
+      {
+        "side": "upper",
+        "outward_velocity": 0.100000001,
+        "status": 1,
+        "expected_status": 9
+      }
+    ],
+    "source_sha256": "d1d07b53a6cee03c1cfc1e3ebcbe1dc4fd020afeb0899e14169dc46c7bf5f5b9",
+    "all_outward_endpoints_rejected": false
+  },
+  "after": {
+    "exact_low": -0.418879022821784,
+    "exact_high": 0.7679448928683996,
+    "representable_low": -0.4188790023326874,
+    "representable_high": 0.767944872379303,
+    "cases": [
+      {
+        "side": "lower",
+        "outward_velocity": -0.100000001,
+        "status": 9,
+        "expected_status": 9
+      },
+      {
+        "side": "upper",
+        "outward_velocity": 0.100000001,
+        "status": 9,
+        "expected_status": 9
+      }
+    ],
+    "source_sha256": "66c95dc1b3dde7099e1827fccadb1e011058a1985e462ce9522d6456c754fbea",
+    "all_outward_endpoints_rejected": true
+  }
+}

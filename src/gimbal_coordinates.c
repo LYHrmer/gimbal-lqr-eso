@@ -2,8 +2,8 @@
 #include <math.h>
 #include <stddef.h>
 
-#ifdef __FAST_MATH__
-#error "gimbal_coordinates requires finite-value checks; compile without -ffast-math"
+#if defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && __FINITE_MATH_ONLY__ > 0)
+#error "Finite-value checks require disabling fast-math and finite-math-only"
 #endif
 
 bool gimbal_angle_near(float target, float current, float *result)

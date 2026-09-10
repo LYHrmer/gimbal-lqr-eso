@@ -4,8 +4,8 @@
 #include <stddef.h>
 #include <string.h>
 
-#ifdef __FAST_MATH__
-#error "yaw_controller requires finite-value checks; compile without -ffast-math"
+#if defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && __FINITE_MATH_ONLY__ > 0)
+#error "Finite-value checks require disabling fast-math and finite-math-only"
 #endif
 
 static float clampf(float x, float low, float high)

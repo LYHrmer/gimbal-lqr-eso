@@ -1,0 +1,19 @@
+[
+  {
+    "flags": [
+      "-O2"
+    ],
+    "compile_exit": 0,
+    "run_exit": 0,
+    "output": "nan_config_accepted=0\n"
+  },
+  {
+    "flags": [
+      "-O2",
+      "-ffinite-math-only"
+    ],
+    "compile_exit": 0,
+    "run_exit": 1,
+    "output": "nan_config_accepted=1\n"
+  }
+]

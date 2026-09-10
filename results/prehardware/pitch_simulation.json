@@ -1,0 +1,90 @@
+{
+  "scope": "Complete synthetic Pitch rerun compared to previously published profiles; includes failed development/boundary cases.",
+  "all_profile_data_equal_to_published": true,
+  "all_primary_acceptance_passed": false,
+  "profiles": {
+    "dm4310_24v_pitch": {
+      "all_profile_data_equal_to_published": true,
+      "development": {
+        "passed": true,
+        "failures": [],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "holdout": {
+        "passed": true,
+        "failures": [],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "integration_passed": true
+    },
+    "gm6020_current_v1_4_pitch": {
+      "all_profile_data_equal_to_published": true,
+      "development": {
+        "passed": false,
+        "failures": [
+          "Original C (same Ki): mean paired RMSE improvement below fixed threshold",
+          "Original C (same Ki): insufficient improved seeds",
+          "New C, gravity off: mean paired RMSE improvement below fixed threshold",
+          "New C, gravity off: insufficient improved seeds",
+          "New C, gravity off: mean position_max_abs_error_deg exceeds comparison limit"
+        ],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "holdout": {
+        "passed": true,
+        "failures": [],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "integration_passed": true
+    }
+  },
+  "provenance": {
+    "source_sha256": {
+      "sim/run_pitch_profiles.py": "ac9617cc57aa44ed05a4e4babfbec5e6d32dd9cb8f36a13c1a9acc655e6cad20",
+      "sim/pitch_core.py": "2c479bb4918082ced84f2a99aaeccd04950888aa514bfaac67324cfa27549caa",
+      "sim/run_benchmarks.py": "6f53d7d5eb2ec7ec2ecc13bb5d00a07d695a69bd7bb2d967ba5fbafae4a2da4e",
+      "sim/run_motor_profiles.py": "c88642ab143955b3f826feb57d24835944ffa377677502d70e8db0cb2fb251e0",
+      "sim/motor_envelope.py": "fdda80370b79633b96689edbe91896155652226f2057a8afb36d294258942d0a",
+      "sim/c_core.py": "d089b251f9eef8535d23c6f1c6af27127ff61a92337b01c7eeda54c04929c476",
+      "sim/upstream_reference.py": "c43adbf471f186ca7bdefeb017cc2b34c5c8cd82d53a3bb26c295ecbca89d0a1",
+      "src/yaw_controller.c": "ea75061c12c08acbe64f64bb9e5c1e3c0a5a46ee64a2f23222267d4948ad42eb",
+      "include/yaw_controller.h": "45b4c41d82d110346292665e0b48d74dd1941760e8a1fb69738a9020a1620a34",
+      "src/gimbal_controller.c": "66c95dc1b3dde7099e1827fccadb1e011058a1985e462ce9522d6456c754fbea",
+      "include/gimbal_controller.h": "fe714d9d4bb2e554e0296af4c5c430986da2f3b0bb99755e12c8ebc7549e7815",
+      "src/dm_mit.c": "45438303da2922daefde45332a2aaebbb65175bef3acb3fcb408bc47bccee8f2",
+      "src/gm6020.c": "93eed62315a2671640a0fe176d96fdf7e652e7b0cd6fc230428c6322863382b5",
+      "include/dm_mit.h": "ffca3ce125afeb5c143e5863b8f7f54fe8e82beddfe4f191b9d9d6343f7957ea",
+      "include/gm6020.h": "f4eccad8d36e35f920f4605905bc876f7803af0ecbbfeea51407134854b3f136",
+      "tools/fetch_upstream.py": "e998edd7c3e3fcf42705b885c6c2421d4f7a53998703cc04a9d690a119d76d97",
+      "profiles/dm4310_24v.json": "2248e2d4d7af9c3e2ae6537cf3e5ed5c0305809874c7e0e24e6d5e23e8908f4b",
+      "profiles/gm6020_current.json": "0b384280635cef0c3422d0cd00482c04f6365f786a7f2968f4b581d78230530a",
+      "profiles/dm4310_24v_pitch.json": "cce88adcc145a5fadb11039b2665e4c6dc9d2e1cce8d8ae00f36f36bae054c7f",
+      "profiles/gm6020_current_pitch.json": "58152a315fdd489df9cc62493e0cef44dcf13d895cada8964b08e9642a9beb18"
+    },
+    "shared_library_sha256": "e5ff95d2290e59a06065471134c96fa4c508148c7e580da9bf57cb33081b74e1"
+  }
+}

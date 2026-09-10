@@ -4,9 +4,55 @@
 #include <stddef.h>
 #include <string.h>
 
-#ifdef __FAST_MATH__
-#error "gimbal_controller requires finite-value checks; compile without -ffast-math"
+#if defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && __FINITE_MATH_ONLY__ > 0)
+#error "Finite-value checks require disabling fast-math and finite-math-only"
 #endif
+
+static double sum_roundoff(double a, double b, double sum)
+{
+    /* TwoSum residual: even double can lose a tiny positive float margin next
+     * to a large endpoint. Retain its sign when sum lands exactly on a float. */
+    const double b_rounded = sum - a;
+    return (a - (sum - b_rounded)) + (b - b_rounded);
+}
+
+bool gimbal_joint_reference_bounds(const GimbalConfig *c, float *low, float *high)
+{
+    if (low == NULL || high == NULL || low == high || c == NULL || !c->pitch_enabled ||
+        !isfinite(c->joint_min_rad) || !isfinite(c->joint_max_rad) ||
+        !isfinite(c->joint_margin_rad) || c->joint_margin_rad < 0.0f ||
+        c->joint_min_rad >= c->joint_max_rad) {
+        if (low != NULL) *low = 0.0f;
+        if (high != NULL) *high = 0.0f;
+        return false;
+    }
+    const double exact_low = (double)c->joint_min_rad + (double)c->joint_margin_rad;
+    const double exact_high = (double)c->joint_max_rad - (double)c->joint_margin_rad;
+    if (exact_low >= exact_high) {
+        *low = *high = 0.0f;
+        return false;
+    }
+    /* Round INTO the mathematical inset. A nearest float may otherwise fall
+     * outside the requested margin; comparisons and host clamps need the same
+     * representable endpoints. A single nextafter is sufficient from nearest. */
+    float lower = (float)exact_low;
+    float upper = (float)exact_high;
+    const double low_roundoff = sum_roundoff((double)c->joint_min_rad,
+                                             (double)c->joint_margin_rad, exact_low);
+    const double high_roundoff = sum_roundoff((double)c->joint_max_rad,
+                                              -(double)c->joint_margin_rad, exact_high);
+    if ((double)lower < exact_low || ((double)lower == exact_low && low_roundoff > 0.0))
+        lower = nextafterf(lower, INFINITY);
+    if ((double)upper > exact_high || ((double)upper == exact_high && high_roundoff < 0.0))
+        upper = nextafterf(upper, -INFINITY);
+    if (lower >= upper) {
+        *low = *high = 0.0f;
+        return false;
+    }
+    *low = lower;
+    *high = upper;
+    return true;
+}
 
 bool gimbal_config_valid(const GimbalConfig *c)
 {
@@ -15,9 +61,8 @@ bool gimbal_config_valid(const GimbalConfig *c)
         !isfinite(c->joint_min_rad) || !isfinite(c->joint_max_rad) ||
         !isfinite(c->joint_margin_rad)) return false;
     if (!c->pitch_enabled) return c->gravity_cos_nm == 0.0f && c->gravity_sin_nm == 0.0f;
-    return c->joint_margin_rad >= 0.0f && c->joint_min_rad < c->joint_max_rad &&
-        (double)c->joint_min_rad + (double)c->joint_margin_rad <
-        (double)c->joint_max_rad - (double)c->joint_margin_rad &&
+    float low, high;
+    return gimbal_joint_reference_bounds(c, &low, &high) &&
         isfinite(hypotf(c->gravity_cos_nm, c->gravity_sin_nm));
 }
 
@@ -90,8 +135,9 @@ YawStatus gimbal_controller_step(GimbalController *c, const YawFeedback *f,
         (double)r->position_rad - (double)f->position_rad;
     const double joint_ref_velocity = (double)p->joint_velocity_rad_s +
         (double)r->velocity_rad_s - (double)f->velocity_rad_s;
-    const double low = (double)cfg->joint_min_rad + (double)cfg->joint_margin_rad;
-    const double high = (double)cfg->joint_max_rad - (double)cfg->joint_margin_rad;
+    float low, high;
+    if (!gimbal_joint_reference_bounds(cfg, &low, &high))
+        return reject(c, out, YAW_BAD_CONFIG);
     if (p->joint_position_rad < cfg->joint_min_rad || p->joint_position_rad > cfg->joint_max_rad ||
         joint_reference < low || joint_reference > high ||
         (joint_reference <= low && joint_ref_velocity < 0.0) ||

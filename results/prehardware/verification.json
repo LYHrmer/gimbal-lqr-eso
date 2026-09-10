@@ -1,0 +1,72 @@
+{
+  "baseline_commit": "2901a83f335ffacf97564755109edef79cdb7a0e",
+  "scope": "Software reliability regressions; no new tracking-performance or hardware-performance claim.",
+  "source_sha256": {
+    "src/yaw_controller.c": "ea75061c12c08acbe64f64bb9e5c1e3c0a5a46ee64a2f23222267d4948ad42eb",
+    "src/gimbal_controller.c": "66c95dc1b3dde7099e1827fccadb1e011058a1985e462ce9522d6456c754fbea",
+    "src/gimbal_coordinates.c": "f74dd8fc35b014fd1167ede2f60bbe5d80c524e0ca0270a4b2704297f84514ea",
+    "src/dm_mit.c": "45438303da2922daefde45332a2aaebbb65175bef3acb3fcb408bc47bccee8f2",
+    "src/gm6020.c": "93eed62315a2671640a0fe176d96fdf7e652e7b0cd6fc230428c6322863382b5",
+    "include/gimbal_controller.h": "fe714d9d4bb2e554e0296af4c5c430986da2f3b0bb99755e12c8ebc7549e7815",
+    "examples/stm32/yaw_periodic.c": "2ec5b1d006d66dc2271101907237056a0197700b91333c8ca0f747ac7796eb06",
+    "examples/stm32/gimbal_periodic.c": "141cd1a5366963ea99f5c09a94f19b4def8353952f60e3523396935e9672ee7d",
+    "experimental/online_rls/src/rls_shadow.c": "7826c53ab332cd8b12a99c0f03d9621cef1e17faaa0610316428addf5ff05a10",
+    "experimental/online_rls/run_experiments.py": "5cc51a71b31c176c87727a41285c5624e137e609d39096023b7c8a38380fa475",
+    "experimental/online_rls/tests/test_experiment_runner.py": "aad859f9576f556d1c306e4682a545c8e8c2987665c8459b712c7703164f159b",
+    "tests/test_compiler_contract.py": "c68804b5d958912b6a971739822e673eec0f94ad3e0f546b3df5df9283583234",
+    "tests/test_gimbal_controller.c": "1bd37d0c86a35aa54e67ead45af788c068d15a821a93b95e30613849aa967015",
+    "tests/test_stm32_gimbal_periodic.c": "ac9c53545de67abc9179c1bd4b0afda57f569b0c2eb8fb930a75b8270adf0fdb",
+    "tests/test_pitch_simulation.py": "75ba4577322885f18f4222104e2ba1030ba40859cb72b713e6f62f8cf0156ee0"
+  },
+  "checks": {
+    "default_ctest": {
+      "passed": 7,
+      "total": 7
+    },
+    "asan_ubsan_including_optional_rls": {
+      "passed": 8,
+      "total": 8,
+      "environment": "Tests rerun outside ptrace sandbox, with LeakSanitizer enabled."
+    },
+    "root_python_tests": {
+      "passed": 47,
+      "total": 47
+    },
+    "compiler_contract": {
+      "sources": 8,
+      "modes": 4,
+      "normal_O2_builds": 8,
+      "unsupported_mode_rejections": 24
+    },
+    "pitch_exact_rational_oracle": {
+      "cases": 10000,
+      "accepted": 6620,
+      "rejected": 3380,
+      "disagreements": 0
+    },
+    "pitch_periodic_fault_recovery": {
+      "fault_types": 8,
+      "checks": "No subsequent ordinary submissions, one disable, latch until ACK, first recovery command zero"
+    },
+    "arm_compile": {
+      "passed": true,
+      "production_object_count": 8,
+      "separate_rls_object": true,
+      "hardware_execution": false
+    },
+    "pitch_full_rerun": {
+      "all_profile_data_equal_to_previous_archive": true,
+      "all_primary_acceptance_passed": false
+    },
+    "rls_fixed_experiment": {
+      "streams": 44,
+      "checked_csv_rows": 15000,
+      "nonprovenance_report_fields_equal_to_baseline": true,
+      "controller_performance_tested": false
+    },
+    "experimental_python_tests": {
+      "passed": 11,
+      "total": 11
+    }
+  }
+}

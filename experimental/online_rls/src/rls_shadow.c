@@ -4,8 +4,8 @@
 #include <stddef.h>
 #include <string.h>
 
-#ifdef __FAST_MATH__
-#error "rls_shadow requires finite checks; do not use -ffast-math"
+#if defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && __FINITE_MATH_ONLY__ > 0)
+#error "Finite-value checks require disabling fast-math and finite-math-only"
 #endif
 
 #define AT(matrix, row, col) ((matrix)[(row) * RLS_SHADOW_MAX_DIM + (col)])

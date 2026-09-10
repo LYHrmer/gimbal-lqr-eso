@@ -43,6 +43,16 @@ typedef struct {
 } GimbalController;
 
 bool gimbal_config_valid(const GimbalConfig *config);
+/* Pitch reference bounds, rounded inward to representable float endpoints.
+ * Host clamps and endpoint velocity checks must use these same values instead
+ * of recomputing joint_min + margin / joint_max - margin with float arithmetic.
+ * Only pitch_enabled and joint geometry are validated here; use
+ * gimbal_config_valid() for the complete controller/gravity configuration.
+ * Returns false if disabled, invalid, or fewer than two distinct floats fit
+ * inside the inset. On failure, non-NULL outputs are zeroed. Outputs must be
+ * distinct and must not alias config. Physical hard limits remain unchanged. */
+bool gimbal_joint_reference_bounds(const GimbalConfig *config,
+                                    float *low_rad, float *high_rad);
 bool gimbal_controller_init(GimbalController *controller, const GimbalConfig *config);
 void gimbal_controller_reset(GimbalController *controller);
 bool gimbal_controller_set_torque_limit(GimbalController *controller, float limit_nm);

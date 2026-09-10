@@ -1,0 +1,114 @@
+{
+  "scope": "Python PE frontend fault recovery only; no controller performance claim",
+  "before_script_sha256": "341b851a315d6a4b0c9c6196e4a99c2cc50922f7417e814d8f08159809c485ec",
+  "after_script_sha256": "5cc51a71b31c176c87727a41285c5624e137e609d39096023b7c8a38380fa475",
+  "injected_window": 250,
+  "window_expired_at": 350,
+  "protocol_bytes_identical": true,
+  "all_nonprovenance_report_fields_equal": true,
+  "differing_nonprovenance_report_fields": [],
+  "fixed_protocol_trials_compared": 44,
+  "performance_of_controller_tested": false,
+  "fault_recovery_comparison": [
+    {
+      "finite_input_magnitude": 1000000000000.0,
+      "before": {
+        "accepted_updates": 299,
+        "accepted_after_expiry": 148,
+        "samples_after_expiry": 2650,
+        "finite_gram_eigenvalues": true,
+        "rejected_state_preserved": true,
+        "final_relative_parameter_error": [
+          -0.0004679560661315918,
+          0.004533648490905762
+        ]
+      },
+      "after": {
+        "accepted_updates": 2801,
+        "accepted_after_expiry": 2650,
+        "samples_after_expiry": 2650,
+        "finite_gram_eigenvalues": true,
+        "rejected_state_preserved": true,
+        "final_relative_parameter_error": [
+          -0.00040590763092041016,
+          -0.0004553794860839844
+        ]
+      }
+    },
+    {
+      "finite_input_magnitude": 1e+38,
+      "before": {
+        "accepted_updates": 299,
+        "accepted_after_expiry": 148,
+        "samples_after_expiry": 2650,
+        "finite_gram_eigenvalues": true,
+        "rejected_state_preserved": true,
+        "final_relative_parameter_error": [
+          -0.0004679560661315918,
+          0.004533648490905762
+        ]
+      },
+      "after": {
+        "accepted_updates": 2801,
+        "accepted_after_expiry": 2650,
+        "samples_after_expiry": 2650,
+        "finite_gram_eigenvalues": true,
+        "rejected_state_preserved": true,
+        "final_relative_parameter_error": [
+          -0.00040590763092041016,
+          -0.0004553794860839844
+        ]
+      }
+    },
+    {
+      "finite_input_magnitude": 1e+200,
+      "before": {
+        "accepted_updates": 151,
+        "accepted_after_expiry": 0,
+        "samples_after_expiry": 2650,
+        "finite_gram_eigenvalues": false,
+        "rejected_state_preserved": true,
+        "final_relative_parameter_error": [
+          0.00090789794921875,
+          0.00034809112548828125
+        ]
+      },
+      "after": {
+        "accepted_updates": 2900,
+        "accepted_after_expiry": 2650,
+        "samples_after_expiry": 2650,
+        "finite_gram_eigenvalues": true,
+        "rejected_state_preserved": true,
+        "final_relative_parameter_error": [
+          -0.0004114508628845215,
+          -0.00043839216232299805
+        ]
+      }
+    },
+    {
+      "finite_input_magnitude": 1.7976931348623157e+308,
+      "before": {
+        "accepted_updates": 151,
+        "accepted_after_expiry": 0,
+        "samples_after_expiry": 2650,
+        "finite_gram_eigenvalues": false,
+        "rejected_state_preserved": true,
+        "final_relative_parameter_error": [
+          0.00090789794921875,
+          0.00034809112548828125
+        ]
+      },
+      "after": {
+        "accepted_updates": 2900,
+        "accepted_after_expiry": 2650,
+        "samples_after_expiry": 2650,
+        "finite_gram_eigenvalues": true,
+        "rejected_state_preserved": true,
+        "final_relative_parameter_error": [
+          -0.0004114508628845215,
+          -0.00043839216232299805
+        ]
+      }
+    }
+  ]
+}

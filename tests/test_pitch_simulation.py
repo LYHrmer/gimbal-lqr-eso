@@ -1,13 +1,17 @@
 """Pitch experiment physics, coordinate and fail-closed comparison checks."""
 from copy import deepcopy
+import ctypes as ct
 from dataclasses import asdict, replace
+from fractions import Fraction
 import math
+import random
+import struct
 import unittest
 
 import numpy as np
 
 from sim.c_core import Config
-from sim.pitch_core import PitchCore
+from sim.pitch_core import GimbalConfig, PitchCore
 from sim.run_benchmarks import config_dict
 from sim.run_pitch_profiles import (HOLDOUT_SEEDS, LABELS, PIX,
     PitchCase, assess_group, gravity_load, load_profiles, pitch_reference, run_trial)
@@ -36,6 +40,56 @@ class PitchActualCTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.core, cls.profiles = PitchCore(), load_profiles()
+
+    def test_reference_bounds_match_exact_rational_float_geometry(self):
+        bounds = self.core.lib.gimbal_joint_reference_bounds
+        bounds.argtypes = [ct.POINTER(GimbalConfig), ct.POINTER(ct.c_float),
+                           ct.POINTER(ct.c_float)]
+        bounds.restype = ct.c_bool
+        rng = random.Random(20260910)
+
+        def finite_float32():
+            # Sample the exponent range as well as the mantissa. Uniform
+            # decimal sampling would miss tiny margins beside large endpoints.
+            while True:
+                value = struct.unpack("<f", struct.pack("<I", rng.getrandbits(32)))[0]
+                if math.isfinite(value):
+                    return value
+
+        accepted = 0
+        for index in range(10000):
+            minimum, maximum = sorted((finite_float32(), finite_float32()))
+            margin = abs(finite_float32())
+            # These exact rationals preserve every bit of the input floats;
+            # the oracle does not repeat the C double-sum/TwoSum algorithm.
+            exact_low = Fraction(minimum) + Fraction(margin)
+            exact_high = Fraction(maximum) - Fraction(margin)
+            expected = False
+            if minimum < maximum and exact_low < exact_high:
+                lower = np.float32(float(exact_low))
+                upper = np.float32(float(exact_high))
+                if Fraction(float(lower)) < exact_low:
+                    lower = np.nextafter(lower, np.float32(np.inf))
+                if Fraction(float(upper)) > exact_high:
+                    upper = np.nextafter(upper, np.float32(-np.inf))
+                expected = bool(lower < upper)
+
+            config = GimbalConfig()
+            config.pitch_enabled = True
+            config.joint_min_rad, config.joint_max_rad = minimum, maximum
+            config.joint_margin_rad = margin
+            low, high = ct.c_float(float("nan")), ct.c_float(float("nan"))
+            actual = bounds(ct.byref(config), ct.byref(low), ct.byref(high))
+            with self.subTest(case=index, geometry=(minimum, maximum, margin)):
+                self.assertEqual(actual, expected)
+                if actual:
+                    self.assertEqual((low.value, high.value), (float(lower), float(upper)))
+                    self.assertGreaterEqual(Fraction(low.value), exact_low)
+                    self.assertLessEqual(Fraction(high.value), exact_high)
+                else:
+                    self.assertEqual((low.value, high.value), (0.0, 0.0))
+            accepted += actual
+        self.assertEqual((accepted, 10000 - accepted), (6620, 3380))
 
     def test_short_seeded_gravity_simulation_reproducible_total_torque_bounded(self):
         profile = self.profiles[0]

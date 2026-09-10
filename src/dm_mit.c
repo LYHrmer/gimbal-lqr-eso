@@ -1,7 +1,7 @@
 #include "dm_mit.h"
 
-#ifdef __FAST_MATH__
-#error "dm_mit requires finite-value checks; compile without -ffast-math"
+#if defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && __FINITE_MATH_ONLY__ > 0)
+#error "Finite-value checks require disabling fast-math and finite-math-only"
 #endif
 
 #include <math.h>

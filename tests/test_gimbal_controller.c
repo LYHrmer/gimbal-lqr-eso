@@ -1,6 +1,8 @@
 #include "gimbal_controller.h"
+#include "../variants/gm6020/pitch_simulation_config.h"
 
 #include <assert.h>
+#include <float.h>
 #include <math.h>
 #include <stdio.h>
 
@@ -338,6 +340,153 @@ static void test_joint_limits_and_relative_velocity(void)
     assert(gimbal_controller_step(&c, &f, &r, &p, step_s, &out) == YAW_WARMUP);
 }
 
+static void assert_inward_bounds(const GimbalConfig *cfg, float low, float high)
+{
+    const double exact_low = (double)cfg->joint_min_rad + (double)cfg->joint_margin_rad;
+    const double exact_high = (double)cfg->joint_max_rad - (double)cfg->joint_margin_rad;
+    assert(low < high);
+    assert((double)low >= exact_low && (double)high <= exact_high);
+    assert(low >= cfg->joint_min_rad && high <= cfg->joint_max_rad);
+    /* The chosen endpoints are the closest representable values on the
+     * permitted side, not arbitrary extra safety offsets. */
+    assert((double)nextafterf(low, -INFINITY) < exact_low);
+    assert((double)nextafterf(high, INFINITY) > exact_high);
+}
+
+static void test_representable_joint_reference_bounds(void)
+{
+    GimbalConfig cfg = gm6020_pitch_simulation_config();
+    float low = 0.0f, high = 0.0f;
+    assert(gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert_inward_bounds(&cfg, low, high);
+    /* The profile's straightforward float lower clamp rounds outside the
+     * requested one-degree inset. It must remain excluded. */
+    const float naive_low = cfg.joint_min_rad + cfg.joint_margin_rad;
+    assert(naive_low < low);
+    assert(low == nextafterf(naive_low, INFINITY));
+    assert(gimbal_config_valid(&cfg));
+
+    cfg = config();
+    cfg.joint_min_rad = -FLT_MAX;
+    cfg.joint_max_rad = FLT_MAX;
+    cfg.joint_margin_rad = FLT_MAX * 0.5f;
+    assert(gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert_inward_bounds(&cfg, low, high);
+    assert(gimbal_config_valid(&cfg));
+    cfg.joint_margin_rad = FLT_MAX;
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert(low == 0.0f && high == 0.0f && !gimbal_config_valid(&cfg));
+
+    /* Do not use a double sum as the oracle here: it loses these positive
+     * margins too. The mathematically correct nearest inward floats are known. */
+    cfg = config();
+    cfg.joint_margin_rad = FLT_TRUE_MIN;
+    assert(gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert(low == nextafterf(-1.0f, INFINITY));
+    assert(high == nextafterf(1.0f, -INFINITY));
+    cfg.joint_min_rad = 1e-30f;
+    cfg.joint_max_rad = 3.0f;
+    cfg.joint_margin_rad = 1.0f;
+    assert(gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert(low == nextafterf(1.0f, INFINITY) && high == 2.0f);
+    cfg.joint_min_rad = -3.0f;
+    cfg.joint_max_rad = -1e-30f;
+    assert(gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert(low == -2.0f && high == nextafterf(-1.0f, -INFINITY));
+    cfg.joint_min_rad = -FLT_MAX;
+    cfg.joint_max_rad = FLT_MAX;
+    cfg.joint_margin_rad = 1.0f;
+    assert(gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert(low == nextafterf(-FLT_MAX, INFINITY));
+    assert(high == nextafterf(FLT_MAX, -INFINITY));
+
+    cfg = config();
+    cfg.joint_min_rad = 1.0f;
+    cfg.joint_max_rad = nextafterf(1.0f, INFINITY);
+    const float ulp = cfg.joint_max_rad - cfg.joint_min_rad;
+    cfg.joint_margin_rad = 0.0f;
+    assert(gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert_inward_bounds(&cfg, low, high);
+    assert(gimbal_config_valid(&cfg));
+    cfg.joint_margin_rad = 0.25f * ulp; /* Positive double width, no float inside. */
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert(!gimbal_config_valid(&cfg));
+    cfg.joint_max_rad = nextafterf(cfg.joint_max_rad, INFINITY);
+    cfg.joint_margin_rad = 0.75f * ulp; /* One float inside is still zero travel. */
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, &high));
+    assert(low == 0.0f && high == 0.0f && !gimbal_config_valid(&cfg));
+
+    cfg = config();
+    cfg.control.inertia_kg_m2 = NAN;
+    assert(gimbal_joint_reference_bounds(&cfg, &low, &high)); /* Geometry only. */
+    assert(!gimbal_config_valid(&cfg));
+    cfg = config();
+    cfg.pitch_enabled = false;
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, &high));
+    cfg = config(); cfg.joint_margin_rad = NAN;
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, &high));
+    cfg = config(); cfg.joint_min_rad = -INFINITY;
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, &high));
+    cfg = config(); cfg.joint_max_rad = INFINITY;
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, &high));
+    cfg = config(); cfg.joint_margin_rad = -0.1f;
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, &high));
+    cfg = config();
+    assert(!gimbal_joint_reference_bounds(NULL, &low, &high));
+    assert(low == 0.0f && high == 0.0f);
+    assert(!gimbal_joint_reference_bounds(&cfg, NULL, &high) && high == 0.0f);
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, NULL) && low == 0.0f);
+    assert(!gimbal_joint_reference_bounds(&cfg, &low, &low) && low == 0.0f);
+}
+
+static void test_representable_endpoints_and_outward_velocity(void)
+{
+    const GimbalConfig cfg = gm6020_pitch_simulation_config();
+    float low, high;
+    assert(gimbal_joint_reference_bounds(&cfg, &low, &high));
+    YawFeedback f = feedback();
+    YawReference r = reference();
+    /* Keep the selected world reference equal to feedback: the encoder joint
+     * offset, not the world angle, is what reaches a mechanical endpoint. */
+    for (int side = 0; side < 2; ++side) {
+        const float endpoint = side == 0 ? low : high;
+        const float outward = side == 0 ? -0.1f : 0.1f;
+        for (int direction = -1; direction <= 1; ++direction) {
+            GimbalController c;
+            GimbalOutput out;
+            GimbalPose p = pose();
+            p.joint_position_rad = endpoint;
+            p.joint_velocity_rad_s = (float)direction * outward;
+            assert(gimbal_controller_init(&c, &cfg));
+            const YawStatus expected = direction > 0 ? YAW_POSITION_LIMIT : YAW_WARMUP;
+            assert(gimbal_controller_step(&c, &f, &r, &p, step_s, &out) == expected);
+            if (direction > 0) {
+                assert(out.control.torque_nm == 0.0f);
+                p.joint_velocity_rad_s = -outward;
+                assert(gimbal_controller_step(&c, &f, &r, &p, step_s, &out) == YAW_POSITION_LIMIT);
+            } else {
+                assert(gimbal_controller_step(&c, &f, &r, &p, step_s, &out) == YAW_OK);
+            }
+        }
+        for (int direction = -1; direction <= 1; direction += 2) {
+            GimbalController c;
+            GimbalOutput out;
+            GimbalPose p = pose();
+            const float toward = (float)direction * outward > 0.0f ? INFINITY : -INFINITY;
+            p.joint_position_rad = nextafterf(endpoint, toward);
+            assert(gimbal_controller_init(&c, &cfg));
+            const YawStatus expected = direction > 0 ? YAW_POSITION_LIMIT : YAW_WARMUP;
+            assert(gimbal_controller_step(&c, &f, &r, &p, step_s, &out) == expected);
+        }
+    }
+    GimbalController c;
+    GimbalOutput out;
+    GimbalPose p = pose();
+    p.joint_position_rad = cfg.joint_min_rad + cfg.joint_margin_rad;
+    assert(gimbal_controller_init(&c, &cfg));
+    assert(gimbal_controller_step(&c, &f, &r, &p, step_s, &out) == YAW_POSITION_LIMIT);
+}
+
 static void assert_same_control(const YawOutput *a, const YawOutput *b)
 {
     assert(a->status == b->status && a->flags == b->flags);
@@ -399,7 +548,9 @@ int main(void)
     test_pose_faults_latch_and_reset();
     test_known_load_faults_preserve_first_reason();
     test_joint_limits_and_relative_velocity();
+    test_representable_joint_reference_bounds();
+    test_representable_endpoints_and_outward_velocity();
     test_yaw_compatibility_and_instance_isolation();
-    puts("gimbal_controller: 9 behavior test groups passed");
+    puts("gimbal_controller: 11 behavior test groups passed");
     return 0;
 }

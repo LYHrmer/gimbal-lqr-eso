@@ -57,7 +57,9 @@ GM6020 的反馈是单圈 `0..8191` 计数，接入层应按输出轴方向、�
 
 M4/M7 的具体 FPU 能力取决于芯片；启动文件、FreeRTOS 端口和编译选项要匹配。`-mcpu`、`-mfpu` 和 `-mfloat-abi` 应在算法、协议、应用及所链接库中一致，不能混链 hard-float 与 soft-float ABI。单精度 FPU 不会自动让所有 `double` 运算成为硬件指令，本协议转换和部分保护运算含 `double`，应纳入测时。参考 [ST AN4044，Rev 2](https://www.st.com/resource/en/application_note/an4044-floating-point-unit-demonstration-on-stm32-microcontrollers-stmicroelectronics.pdf) 与 [GCC ARM 选项](https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html)。
 
-禁止 `-ffast-math`、`-Ofast` 以及允许假定所有输入有限的优化。`isfinite()` 与 NaN/Inf 故障检测是控制契约的一部分，源码在 `__FAST_MATH__` 下会拒绝编译。普通 `-O2` 可作为验证起点；是否满足 1 ms 必须在最终板卡、数学库、优化级别与任务负载下测量。
+禁止 `-ffast-math`、`-Ofast`、`-ffinite-math-only` 以及允许假定所有输入有限的优化。`isfinite()` 与 NaN/Inf 故障检测是控制契约的一部分：源码同时检查 `__FAST_MATH__` 和 `__FINITE_MATH_ONLY__ > 0`，避免单独开启有限数假设后绕过保护。`tests/test_compiler_contract.py` 对核心、协议、两个薄层和独立 RLS 共 8 个 C 文件检查正常 `-O2` 编译及三类危险选项拒绝。普通 `-O2` 可作为验证起点；是否满足 1 ms 必须在最终板卡、数学库、优化级别与任务负载下测量。
+
+还须保留浮点表达式的求值顺序，禁止 `-funsafe-math-optimizations` 或其他允许重关联的数学优化；Pitch 向内舍入使用的误差残差计算依赖这一点。编译器不一定为所有单独优化选项提供可检测宏，源码保护不能代替对整车编译选项的核查。
 
 在器件确实提供并允许使用 DWT cycle counter 时，按对应芯片/CMSIS 文档完成初始化后，围住实际调用测量：
 

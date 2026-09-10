@@ -4,8 +4,8 @@
 #include <math.h>
 #include <string.h>
 
-#ifdef __FAST_MATH__
-#error "GM6020 finite-value checks require compilation without fast-math"
+#if defined(__FAST_MATH__) || (defined(__FINITE_MATH_ONLY__) && __FINITE_MATH_ONLY__ > 0)
+#error "Finite-value checks require disabling fast-math and finite-math-only"
 #endif
 
 static const double pi_value = 3.14159265358979323846264338327950288;

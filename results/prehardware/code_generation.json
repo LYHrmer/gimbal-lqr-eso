@@ -1,0 +1,42 @@
+{
+  "baseline_commit": "2901a83f335ffacf97564755109edef79cdb7a0e",
+  "compiler": "cc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+  "scope": "Host O2 code generation for guard-only edits. Pitch bounds logic verified separately; no STM32 timing claim.",
+  "rows": [
+    {
+      "source": "src/yaw_controller.c",
+      "objects_byte_identical": true,
+      "object_sha256": "c18e259b034d3fd9e33507e97fa8f60a1e77fb1b06a68746a8eaa9908bdc2c56"
+    },
+    {
+      "source": "src/gimbal_coordinates.c",
+      "objects_byte_identical": true,
+      "object_sha256": "e754aa83b524fe2de45f96d910b850a702d01083f27d22b9d5530d53a335ed6f"
+    },
+    {
+      "source": "src/dm_mit.c",
+      "objects_byte_identical": true,
+      "object_sha256": "f0b349978b1a470e4de8b38e0078851749e0476a27f8bd06217533cd2359c445"
+    },
+    {
+      "source": "src/gm6020.c",
+      "objects_byte_identical": true,
+      "object_sha256": "6990c533cc0c8d6e16e09e97d1323e783ea2a573c5f5097de6281aa1786c04bc"
+    },
+    {
+      "source": "examples/stm32/yaw_periodic.c",
+      "objects_byte_identical": true,
+      "object_sha256": "e9e46160874e81210b390152f17c56c329837c49f27acca954150015d50beee6"
+    },
+    {
+      "source": "examples/stm32/gimbal_periodic.c",
+      "objects_byte_identical": true,
+      "object_sha256": "b9b06239fb6858fd4e5288218d53445005f27866ed5ba380e5263294cef2680e"
+    },
+    {
+      "source": "experimental/online_rls/src/rls_shadow.c",
+      "objects_byte_identical": true,
+      "object_sha256": "e34d1e5f57a1bd9b51721f738a0b81de085106c0a361f45dd7b931f55948d978"
+    }
+  ]
+}

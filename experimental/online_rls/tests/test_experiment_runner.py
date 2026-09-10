@@ -128,6 +128,71 @@ if not result['accepted'] or result['state'].initialized != 1:
         self.assertGreater(len(result['accepted']), 2500)
         self.assertLess(np.max(np.abs(result['estimates'][-1] / runner.SCALE - 1)), 0.01)
 
+    def test_large_finite_contribution_expires_without_corrupting_excitation(self):
+        injected_at = 250
+        expires_at = injected_at + runner.PROTOCOL['pe_window_samples']
+        for dtype in (np.float32, np.float64):
+            for magnitude in (1e12, 1e38):
+                with self.subTest(dtype=dtype.__name__, magnitude=magnitude):
+                    normal = list(runner.source(0))
+                    normal[1] = normal[1].astype(dtype)
+                    baseline = runner.run(self.lib, tuple(normal), 1.0)
+                    corrupted = list(normal)
+                    corrupted[1] = normal[1].copy()
+                    corrupted[1][injected_at] = [magnitude, magnitude]
+                    with np.errstate(over='raise', invalid='raise'):
+                        recovered = runner.run(self.lib, tuple(corrupted), 1.0)
+                    self.assertNotEqual(recovered['status'][injected_at], 0)
+                    self.assertTrue(recovered['rejected_preserved_exactly'])
+                    # Once the sample leaves the finite-memory PE statistic,
+                    # subsequent decisions depend only on the same clean data.
+                    np.testing.assert_allclose(recovered['min_eigenvalue'][expires_at:],
+                                               baseline['min_eigenvalue'][expires_at:],
+                                               rtol=1e-11, atol=1e-12)
+                    np.testing.assert_array_equal(recovered['pe'][expires_at:],
+                                                  baseline['pe'][expires_at:])
+                    self.assertTrue(np.all(recovered['status'][expires_at:] == 0))
+                    self.assertLess(np.max(np.abs(recovered['estimates'][-1] / runner.SCALE - 1)), 0.01)
+
+    def test_finite_overflowing_outer_product_does_not_poison_window(self):
+        injected_at = 250
+        expires_at = injected_at + runner.PROTOCOL['pe_window_samples']
+        baseline = runner.run(self.lib, runner.source(0), 1.0)
+        for magnitude in (1e200, np.finfo(np.float64).max):
+            with self.subTest(magnitude=magnitude):
+                corrupted = runner.source(0)
+                corrupted[1][injected_at] = [magnitude, magnitude]
+                with np.errstate(over='raise', invalid='raise'):
+                    recovered = runner.run(self.lib, corrupted, 1.0)
+                self.assertNotEqual(recovered['status'][injected_at], 0)
+                self.assertTrue(recovered['rejected_preserved_exactly'])
+                self.assertTrue(np.isfinite(recovered['min_eigenvalue']).all())
+                np.testing.assert_allclose(recovered['min_eigenvalue'][expires_at:],
+                                           baseline['min_eigenvalue'][expires_at:],
+                                           rtol=1e-11, atol=1e-12)
+                self.assertTrue(np.all(recovered['status'][expires_at:] == 0))
+
+    def test_finite_gram_with_overflowing_condition_ratio_is_rejected(self):
+        # Both eigenvalues can be finite while max_eigenvalue/min_eigenvalue
+        # overflows. The same condition-number gate must reject without warning.
+        normal = list(runner.source(0))
+        noise = normal[2] - normal[1].sum(axis=1)
+        normal[1][:, 1] *= 0.1
+        normal[2] = normal[1].sum(axis=1) + noise
+        baseline = runner.run(self.lib, tuple(normal), 1.0)
+        corrupted = list(normal)
+        corrupted[1] = normal[1].copy()
+        corrupted[1][250] = [1e154, 0.0]
+        with np.errstate(over='raise', invalid='raise'):
+            recovered = runner.run(self.lib, tuple(corrupted), 1.0)
+        self.assertFalse(recovered['pe'][250])
+        self.assertNotEqual(recovered['status'][250], 0)
+        self.assertTrue(recovered['rejected_preserved_exactly'])
+        np.testing.assert_allclose(recovered['min_eigenvalue'][350:],
+                                   baseline['min_eigenvalue'][350:],
+                                   rtol=1e-11, atol=1e-12)
+        np.testing.assert_array_equal(recovered['pe'][350:], baseline['pe'][350:])
+
 
 if __name__ == '__main__':
     unittest.main()
