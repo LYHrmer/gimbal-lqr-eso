@@ -1,0 +1,1 @@
+record_tick_ms,axis_id,can_bus,can_id,encoder_raw,speed_raw,current_raw,temperature_raw,payload_hex

@@ -29,6 +29,7 @@
 ## 模型辨识与参数整定
 
 - [辨识与整定](system_identification.md)：力矩标度、时间对齐、惯量/阻尼/摩擦/重力，以及哪些环节已经实现。
+- [DM4310 专项辨识](dm4310_identification.md)：MIT 模式的真实反馈、分阶段辨识、最小二乘与一拖四区别。
 - [在线 RLS 实验工程](../experimental/online_rls/README.md)：独立 C 估计器、主机数据窗口、构建与复现命令。
 - [RLS 合成验证与反例](../results/online_rls/README.md)：参数恢复、更新冻结，以及噪声、标度和时序错误带来的偏差。
 
@@ -42,6 +43,7 @@
 - [Yaw / Pitch 接入](pitch_integration.md)：独立轴实例、重力角、机械关节边界与前后周期已知负载。
 - [实机前软件检查](prehardware_review.md)：编译选项、Pitch 端点、RLS 异常恢复的失败复现与修复证据，以及仍待硬件验证的项目。
 - [单轴实验步骤与记录](experiment_plan.md)：协议核对、负载辨识、逐项开启控制功能和硬件 A/B 测试。
+- [实机数据留存与空白模板](test_data_recording.md)：依据 Rudder 原版/移植版逐项核对已有反馈、软件量和取样位置。
 
 三轴方案另见 [多轴参考与连续角](multiaxis_integration.md)。目前已有独立实例状态与角度助手；**大 Yaw → 小 Yaw → Pitch 协调层及三轴耦合闭环尚未实现**。Pitch 的姿态、机械关节角与重力角依据见 [坐标资料](pitch_sources.md)。
 

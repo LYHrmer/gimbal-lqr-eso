@@ -63,6 +63,8 @@ Python 环境、两种电机的仿真和固定原版 C 对照命令见 [快速�
 先校准力矩标度、时序和机构坐标，再估计每轴的惯量、阻尼、摩擦与 Pitch 重力。现有 LQR 工具可接收辨识后的 `J/B/dt`；权重、ESO 带宽和积分仍需经过独立闭环验证。
 
 - [辨识与整定说明](docs/system_identification.md)：数据怎样变成模型，以及哪些工作已经实现。
+- [DM4310 专项辨识](docs/dm4310_identification.md)：MIT 反馈、Yaw / Pitch 实验、最小二乘与一拖四的区别。
+- [实机应保留的数据](docs/test_data_recording.md)：按 Rudder 老工程核实字段来源，附可复制的空白模板。
 - [在线 RLS 实验工程](experimental/online_rls/README.md)：纯 C 候选参数估计、独立构建、逐样本合成实验与复现命令。
 - [RLS 数值验证与反例](results/online_rls/README.md)：同时保留正确数据下的参数恢复，以及噪声、时序错位和标度错误造成的偏差。
 

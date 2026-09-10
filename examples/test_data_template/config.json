@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "template_only": true,
+  "config_id": null,
+  "implementation": null,
+  "axes": [
+    {
+      "axis_id": "yaw",
+      "parameters": {}
+    },
+    {
+      "axis_id": "pitch",
+      "parameters": {}
+    }
+  ],
+  "reference_generation": {},
+  "filters": {},
+  "pitch_load_model": {},
+  "command_mapping": {},
+  "timeouts": {},
+  "build_options": {
+    "RUDDER_USE_LQR": null,
+    "RUDDER_AUTO_YAW_ENABLE": null
+  },
+  "parameter_snapshot_files": []
+}

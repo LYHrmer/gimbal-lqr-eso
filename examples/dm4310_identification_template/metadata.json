@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "data_kind": "empty_template_not_measurements",
+  "csv": "events.csv",
+  "run_id": null,
+  "boot_id": null,
+  "hardware": {
+    "motor_model_and_revision": null,
+    "driver_firmware": null,
+    "mode": "MIT",
+    "can_bus": null,
+    "motor_can_id": null,
+    "master_can_id": null,
+    "pmax_rad": null,
+    "vmax_rad_s": null,
+    "tmax_nm": null,
+    "timeout_readback_and_unit": null,
+    "torque_constant_and_gear_configuration_readback": null
+  },
+  "mechanics": {
+    "axis_role": null,
+    "load_and_assembly_description": null,
+    "other_axes_fixed": null,
+    "joint_angle_transform_from_motor_output": null,
+    "reported_position_wrap_period_rad": null,
+    "gravity_angle_source_and_zero_calibration": null
+  },
+  "timing": {
+    "host_clock": {
+      "source": null,
+      "unit": null,
+      "resolution_s": null,
+      "counter_bits": null,
+      "wrap_handling": null,
+      "reset_handling": null
+    },
+    "rx_timestamp_meaning": "host_reception_not_motor_sampling",
+    "tx_completion_observable": null,
+    "nominal_control_period_s": null,
+    "observed_feedback_interval_s": null,
+    "timestamp_sync_and_delay_evidence": null
+  },
+  "logging": {
+    "dropped_events_by_stream": {
+      "TX_SUBMIT": null,
+      "TX_COMPLETE": null,
+      "RX": null,
+      "CONTROL": null,
+      "GRAVITY": null
+    },
+    "drop_count_method": null
+  },
+  "experiment": {
+    "baseline_controller_commit_and_config": null,
+    "position_velocity_acceleration_torque_limits": null,
+    "excitation_amplitude_frequency_duration": null,
+    "preprocessing_and_window_definition": null,
+    "identification_runs": [],
+    "tuning_validation_runs": [],
+    "final_holdout_runs": []
+  },
+  "input_label": {
+    "source": null,
+    "torque_scale_status": "unverified",
+    "scale_calibration_and_actuator_dynamics_evidence": null,
+    "parameter_interpretation": "effective_or_normalized_until_scale_is_verified"
+  }
+}

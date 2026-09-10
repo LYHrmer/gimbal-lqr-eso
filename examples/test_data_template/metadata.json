@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "template_only": true,
+  "run_id": null,
+  "boot_id": null,
+  "started_at_with_timezone": null,
+  "implementation": null,
+  "firmware": {
+    "git_commit": null,
+    "dirty_patch_file": null,
+    "binary_file": null,
+    "binary_sha256": null,
+    "compiler_version": null,
+    "build_options_file": null
+  },
+  "hardware": {
+    "board": null,
+    "supply_setting_v": null,
+    "mounting_and_payload": null,
+    "axes": [
+      {
+        "axis_id": "yaw",
+        "motor_model": null,
+        "motor_firmware": null,
+        "control_mode": null,
+        "can_bus": null,
+        "feedback_can_id": null,
+        "command_can_id": null,
+        "command_slot": null,
+        "direction_and_zero_calibration": null,
+        "physically_verified": false
+      },
+      {
+        "axis_id": "pitch",
+        "motor_model": null,
+        "motor_firmware": null,
+        "control_mode": null,
+        "can_bus": null,
+        "feedback_can_id": null,
+        "command_can_id": null,
+        "command_slot": null,
+        "direction_and_zero_calibration": null,
+        "physically_verified": false
+      }
+    ]
+  },
+  "experiment": {
+    "purpose": null,
+    "ab_pair_id": null,
+    "controller_label": null,
+    "repetition": null,
+    "order_in_pair": null,
+    "reference_generation_or_file": null,
+    "initial_pose_description": null,
+    "result": null
+  },
+  "logging": {
+    "clock": "HAL_GetTick uint32 ms; MCU record/receive time, not device sample time",
+    "boot_or_wrap_notes": null,
+    "streams_recorded": [],
+    "sampling_and_snapshot_policy": null,
+    "stream_statistics": {},
+    "mode_enum_definition_file": null,
+    "logger_patch_file": null,
+    "logger_timing_impact": null,
+    "missing_fields_and_reasons": {}
+  },
+  "config_file": "config.json",
+  "notes_file": "notes.md"
+}
