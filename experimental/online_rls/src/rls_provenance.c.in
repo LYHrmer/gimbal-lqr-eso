@@ -1,0 +1,57 @@
+/* Generated only for the host regression harness; not part of the STM32 API. */
+#include "rls_shadow.h"
+#include <stddef.h>
+
+const char *rls_shadow_source_sha256(void)
+{
+    return "@RLS_SOURCE_SHA256@";
+}
+
+const char *rls_shadow_header_sha256(void)
+{
+    return "@RLS_HEADER_SHA256@";
+}
+
+const char *rls_shadow_compiler(void)
+{
+    return "@RLS_COMPILER@";
+}
+
+size_t rls_shadow_config_size(void)
+{
+    return sizeof(RlsShadowConfig);
+}
+
+size_t rls_shadow_state_size(void)
+{
+    return sizeof(RlsShadow);
+}
+
+size_t rls_shadow_config_offset(uint32_t field)
+{
+    switch (field) {
+    case 0U: return offsetof(RlsShadowConfig, dimension);
+    case 1U: return offsetof(RlsShadowConfig, forgetting_factor);
+    case 2U: return offsetof(RlsShadowConfig, covariance_initial);
+    case 3U: return offsetof(RlsShadowConfig, covariance_max);
+    case 4U: return offsetof(RlsShadowConfig, innovation_limit);
+    case 5U: return offsetof(RlsShadowConfig, theta_initial);
+    case 6U: return offsetof(RlsShadowConfig, theta_min);
+    case 7U: return offsetof(RlsShadowConfig, theta_max);
+    default: return SIZE_MAX;
+    }
+}
+
+size_t rls_shadow_state_offset(uint32_t field)
+{
+    switch (field) {
+    case 0U: return offsetof(RlsShadow, config);
+    case 1U: return offsetof(RlsShadow, theta);
+    case 2U: return offsetof(RlsShadow, p);
+    case 3U: return offsetof(RlsShadow, accepted_count);
+    case 4U: return offsetof(RlsShadow, rejected_count);
+    case 5U: return offsetof(RlsShadow, last_status);
+    case 6U: return offsetof(RlsShadow, initialized);
+    default: return SIZE_MAX;
+    }
+}

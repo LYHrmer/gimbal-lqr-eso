@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "scope": "Synthetic shadow RLS only; no controller performance claim",
+  "gates": {
+    "normal_parameter_recovery": true,
+    "normal_matches_same_prior_batch": true,
+    "forgetting_matches_same_prior_batch": true,
+    "slow_drift_tracking": true,
+    "rank_deficient_freezes": true,
+    "fault_rows_rejected": true,
+    "every_rejection_preserves_parameters_and_p": true
+  },
+  "normal_max_abs_relative_error": [
+    0.0004799962043762207,
+    0.002615213394165039
+  ],
+  "forgetting_tail_b_absolute_error": 0.0006599703948654908,
+  "checked_trials": 44,
+  "checked_trace_rows": 15000,
+  "report_sha256": "e1a14dc7adcdeaac8d1218bc13520d26af8a512887b75a32a1a285c0fba073da"
+}

@@ -62,7 +62,7 @@ SciPy `cont2discrete(method="zoh")` 给出精确零阶保持模型，`solve_disc
 .venv/bin/python -m unittest discover -s tests -p 'test_*.py'
 ```
 
-`tests/test_simulation.py` 使用标准 `unittest`，独立解析阻尼模型的 ZOH 解并检查离散闭环极点，拒绝 24 组非法调参输入，以有限差分检查启动包络内外的参考导数，并通过真实 C 库检查固定种子复现、输出限幅/变化率、在线降额优先、反馈超时故障锁存和显式复位。复现性测试只运行 0.3 s 的局部场景，不重跑全部基准，也不修改已发布结果。
+`tests/test_simulation.py` 使用标准 `unittest`，独立解析有阻尼模型与零阻尼双积分器的 ZOH 解并检查离散闭环极点，拒绝非有限及越界调参输入，以有限差分检查启动包络内外的参考导数，并通过真实 C 库检查固定种子复现、输出限幅/变化率、在线降额优先、反馈超时故障锁存和显式复位。复现性测试只运行 0.3 s 的局部场景，不重跑全部基准，也不修改已发布结果。
 
 原版与新版的直接对比由另一入口执行，结果单独放在 `results/upstream_comparison/`：
 

@@ -16,6 +16,10 @@ def design_lqr(inertia=0.039, damping=0.30, dt=0.001,
     values = dict(inertia=inertia, damping=damping, dt=dt,
                   q_position=q_position, q_velocity=q_velocity, r_torque=r_torque)
     for name, value in values.items():
+        if name == "damping":
+            if not math.isfinite(value) or value < 0:
+                raise ValueError("damping must be finite and nonnegative")
+            continue
         if not math.isfinite(value) or value <= 0:
             raise ValueError(f"{name} must be finite and positive")
     continuous_a = np.array([[0., 1.], [0., -damping / inertia]])
@@ -49,7 +53,7 @@ def design_lqr(inertia=0.039, damping=0.30, dt=0.001,
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--inertia", type=float, default=.039, help="kg m^2, assumed load")
-    parser.add_argument("--damping", type=float, default=.30, help="N.m s/rad")
+    parser.add_argument("--damping", type=float, default=.30, help="N.m s/rad, nonnegative")
     parser.add_argument("--dt", type=float, default=.001, help="seconds")
     parser.add_argument("--q-position", type=float, default=1600.)
     parser.add_argument("--q-velocity", type=float, default=1.)

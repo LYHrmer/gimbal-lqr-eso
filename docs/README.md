@@ -10,6 +10,7 @@
 | 先看项目是否适合自己的云台 | [项目首页](../README.md) → [电机版本](#选择电机与协议) → [验收结论](validation_report.md) |
 | 接入已有 STM32 工程 | 对应电机接入说明 → [STM32 接入](stm32_integration.md) → [单轴实验步骤](experiment_plan.md) |
 | 核查“优化”是否有证据 | [验收总览](validation_report.md) → [Pitch 独立验证](pitch_validation.md) → [复跑仿真](simulation.md) |
+| 为自己的机构辨识参数 | [辨识与整定](system_identification.md) → [在线 RLS 实验](../experimental/online_rls/README.md) → [单轴采集步骤](experiment_plan.md) |
 | 扩展到大 Yaw、小 Yaw、Pitch | [多轴接入边界](multiaxis_integration.md) → [Pitch 坐标与负载](pitch_integration.md) |
 
 ## 了解控制原理
@@ -42,6 +43,7 @@
 - [Pitch 独立验证](pitch_validation.md)：查看同 Ki 对照、重力前馈消融、载荷失配和各分组验收结果。
 - [仿真与调参说明](simulation.md)：了解 Python 如何调用真实 C 控制器，以及如何生成参考和复跑实验。
 - [性能验收口径](performance_acceptance.md)：核对 Yaw 主工况、开发/验证种子和预先确定的性能门槛。
+- [在线 RLS 合成验证](../results/online_rls/README.md)：检查候选参数恢复、更新冻结及测量/标度/时序失配反例；它不是控制性能验收。
 
 进一步核查实现和模型：
 

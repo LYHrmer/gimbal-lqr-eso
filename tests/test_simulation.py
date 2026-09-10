@@ -35,11 +35,29 @@ class LqrDesignTests(unittest.TestCase):
         self.assertAlmostEqual(result["spectral_radius"], float(np.max(np.abs(poles))), places=12)
         self.assertLess(result["dare_residual_max_abs"], 1e-6)
 
+    def test_zero_damping_matches_held_torque_double_integrator(self):
+        inertia, dt = .025, .002
+        result = design_lqr(inertia=inertia, damping=0., dt=dt)
+        analytic_a = np.array([[1., dt], [0., 1.]])
+        analytic_b = np.array([[dt * dt / (2. * inertia)], [dt / inertia]])
+        np.testing.assert_allclose(result["ad"], analytic_a, atol=1e-14, rtol=1e-12)
+        np.testing.assert_allclose(result["bd"], analytic_b, atol=1e-14, rtol=1e-12)
+        gain = np.array([[result["gain"]["k_position"], result["gain"]["k_velocity"]]])
+        self.assertLess(float(np.max(np.abs(np.linalg.eigvals(analytic_a - analytic_b @ gain)))), 1.)
+        self.assertLess(result["dare_residual_max_abs"], 1e-6)
+        near_zero = design_lqr(inertia=inertia, damping=1e-9, dt=dt)
+        np.testing.assert_allclose(list(result["gain"].values()),
+                                   list(near_zero["gain"].values()), rtol=1e-8, atol=1e-8)
+
     def test_invalid_parameters_are_rejected(self):
         for name in ("inertia", "damping", "dt", "q_position", "q_velocity", "r_torque"):
-            for value in (0., -1., float("nan"), float("inf")):
+            invalid_values = [-1., float("nan"), float("inf")]
+            if name != "damping":
+                invalid_values.append(0.)
+            message = "finite and nonnegative" if name == "damping" else "finite and positive"
+            for value in invalid_values:
                 with self.subTest(parameter=name, value=value):
-                    with self.assertRaisesRegex(ValueError, "finite and positive"):
+                    with self.assertRaisesRegex(ValueError, message):
                         design_lqr(**{name: value})
 
 

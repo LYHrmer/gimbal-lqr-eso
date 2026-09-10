@@ -1,0 +1,55 @@
+{
+  "scope": "Synthetic integral regression stream, actual float32 C RLS; no control-gain update or motor experiment",
+  "duration_s": 60.0,
+  "source_dt_s": 0.001,
+  "nonoverlap_window_samples": 20,
+  "nominal_update_s": 0.02,
+  "normalization_parameter_scale": [
+    0.025,
+    0.06
+  ],
+  "normalization_impulse_nm_s": 0.001,
+  "initial_normalized_parameters": [
+    0.6,
+    1.6
+  ],
+  "initial_inverse_information_diagonal": 100.0,
+  "independent_label_noise_normalized_std": 0.03,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "pe_window_samples": 100,
+  "pe_min_eigenvalue": 0.002,
+  "pe_max_condition": 10000.0,
+  "forgetting_time_valid_updates_s": 5.0,
+  "acceptance": {
+    "baseline_each_parameter_error_max": 0.05,
+    "c_vs_weighted_batch_normalized_abs_max": 0.002,
+    "drift_tail_b_error_nm_s_rad_max": 0.01,
+    "drift_tail_error_ratio_to_no_forgetting_max": 0.5,
+    "all_rejected_updates_preserve_theta_and_p_exactly": true
+  },
+  "diagnostic_only_cases": [
+    "regressor_noise",
+    "20ms_torque_label_timestamp_shift",
+    "torque_scale_1.25"
+  ],
+  "drift_scope": "One seed (100), b ramps 20-40 s; MAE scored only at 50-60 s",
+  "delay_scope": "Torque labels shifted against prescribed motion; NOT a solved actuator-delay closed loop",
+  "not_implemented": [
+    "closed-loop bias correction",
+    "firmware timestamp/PE frontend",
+    "online gain switching",
+    "hardware validation",
+    "three-axis dynamics"
+  ]
+}

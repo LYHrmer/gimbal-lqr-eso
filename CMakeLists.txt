@@ -4,6 +4,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 option(YAW_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
+option(GIMBAL_BUILD_RLS_EXPERIMENT "Build the separate, shadow-only online RLS experiment" OFF)
 
 add_library(yaw_controller SHARED src/yaw_controller.c src/gimbal_controller.c src/dm_mit.c src/gm6020.c)
 add_library(gimbal_coordinates STATIC src/gimbal_coordinates.c)
@@ -55,4 +56,9 @@ if(BUILD_TESTING)
         target_compile_options(test_multiaxis PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
     endif()
     add_test(NAME multiaxis COMMAND test_multiaxis)
+endif()
+
+# Experimental estimation never becomes a dependency of the motor controllers.
+if(GIMBAL_BUILD_RLS_EXPERIMENT)
+    add_subdirectory(experimental/online_rls)
 endif()

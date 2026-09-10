@@ -13,6 +13,43 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def check_arm_object(path):
+    header = path.read_bytes()[:52]
+    if header[:4] != b"\x7fELF" or header[4:6] != b"\x01\x01" or \
+            int.from_bytes(header[18:20], "little") != 40:
+        raise RuntimeError(f"Not a little-endian ELF32 ARM object: {path}")
+
+
+def compile_experimental_rls(compiler, flags, output):
+    """Compile separately; keep experimental code out of both motor archives."""
+    experiment = ROOT/"experimental/online_rls"
+    source = experiment/"src/rls_shadow.c"
+    target = output/"rls_shadow.o"
+    experimental_flags = [*flags, "-I", str(experiment/"include"), "-fstack-usage"]
+    subprocess.run([str(compiler), *experimental_flags, "-c", str(source),
+                    "-o", str(target)], check=True)
+    check_arm_object(target)
+    stack_usage = []
+    for line in target.with_suffix(".su").read_text().splitlines():
+        location, size, qualifier = line.rsplit("\t", 2)
+        stack_usage.append({"function": location.rsplit(":", 1)[-1],
+                            "bytes": int(size), "qualifier": qualifier})
+    if not stack_usage:
+        raise RuntimeError("RLS compiler emitted no stack-usage entries")
+    source_names = ("src/rls_shadow.c", "include/rls_shadow.h")
+    return {
+        "passed": True,
+        "scope": "Separate experimental object only; no archive integration or STM32 execution. "
+                 "Stack entries are compiler estimates per function, not a call-chain/WCET bound.",
+        "flags": experimental_flags,
+        "object": {"name": target.name, "bytes": target.stat().st_size,
+                   "sha256": hashlib.sha256(target.read_bytes()).hexdigest()},
+        "stack_usage": stack_usage,
+        "source_sha256": {name: hashlib.sha256((experiment/name).read_bytes()).hexdigest()
+                          for name in source_names},
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cc", default="arm-none-eabi-gcc")
@@ -20,6 +57,8 @@ def main():
                         help="Optional headers for an unpacked local toolchain")
     parser.add_argument("--output", type=Path, default=ROOT/"build/arm-check")
     parser.add_argument("--report", type=Path, default=ROOT/"results/arm_compile.json")
+    parser.add_argument("--include-experimental-rls", action="store_true",
+                        help="Also compile the separate shadow RLS object and report stack usage")
     args = parser.parse_args()
     compiler = shutil.which(args.cc)
     if compiler is None:
@@ -57,10 +96,7 @@ def main():
     for source in [ROOT/name for name in sources]+[probe]:
         target = args.output/(source.stem+".o")
         subprocess.run([str(compiler), *flags, "-c", str(source), "-o", str(target)], check=True)
-        header = target.read_bytes()[:52]
-        if header[:4] != b"\x7fELF" or header[4:6] != b"\x01\x01" or \
-                int.from_bytes(header[18:20], "little") != 40:
-            raise RuntimeError(f"Not a little-endian ELF32 ARM object: {target}")
+        check_arm_object(target)
         objects[source.stem] = target
     for motor, codec in (("dm4310", "dm_mit"), ("gm6020", "gm6020")):
         subprocess.run([str(archiver), "rcs", str(args.output/f"libgimbal_{motor}.a"),
@@ -81,6 +117,8 @@ def main():
         "objects": {name: {"bytes": path.stat().st_size,
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest()} for name, path in objects.items()},
         "source_sha256": {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in source_names}}
+    if args.include_experimental_rls:
+        result["experimental_rls"] = compile_experimental_rls(compiler, flags, args.output)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(result, indent=2)+"\n")
     print(json.dumps({key: result[key] for key in ("passed", "target", "compiler", "object_count", "scope")}, indent=2))

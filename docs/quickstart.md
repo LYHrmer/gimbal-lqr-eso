@@ -71,7 +71,7 @@ python3 -m venv .venv
 .venv/bin/python -m unittest discover -s tests -p 'test_*.py'
 ```
 
-预期为 `Ran 34 tests` 和 `OK`。获取脚本固定提交 `665c5b4ab1067d6cb63122c120822f27502953e5`，验证 SHA256 后缓存到 `build/upstream/`；后续命中完整缓存时不需要联网。完整测试本身不会重写已发布报告。
+预期全部 Python 测试通过并输出 `OK`。获取脚本固定提交 `665c5b4ab1067d6cb63122c120822f27502953e5`，验证 SHA256 后缓存到 `build/upstream/`；后续命中完整缓存时不需要联网。完整测试本身不会重写已发布报告。
 
 无法访问下载地址时，用包含该固定版本源码的本地目录替代获取命令，然后继续运行测试：
 
@@ -119,6 +119,8 @@ python3 -m venv .venv
 手瞄与自瞄可以共用控制内核，由上层生成连续的位置、速度、加速度参考。大 yaw—小 yaw—pitch 还需要参考分配和耦合处理；当前三实例测试验证状态隔离，不代表完成三轴整机闭环验证。
 
 ## 常见启动问题
+
+需要研究在线参数估计时，另按 [RLS 实验工程](../experimental/online_rls/README.md) 的说明启用 `GIMBAL_BUILD_RLS_EXPERIMENT`。默认构建仍是 7 个控制器 CTest；启用实验后增加一个 `rls_shadow` 测试。实验输出写入 `build/`，RLS 不会自动改变控制器配置。
 
 | 现象 | 处理方法 |
 | --- | --- |

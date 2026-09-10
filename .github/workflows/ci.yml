@@ -21,7 +21,35 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi libnewlib-dev
       - name: Compile Cortex-M4F C library and STM32 adapter
-        run: python3 tools/check_arm_build.py --newlib-include /usr/include/newlib --report build/ci-arm-compile.json
+        run: python3 tools/check_arm_build.py --newlib-include /usr/include/newlib --include-experimental-rls --report build/ci-arm-compile.json
+  online-rls-experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Build opt-in experiment and run all eight C tests
+        run: |
+          cmake -S . -B build-rls -DCMAKE_BUILD_TYPE=Release -DGIMBAL_BUILD_RLS_EXPERIMENT=ON
+          cmake --build build-rls -j 2
+          ctest --test-dir build-rls --output-on-failure
+      - name: Check opt-in build with address and undefined behavior sanitizers
+        run: |
+          cmake -S . -B build-rls-sanitize -DCMAKE_BUILD_TYPE=Debug -DYAW_SANITIZERS=ON -DGIMBAL_BUILD_RLS_EXPERIMENT=ON
+          cmake --build build-rls-sanitize -j 2
+          ctest --test-dir build-rls-sanitize --output-on-failure
+      - name: Recompute actual C RLS streams and independently check the evidence
+        run: |
+          python -m pip install -r requirements.txt
+          python -m unittest discover -s experimental/online_rls/tests -p 'test_*.py'
+          python -m unittest discover -s tests -p 'test_online_rls_results.py'
+          python experimental/online_rls/run_experiments.py --output build/ci-online-rls --build-dir build/ci-online-rls-library --no-plots
+          python tools/check_online_rls_results.py --report build/ci-online-rls/report.json --output build/ci-online-rls-independent.json
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
