@@ -8,25 +8,26 @@
 
 输入位置、速度、加速度参考和反馈，输出电机总力矩；通过协议适配层接入已有 CAN 任务。手瞄与自瞄共用控制内核，Python 用于电脑端设计和仿真。
 
-[快速开始](docs/quickstart.md) · [选择电机](#选择电机) · [STM32 接入](docs/stm32_integration.md) · [辨识与整定](docs/system_identification.md) · [验证结果](#验证结果怎么读) · [文档导航](docs/README.md)
+[1. 选择电机](#选择电机) → [2. 跑 C 测试](#先在电脑上跑通) → [3. 辨识参数](#模型辨识与参数整定) → [4. 接入 STM32](#接入-stm32) → [5. 核对收益](#验证结果怎么读)
 
-> **当前状态：软件验证阶段。** 已有真实 C 仿真、故障回归和 Cortex-M4F 编译检查；尚无本项目的电机实测数据，不提供直接烧录的整车固件。仓库参数是仿真示例，需要按实际机构辨识和标定。
+> **当前处于软件验证阶段。** 已有真实 C 仿真、故障回归和 Cortex-M4F 编译检查；尚无本项目的电机实测数据。示例参数需要按实际机构辨识和标定。
+
+全部资料见 [文档导航](docs/README.md)；最近的可复现问题、修复和回归见 [实机前软件检查](docs/prehardware_review.md)。
 
 ## 项目提供什么
 
 控制结构为 **动力学前馈 + 离散 LQR 反馈 + 残余扰动 ESO + 可选抗饱和积分**：前馈补偿已知模型，LQR 根据跟踪误差产生反馈，ESO 估计并补偿剩余扰动。原理与离散实现见 [控制设计](docs/control_design.md)。
 
-| 能力 | 当前范围 |
+| 组成 | 当前范围与职责 |
 | --- | --- |
-| Yaw | 连续角度控制；提供单圈方向目标的最近等价圈助手 |
-| Pitch | 独立的重力倾角、机械关节角与行程检查；重力前馈纳入总力矩限制和抗饱和 |
-| 手瞄 / 自瞄 | 上层统一生成参考与来源时间，接入同一控制器；模式管理由宿主工程负责 |
-| 实时 C 内核 | 静态状态、无动态分配、无 HAL / RTOS 依赖；检查实际周期、数据年龄和异常数值 |
-| 电机与示例 | 两种协议适配、独立静态库、STM32 周期调用示例 |
-| 在线参数估计（实验） | 独立 C RLS 只输出候选参数，默认不构建；未自动更新控制器 |
-| 多轴基础 | 每关节独立状态；**大 yaw → 小 yaw → pitch 的协调层与耦合闭环尚未实现** |
+| 实时 C 内核 | 面向 STM32；静态状态、无动态分配、无 HAL / RTOS 依赖，检查实际周期、数据年龄和异常数值 |
+| Yaw / Pitch | Yaw 使用连续角度；Pitch 分别处理重力倾角、机械关节角与行程，重力补偿纳入总力矩限制和抗饱和 |
+| 电机适配与示例 | 两种协议适配、独立静态库、STM32 周期调用示例 |
+| 宿主工程接入 | 已有工程负责坐标转换、手瞄/自瞄参考、模式管理、驱动使能和唯一 CAN 发送者 |
+| 在线 RLS 实验 | 独立 C 估计器只输出候选参数，**默认不构建、不更新控制器**；数据窗口与激励判断目前在 Python 中 |
+| 三轴扩展计划 | 已有独立轴实例与角度助手；**大 Yaw → 小 Yaw → Pitch 协调层及耦合闭环尚未实现** |
 
-本库主要提供控制算法和接口。机械坐标转换、整车任务、驱动使能和唯一 CAN 发送者由已有工程接入；建议沿用 [RoboMaster 官方例程的分层方式](docs/opensource_integration_notes.md)。
+仓库提供控制器库及接入示例，不包含直接烧录的整车固件；建议沿用 [RoboMaster 官方例程的分层方式](docs/opensource_integration_notes.md)。
 
 ## 选择电机
 
@@ -55,11 +56,7 @@ ctest --test-dir build --output-on-failure
 
 预期 **7 个 CTest 全部通过**。这一步生成的是主机测试程序和库；STM32 目标编译需要对应的 ARM 工具链。
 
-接下来按目的选择：
-
-- **看两种电机的仿真曲线**：[安装 Python 依赖并运行实验](docs/quickstart.md)。示例将新结果写到 `build/` 下。
-- **接入自己的 STM32 工程**：[周期示例与回调接口](docs/stm32_integration.md)，再核对所选电机协议。
-- **核对“优化”是否成立**：先看下面的结果口径，再按 [逐步复现实验](docs/quickstart.md) 运行固定原版 C 对照。
+Python 环境、两种电机的仿真和固定原版 C 对照命令见 [快速开始](docs/quickstart.md)。其中的命令将新结果写入 `build/`，便于与已发布结果比较。
 
 ## 模型辨识与参数整定
 
@@ -69,7 +66,35 @@ ctest --test-dir build --output-on-failure
 - [在线 RLS 实验工程](experimental/online_rls/README.md)：纯 C 候选参数估计、独立构建、逐样本合成实验与复现命令。
 - [RLS 数值验证与反例](results/online_rls/README.md)：同时保留正确数据下的参数恢复，以及噪声、时序错位和标度错误造成的偏差。
 
-RLS 是默认关闭的研究组件，不改变手瞄/自瞄控制链。完整实测日志前端、实测参数导出、自动整定与运行中增益切换尚未实现；**参数拟合成功不等于控制性能改善**。
+完整实测日志前端、实测参数导出、自动整定与运行中增益切换尚未实现。辨识得到的候选参数仍需独立轨迹和闭环检验：**参数拟合成功不等于控制性能改善**。
+
+## 接入 STM32
+
+从 [周期示例与回调契约](docs/stm32_integration.md) 开始，按所选电机连接反馈和力矩提交。手瞄/自瞄在宿主侧统一参考、坐标和来源时间；模式切换与 CAN 调度仍由已有工程负责。
+
+```mermaid
+flowchart LR
+    M["手瞄 / 自瞄"] --> R["宿主：参考与坐标转换"]
+    R --> C["C 控制器：前馈 + LQR + ESO + 积分"]
+    F["反馈与来源时间"] --> C
+    P["Pitch 已知负载"] --> C
+    C --> L["总力矩与变化率限制"]
+    L --> E["MIT / GM6020 电流编码"]
+    E --> H["宿主：CAN 与驱动状态管理"]
+```
+
+| 从哪里读代码 | 作用 |
+| --- | --- |
+| [yaw_controller.h](include/yaw_controller.h) / [yaw_controller.c](src/yaw_controller.c) | 单轴核心：初始化、周期计算、复位和在线力矩降额 |
+| [gimbal_controller.h](include/gimbal_controller.h) / [gimbal_controller.c](src/gimbal_controller.c) | Pitch 的重力、机械关节范围和负载历史 |
+| [gimbal_coordinates.h](include/gimbal_coordinates.h) | 连续角度与单圈方向目标的接口约定 |
+| [STM32 周期示例](examples/stm32/gimbal_periodic.c) / [回调定义](examples/stm32/gimbal_periodic.h) | 反馈快照、实际 dt、力矩提交和停止请求 |
+| [DM4310 参数目录](variants/dm4310/README.md) / [GM6020 参数目录](variants/gm6020/README.md) | 两电机的 Yaw / Pitch 仿真参数示例与移植文件 |
+| [仿真说明](docs/simulation.md) / [tests](tests) | 真实 C 调用、合成被控对象、接口和回归测试 |
+
+接入时统一使用 **rad、rad/s、rad/s²、N·m、s**。首次有效周期输出零，故障锁存后需显式复位；零力矩不能代替 Pitch 的机械保持。编译必须保留有限数检查，禁止 `-ffinite-math-only / -ffast-math / -Ofast`。坐标与重力约定见 [Pitch 接入](docs/pitch_integration.md)，恢复与边界验证见 [实机前软件检查](docs/prehardware_review.md)。
+
+三轴的参考分配、连续角度及宿主职责见 [多轴接入](docs/multiaxis_integration.md)。
 
 ## 验证结果怎么读
 
@@ -94,32 +119,6 @@ RLS 是默认关闭的研究组件，不改变手瞄/自瞄控制链。完整实
 | 实验模型和参数从哪里来 | [仿真假设](assumptions.md) · [参数来源](docs/parameter_sources.md) |
 
 早期 7 N·m 挑战条件下的 [原版直接对照](results/upstream_comparison/README.md) 与 [新版 ESO 消融](results/README.md) 单独保留；它们不是两种电机主工况，也不是论坛实验的逐点复现。
-
-## 控制链与代码入口
-
-```mermaid
-flowchart LR
-    M["手瞄 / 自瞄"] --> R["宿主：参考与坐标转换"]
-    R --> C["C 控制器：前馈 + LQR + ESO + 积分"]
-    F["反馈与来源时间"] --> C
-    P["Pitch 已知负载"] --> C
-    C --> L["总力矩与变化率限制"]
-    L --> E["MIT / GM6020 电流编码"]
-    E --> H["宿主：CAN 与驱动状态管理"]
-```
-
-| 从哪里读代码 | 作用 |
-| --- | --- |
-| [yaw_controller.h](include/yaw_controller.h) / [yaw_controller.c](src/yaw_controller.c) | 单轴核心：初始化、周期计算、复位和在线力矩降额 |
-| [gimbal_controller.h](include/gimbal_controller.h) / [gimbal_controller.c](src/gimbal_controller.c) | Pitch 的重力、机械关节范围和负载历史 |
-| [gimbal_coordinates.h](include/gimbal_coordinates.h) | 连续角度与单圈方向目标的接口约定 |
-| [STM32 周期示例](examples/stm32/gimbal_periodic.c) / [回调定义](examples/stm32/gimbal_periodic.h) | 反馈快照、实际 dt、力矩提交和停止请求 |
-| [DM4310 参数目录](variants/dm4310/README.md) / [GM6020 参数目录](variants/gm6020/README.md) | 两电机的 Yaw / Pitch 仿真参数示例与移植文件 |
-| [仿真说明](docs/simulation.md) / [tests](tests) | 真实 C 调用、合成被控对象、接口和回归测试 |
-
-接入时统一使用 **rad、rad/s、rad/s²、N·m、s**。核心接收连续角度，数据年龄取自真实来源时间；首次有效周期输出零，故障锁存后需显式复位。保留 `isfinite()` 检查，禁止 `-ffast-math / -Ofast`。故障零力矩不等于 Pitch 的机械保持，具体要求见 [STM32 接入](docs/stm32_integration.md) 和 [Pitch 接入](docs/pitch_integration.md)。
-
-更多原理、移植和复现文档已按阅读目的整理在 **[文档导航](docs/README.md)**。三轴扩展的职责与当前边界见 [多轴接入](docs/multiaxis_integration.md)。
 
 ## 来源与许可
 
