@@ -1,0 +1,861 @@
+{
+  "schema_version": 1,
+  "scope": "Synthetic Python diagnostics, not firmware replay or hardware data.",
+  "script_sha256": "192739c681af2595d714f7dc9a74cd1929aac98cf8078222e07912a3fef8044c",
+  "dependencies": {
+    "python": "3.10.12",
+    "numpy": "2.2.6",
+    "scipy": "1.15.3"
+  },
+  "protocol": {
+    "dt_s": 0.001,
+    "duration_s": 2.0,
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "reference": "0 to 5 degrees linear ramp during 0-0.2 s, then hold",
+    "rmse_window_s": [
+      0.8,
+      2.0
+    ],
+    "peak_error_window_s": [
+      0.0,
+      2.0
+    ],
+    "settling": "+/-0.25 degree band; time measured from 0.2 s; capped at 1800 ms",
+    "disturb_scale": 1.3,
+    "j_scale": 1.0,
+    "b_scale": 1.0,
+    "noise_deg": 0.01,
+    "integral_enabled": true,
+    "axes": {
+      "yaw": {
+        "name": "yaw",
+        "inertia": 0.0342594124,
+        "damping": 0.242238596,
+        "q_position": 400.0,
+        "q_velocity": 1.0,
+        "r_torque": 1.0,
+        "gain_row": 0,
+        "mapping_sign": 1.0,
+        "gravity_ff": false,
+        "integral_gain": 10.0,
+        "integral_limit": 0.2,
+        "antiwindup_rate": 10.0,
+        "torque_limit": 2.2,
+        "torque_slew": 500.0,
+        "eso_bandwidth": 140.0,
+        "eso_disturb_limit": 0.8,
+        "eso_comp_limit": 1.0,
+        "eso_comp_slew": 100.0,
+        "eso_comp_gain": 0.8
+      },
+      "pitch": {
+        "name": "pitch",
+        "inertia": 0.0201187059,
+        "damping": 0.207791924,
+        "q_position": 400.0,
+        "q_velocity": 1.0,
+        "r_torque": 1.0,
+        "gain_row": 1,
+        "mapping_sign": -1.0,
+        "gravity_ff": true,
+        "integral_gain": 20.0,
+        "integral_limit": 0.3,
+        "antiwindup_rate": 20.0,
+        "torque_limit": 2.2,
+        "torque_slew": 500.0,
+        "eso_bandwidth": 140.0,
+        "eso_disturb_limit": 0.8,
+        "eso_comp_limit": 1.0,
+        "eso_comp_slew": 100.0,
+        "eso_comp_gain": 0.8
+      }
+    },
+    "gyro_noise_rad_s": 0.02,
+    "gyro_lpf_q": 1.0,
+    "imu_rate_hz": 500.0,
+    "angle_quantum_deg": 0.0219,
+    "actuator_lag_s": 0.002
+  },
+  "limitations": [
+    "Both variants retain the archived simulation's enabled integral and gravity model.",
+    "The Python simulation does not implement the firmware's high-speed observer freeze.",
+    "The 80 Hz diagnostic changes only the gyro cutoff and is not a new tuned controller.",
+    "RMSE, peak, overshoot and settling are means over seeds; torque diagnostics use only the last seed in the original script.",
+    "A settling value of 1800 ms denotes the observation limit, not demonstrated convergence.",
+    "If any seed is censored, mean_ms_if_all_settled is null; the legacy capped mean is retained only in metrics."
+  ],
+  "rows": [
+    {
+      "gyro_lpf_hz": 0.82,
+      "axis": "pitch",
+      "delay_samples": 1,
+      "comp_gain": 0.0,
+      "metrics": {
+        "rmse_deg": 0.12717049361241484,
+        "max_err_deg": 1.1274463533021892,
+        "overshoot_pct": 4.573738475225149,
+        "settle_ms": 393.6666666666667,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.0,
+        "peak_tau_nm": 0.6277329177904369,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.12725202728065993,
+            "max_err_deg": 1.1267551987627304,
+            "overshoot_pct": 4.574439049820409,
+            "settle_ms": 393.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.6276478056162315,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.1267168301830873,
+            "max_err_deg": 1.1293094075939902,
+            "overshoot_pct": 4.518446175408872,
+            "settle_ms": 393.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.6263194772304241,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.12754262337349728,
+            "max_err_deg": 1.126274453549847,
+            "overshoot_pct": 4.628330200446165,
+            "settle_ms": 395.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.6277329177904369,
+            "diverged": false
+          },
+          "settle_censored": false
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 0,
+        "mean_ms_if_all_settled": 393.6666666666667
+      }
+    },
+    {
+      "gyro_lpf_hz": 0.82,
+      "axis": "pitch",
+      "delay_samples": 1,
+      "comp_gain": 0.8,
+      "metrics": {
+        "rmse_deg": 0.5516492985802247,
+        "max_err_deg": 1.2262920590229651,
+        "overshoot_pct": 18.835653376573422,
+        "settle_ms": 1800.0,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.06075801054711519,
+        "peak_tau_nm": 0.7215788786810831,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.5518783369499684,
+            "max_err_deg": 1.2178914736702262,
+            "overshoot_pct": 18.783892922224528,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.060509115829320684,
+            "peak_tau_nm": 0.7005439744671601,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.5447445402107758,
+            "max_err_deg": 1.2217689945375454,
+            "overshoot_pct": 18.614888213779306,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.060653084778794455,
+            "peak_tau_nm": 0.7046410296693819,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.5583250185799301,
+            "max_err_deg": 1.2392157088611235,
+            "overshoot_pct": 19.108178993716436,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.06075801054711519,
+            "peak_tau_nm": 0.7215788786810831,
+            "diverged": false
+          },
+          "settle_censored": true
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 3,
+        "mean_ms_if_all_settled": null
+      }
+    },
+    {
+      "gyro_lpf_hz": 0.82,
+      "axis": "pitch",
+      "delay_samples": 2,
+      "comp_gain": 0.0,
+      "metrics": {
+        "rmse_deg": 0.13019874350884855,
+        "max_err_deg": 1.1698995169033928,
+        "overshoot_pct": 4.928396057432032,
+        "settle_ms": 543.6666666666666,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.0,
+        "peak_tau_nm": 0.6440056173656115,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.1309033098322864,
+            "max_err_deg": 1.1687178860464424,
+            "overshoot_pct": 4.963261288264746,
+            "settle_ms": 390.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.643993034091876,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.12992648449809088,
+            "max_err_deg": 1.1715665410704927,
+            "overshoot_pct": 4.808619336838049,
+            "settle_ms": 388.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.6427792184831089,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.1297664361961684,
+            "max_err_deg": 1.1694141235932431,
+            "overshoot_pct": 5.0133075471933,
+            "settle_ms": 853.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.6440056173656115,
+            "diverged": false
+          },
+          "settle_censored": false
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 0,
+        "mean_ms_if_all_settled": 543.6666666666666
+      }
+    },
+    {
+      "gyro_lpf_hz": 0.82,
+      "axis": "pitch",
+      "delay_samples": 2,
+      "comp_gain": 0.8,
+      "metrics": {
+        "rmse_deg": 0.7117859638083459,
+        "max_err_deg": 1.3017606237721728,
+        "overshoot_pct": 26.035212475443455,
+        "settle_ms": 1800.0,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.06230215392494214,
+        "peak_tau_nm": 0.7329376354645817,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.71067591700596,
+            "max_err_deg": 1.2934425623426102,
+            "overshoot_pct": 25.86885124685221,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0622299627103525,
+            "peak_tau_nm": 0.7145527454930866,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.7051570649514488,
+            "max_err_deg": 1.289849249797647,
+            "overshoot_pct": 25.796984995952936,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.062161744365696305,
+            "peak_tau_nm": 0.7172103710746465,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.719524909467629,
+            "max_err_deg": 1.3219900591762612,
+            "overshoot_pct": 26.439801183525212,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.06230215392494214,
+            "peak_tau_nm": 0.7329376354645817,
+            "diverged": false
+          },
+          "settle_censored": true
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 3,
+        "mean_ms_if_all_settled": null
+      }
+    },
+    {
+      "gyro_lpf_hz": 0.82,
+      "axis": "yaw",
+      "delay_samples": 1,
+      "comp_gain": 0.0,
+      "metrics": {
+        "rmse_deg": 0.45864544017377806,
+        "max_err_deg": 1.0214932007987907,
+        "overshoot_pct": 16.333632921378555,
+        "settle_ms": 1800.0,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.0,
+        "peak_tau_nm": 0.4838411492727882,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.45888369901270387,
+            "max_err_deg": 1.019291933102706,
+            "overshoot_pct": 16.402255273321664,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.481987008444775,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.45905250150479227,
+            "max_err_deg": 1.0184025797136744,
+            "overshoot_pct": 16.332912086899043,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.4844736297833727,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.45800012000383816,
+            "max_err_deg": 1.026785089579992,
+            "overshoot_pct": 16.265731403914963,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.4838411492727882,
+            "diverged": false
+          },
+          "settle_censored": true
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 3,
+        "mean_ms_if_all_settled": null
+      }
+    },
+    {
+      "gyro_lpf_hz": 0.82,
+      "axis": "yaw",
+      "delay_samples": 1,
+      "comp_gain": 0.8,
+      "metrics": {
+        "rmse_deg": 2.021293388479949,
+        "max_err_deg": 3.7522753222182796,
+        "overshoot_pct": 74.51550054041088,
+        "settle_ms": 1800.0,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.19842776266080034,
+        "peak_tau_nm": 1.4672951340219547,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 2.01142708176842,
+            "max_err_deg": 3.740902368808797,
+            "overshoot_pct": 74.0496169516306,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.19743224877451396,
+            "peak_tau_nm": 1.4778510408865118,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 2.0200475795587307,
+            "max_err_deg": 3.7485517412895555,
+            "overshoot_pct": 74.45435115282756,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.19776909029558729,
+            "peak_tau_nm": 1.4332914343971326,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 2.0324055041126967,
+            "max_err_deg": 3.7673718565564873,
+            "overshoot_pct": 75.04253351677453,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.19842776266080034,
+            "peak_tau_nm": 1.4672951340219547,
+            "diverged": false
+          },
+          "settle_censored": true
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 3,
+        "mean_ms_if_all_settled": null
+      }
+    },
+    {
+      "gyro_lpf_hz": 80.0,
+      "axis": "pitch",
+      "delay_samples": 1,
+      "comp_gain": 0.0,
+      "metrics": {
+        "rmse_deg": 0.07931132429175042,
+        "max_err_deg": 1.6541091494610758,
+        "overshoot_pct": 3.4114624720523303,
+        "settle_ms": 80.66666666666667,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.0,
+        "peak_tau_nm": 0.4383052570521693,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.07988937975315095,
+            "max_err_deg": 1.6498395990720085,
+            "overshoot_pct": 3.3135739723138435,
+            "settle_ms": 80.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.4370865402567379,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.0771579785441295,
+            "max_err_deg": 1.6557636635288477,
+            "overshoot_pct": 3.6383758649738773,
+            "settle_ms": 80.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.4412947360788618,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.08088661457797079,
+            "max_err_deg": 1.656724185782371,
+            "overshoot_pct": 3.2824375788692706,
+            "settle_ms": 82.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.4383052570521693,
+            "diverged": false
+          },
+          "settle_censored": false
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 0,
+        "mean_ms_if_all_settled": 80.66666666666667
+      }
+    },
+    {
+      "gyro_lpf_hz": 80.0,
+      "axis": "pitch",
+      "delay_samples": 1,
+      "comp_gain": 0.8,
+      "metrics": {
+        "rmse_deg": 0.11441676271220698,
+        "max_err_deg": 1.523750036303892,
+        "overshoot_pct": 5.110503995032764,
+        "settle_ms": 238.0,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.045310168952021675,
+        "peak_tau_nm": 0.46952773796836256,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.11435566749403137,
+            "max_err_deg": 1.5203784044987945,
+            "overshoot_pct": 4.97991613035822,
+            "settle_ms": 69.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.04593171682851628,
+            "peak_tau_nm": 0.4919611224650288,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.11204723932870503,
+            "max_err_deg": 1.5212395357449948,
+            "overshoot_pct": 5.3491655891996,
+            "settle_ms": 348.00000000000006,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.04564244460251075,
+            "peak_tau_nm": 0.4873686070501649,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.11684738131388453,
+            "max_err_deg": 1.529632168667887,
+            "overshoot_pct": 5.002430265540472,
+            "settle_ms": 297.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.045310168952021675,
+            "peak_tau_nm": 0.46952773796836256,
+            "diverged": false
+          },
+          "settle_censored": false
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 0,
+        "mean_ms_if_all_settled": 238.0
+      }
+    },
+    {
+      "gyro_lpf_hz": 80.0,
+      "axis": "pitch",
+      "delay_samples": 2,
+      "comp_gain": 0.0,
+      "metrics": {
+        "rmse_deg": 0.07929407944074303,
+        "max_err_deg": 1.6537233603363983,
+        "overshoot_pct": 3.4280615988509013,
+        "settle_ms": 79.66666666666667,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.0,
+        "peak_tau_nm": 0.44194642020337094,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.08004791058308026,
+            "max_err_deg": 1.648908118515237,
+            "overshoot_pct": 3.3171580704572006,
+            "settle_ms": 79.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.4471971853505181,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.07702288689844922,
+            "max_err_deg": 1.6550048264302366,
+            "overshoot_pct": 3.6512841478467806,
+            "settle_ms": 79.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.4455302229086982,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.08081144084069965,
+            "max_err_deg": 1.6572571360637218,
+            "overshoot_pct": 3.3157425782487238,
+            "settle_ms": 81.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.44194642020337094,
+            "diverged": false
+          },
+          "settle_censored": false
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 0,
+        "mean_ms_if_all_settled": 79.66666666666667
+      }
+    },
+    {
+      "gyro_lpf_hz": 80.0,
+      "axis": "pitch",
+      "delay_samples": 2,
+      "comp_gain": 0.8,
+      "metrics": {
+        "rmse_deg": 0.11460760494223061,
+        "max_err_deg": 1.524172903799949,
+        "overshoot_pct": 5.115001052168863,
+        "settle_ms": 238.66666666666666,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.045482541233326776,
+        "peak_tau_nm": 0.4745820953460784,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.11458140046621171,
+            "max_err_deg": 1.5204544513022034,
+            "overshoot_pct": 4.988128036099955,
+            "settle_ms": 69.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.04577655602793841,
+            "peak_tau_nm": 0.49602888708913273,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.1120072066863542,
+            "max_err_deg": 1.5212509976500463,
+            "overshoot_pct": 5.352782112360472,
+            "settle_ms": 347.00000000000006,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.04586335794641382,
+            "peak_tau_nm": 0.5012818754704094,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.11723420767412597,
+            "max_err_deg": 1.5308132624475972,
+            "overshoot_pct": 5.004093008046162,
+            "settle_ms": 300.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.045482541233326776,
+            "peak_tau_nm": 0.4745820953460784,
+            "diverged": false
+          },
+          "settle_censored": false
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 0,
+        "mean_ms_if_all_settled": 238.66666666666666
+      }
+    },
+    {
+      "gyro_lpf_hz": 80.0,
+      "axis": "yaw",
+      "delay_samples": 1,
+      "comp_gain": 0.0,
+      "metrics": {
+        "rmse_deg": 0.4226278375559079,
+        "max_err_deg": 1.2772196367858943,
+        "overshoot_pct": 13.039434171208342,
+        "settle_ms": 1800.0,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.0,
+        "peak_tau_nm": 0.3041980421842304,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.4212115602724745,
+            "max_err_deg": 1.2732762936363209,
+            "overshoot_pct": 12.965040867058288,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.3078390795741894,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.4217093099805816,
+            "max_err_deg": 1.271896109335846,
+            "overshoot_pct": 13.290860893767336,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.3152507729159546,
+            "diverged": false
+          },
+          "settle_censored": true
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.4249626424146675,
+            "max_err_deg": 1.2864865073855163,
+            "overshoot_pct": 12.862400752799399,
+            "settle_ms": 1800.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.0,
+            "peak_tau_nm": 0.3041980421842304,
+            "diverged": false
+          },
+          "settle_censored": true
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 3,
+        "mean_ms_if_all_settled": null
+      }
+    },
+    {
+      "gyro_lpf_hz": 80.0,
+      "axis": "yaw",
+      "delay_samples": 1,
+      "comp_gain": 0.8,
+      "metrics": {
+        "rmse_deg": 0.17741668858827211,
+        "max_err_deg": 1.697371126203679,
+        "overshoot_pct": 5.252467400475223,
+        "settle_ms": 441.3333333333333,
+        "limit_pct": 0.0,
+        "comp_rms_nm": 0.1575047218523055,
+        "peak_tau_nm": 0.3305410464226881,
+        "diverged": false
+      },
+      "trials": [
+        {
+          "seed": 1,
+          "metrics": {
+            "rmse_deg": 0.17699162696039308,
+            "max_err_deg": 1.6933663298875716,
+            "overshoot_pct": 5.1398381688785655,
+            "settle_ms": 520.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.1574122760736902,
+            "peak_tau_nm": 0.3419583340157512,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 2,
+          "metrics": {
+            "rmse_deg": 0.17502775789305697,
+            "max_err_deg": 1.6927508318031754,
+            "overshoot_pct": 5.524334711079053,
+            "settle_ms": 496.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.15720115268622523,
+            "peak_tau_nm": 0.3343147322065857,
+            "diverged": false
+          },
+          "settle_censored": false
+        },
+        {
+          "seed": 3,
+          "metrics": {
+            "rmse_deg": 0.18023068091136626,
+            "max_err_deg": 1.7059962169202898,
+            "overshoot_pct": 5.093229321468051,
+            "settle_ms": 308.0,
+            "limit_pct": 0.0,
+            "comp_rms_nm": 0.1575047218523055,
+            "peak_tau_nm": 0.3305410464226881,
+            "diverged": false
+          },
+          "settle_censored": false
+        }
+      ],
+      "settling": {
+        "censored_seed_count": 0,
+        "mean_ms_if_all_settled": 441.3333333333333
+      }
+    }
+  ]
+}

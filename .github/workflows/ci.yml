@@ -61,6 +61,8 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
+      - name: Check archived GM6020 evidence consistency (no private ZIP required)
+        run: python tools/check_legacy_gm6020_evidence.py
       - name: Build and test C
         run: |
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release

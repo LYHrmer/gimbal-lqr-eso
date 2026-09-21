@@ -1,0 +1,7 @@
+axis,delay_ms,comp_gain,rmse_deg,peak_error_deg,overshoot_percent,settle_ms,settle_censored
+pitch,1,0,0.127,1.127,4.6,394,false
+pitch,1,0.8,0.552,1.226,18.8,1800,true
+pitch,2,0,0.130,1.170,4.9,544,false
+pitch,2,0.8,0.712,1.302,26.0,1800,true
+yaw,1,0,0.459,1.022,16.3,1800,true
+yaw,1,0.8,2.021,3.752,74.5,1800,true

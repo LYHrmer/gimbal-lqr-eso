@@ -47,6 +47,7 @@
 - [实机前软件检查](prehardware_review.md)：编译选项、Pitch 端点、RLS 异常恢复的失败复现与修复证据，以及仍待硬件验证的项目。
 - [单轴实验步骤与记录](experiment_plan.md)：协议核对、负载辨识、逐项开启控制功能和硬件 A/B 测试。
 - [实机数据留存与空白模板](test_data_recording.md)：依据 Rudder 原版/移植版逐项核对已有反馈、软件量和取样位置。
+- [GM6020 早期整机测试回顾](lqr-leso-testing.md)：双轴参数、实际功能旁路、仿真退化复算、滤波配置差异及简历表述；该次测试尚未调定，无实机原始日志。
 
 三轴方案另见 [多轴参考与连续角](multiaxis_integration.md)。目前已有独立实例状态与角度助手；**大 Yaw → 小 Yaw → Pitch 协调层及三轴耦合闭环尚未实现**。Pitch 的姿态、机械关节角与重力角依据见 [坐标资料](pitch_sources.md)。
 
@@ -63,4 +64,4 @@
 - [积分步长核验](integration_convergence.md)：Yaw 结果对 RK4 子步数从 4 增至 8 的敏感性。
 - [独立检查记录](independent_review.md)：交叉检查与 Claude 辅助分析的范围，以及对应运行证据。
 
-当前证据来自合成仿真与软件测试，尚无本项目的电机实测。**GM6020 Yaw 的主要收益包含积分配置变化；GM6020 Pitch 开发组仍未通过，完整 Pitch 验收仍为 `false`。** 各项百分比与对照条件见 [首页结果表](../README.md#验证结果怎么读)；[实机前修复](prehardware_review.md) 证明的是工程可靠性改善，没有新增跟踪精度提升结论。
+当前可复核的性能证据来自合成仿真与软件测试，尚无实机原始日志或已完成的硬件 A/B 报告；新增的[早期整机回顾](lqr-leso-testing.md)不改变这一范围。**GM6020 Yaw 的主要收益包含积分配置变化；GM6020 Pitch 开发组仍未通过，完整 Pitch 验收仍为 `false`。** 各项百分比与对照条件见 [首页结果表](../README.md#验证结果怎么读)；[实机前修复](prehardware_review.md) 证明的是工程可靠性改善，没有新增跟踪精度提升结论。

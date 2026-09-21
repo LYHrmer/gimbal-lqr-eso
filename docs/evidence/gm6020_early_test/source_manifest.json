@@ -1,0 +1,48 @@
+{
+  "material_received_and_reviewed_on": "2026-09-21",
+  "actual_hardware_test_date": null,
+  "user_status": "An early test that was not fully tuned.",
+  "archive_basename": "Rudder_Infantry_Gimbal(1).zip",
+  "archive_sha256": "d2c837162632d8f62bfb15bd8729f3d38905710579632f0c885749874d0d390d",
+  "archive_included_in_public_repository": false,
+  "firmware_commit": null,
+  "flashed_firmware_hash": null,
+  "public_repository_baseline": "70eacca27d171fa953bf78c55103f249ff18135c",
+  "source_files_sha256": {
+    "README.md": "b74559c25e08ed6ae915cdbb31ba5577b1e26467f6a2c400bac9b91c10a1283f",
+    "CMakeLists.txt": "ca64d700aa280706b2322465affea16b04b43bd59fe09f3a23814256f6082011",
+    "tools/pitch_lqr_eso_sim.py": "192739c681af2595d714f7dc9a74cd1929aac98cf8078222e07912a3fef8044c",
+    "Utils/MotorRLS.cpp": "611a857bb9822fd20e3080b3cd4e0f7d2de1b434b699626ed2b65de2061eeb32",
+    "Utils/RLS.hpp": "3aa9c67e3b67b61f56b6cd2be73f2d9bd8d4e1a9dc4015d95f368833ecc59e4b",
+    "user/application/src/gimbal.cpp": "2531383ef5d6682ae670d6abaac95539862d22c238d1c6619f454876878d6725",
+    "user/algorithm/src/LQR.cpp": "2ee849ffc4f7b705143c261091bbc536549a9a9c78d71931594720caeca6558c",
+    "user/algorithm/src/ADRC.cpp": "f304d0c7a7ab843affe6b540693a6af1a1dccf5e3632da8191199d3ebdb7981f",
+    "user/algorithm/inc/ADRC.h": "8376eafd4641f44ff090b4b14b17e0eb6363ade55f95c4d81de6f611c0493512",
+    "user/application/src/ins.cpp": "ce0dfc0818c4be5568c4067be6709c5adf8b4235b5a32cebd4e492a24054ab4e",
+    "Core/Src/freertos.c": "ad5d7a7325fd85d7b9d715cc41f334d46c7c7b2e19e71c7e8ae07b9647efa902",
+    "user/application/src/infantry.cpp": "6526cf35493f69514b0976b0c6d4f431eca7f2c2f0fe76d72414da572bd3b342"
+  },
+  "verification": {
+    "firmware_source_inspected": true,
+    "firmware_built_or_flashed": false,
+    "hardware_timeseries_provided": false,
+    "hardware_ab_completed": false,
+    "original_simulation_command": "python3 tools/pitch_lqr_eso_sim.py --seeds 3",
+    "original_simulation_exit_code": 1,
+    "original_simulation_verdict": "FAIL",
+    "original_simulation_log": "simulation_as_received.log",
+    "original_full_grid_rerun": false,
+    "diagnostic_command": "python3 docs/evidence/gm6020_early_test/reproduce.py --source /path/to/Rudder_Infantry_Gimbal --output build/gm6020-early-test/step-diagnostics.json",
+    "diagnostic_report": "step_diagnostics.json",
+    "reported_table": "reported_step_metrics.csv",
+    "scope": "Source review, nominal LQR recomputation, original Python simulation, and a gyro-cutoff-only sensitivity check; not hardware validation."
+  },
+  "key_distinctions": [
+    "Manual firmware sets Ki=0 and overrides velocity feedforward with SetVel(0) for both axes.",
+    "Yaw observer updates but compensation is bypassed; Pitch observer update, gravity feedforward and compensation are disabled.",
+    "Both RLS call sites are commented out; one global estimator is implemented.",
+    "Original simulation uses 0.82 Hz gyro cutoff, not firmware 80 Hz; it also enables integral in the reported robustness cases and omits high-speed freeze.",
+    "Step reference is a 200 ms ramp; reported RMSE is the 0.8-2.0 s tail mean over seeds 1,2,3.",
+    "Period regression inf is a sentinel for nonfinite OR abs(z3)>1e6, and its new-observer test checks only the window condition."
+  ]
+}
