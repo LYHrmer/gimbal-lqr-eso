@@ -1,0 +1,62 @@
+{
+  "material_received_and_reviewed_on": "2026-10-03",
+  "actual_hardware_recording_date": "2026-09-25",
+  "user_status": "昨天辨识后，云台会有个超调；最终用户将其归因于陀螺仪(AHRS)解算问题而非辨识或控制算法问题，并在后续消息中告知“问题已解决”。本次会话未复核任何修复后的固件源码或新的实机时序日志。",
+  "archive_basename": "Rudder_Infantry_Gimbal_20260924.zip",
+  "archive_sha256": "b7f3f5286007c13d8d02d180169b149189c7658cf5542396842feafafe1f9f5c",
+  "archive_included_in_public_repository": false,
+  "firmware_commit": null,
+  "flashed_firmware_hash": null,
+  "public_repository_baseline": "0c6474b",
+  "relation_to_this_repository": "思路致敬：手动分支沿用 LQR + LESO 力矩控制结构，并新增 PRBS + 批量最小二乘在线辨识；代码为该整机工程的独立实现，并非本仓库 C 内核的移植或复用。",
+  "source_files_sha256": {
+    "Utils/MotorRLS.h": "2ba477becdc69dee6153afa2fab611fa86cb4785b6aeb39d202077c60210dab4",
+    "Utils/MotorRLS.cpp": "dedbca6570747320448cadef6f92b245959851f52f7911cc9521fe1a83909610",
+    "user/application/src/gimbal.cpp": "faf4a2de5148eabdb03280dc53fa0cb80ebf7b53183c98f1a7afc5d44902a51e",
+    "user/algorithm/src/LQR.cpp": "0d066c3e1a9bc309e468b2b9df3079718e5a23d0fd899c1a3cac6ea3452a9467",
+    "user/algorithm/src/ADRC.cpp": "40b0c408f7dd2c36bd36d5a6b525a0d886d19ba6014bd47dd08a5396e7b67e17",
+    "user/application/src/ins.cpp": "7a7e4ae9397766762f92b46aefafcb869deaf9d92a4ad3fb41bacbc4626b742a",
+    "user/modules/inc/remote.h": "887e91f413471f42f08867bbebb6d9fe0d397e53345f297bcf90fb4c75c93cbc",
+    "tools/pitch_lqr_eso_sim.py": "576a861473faced313887e19e7233a4b66bc62efc3ae835d7272e4e2ad49f2b1",
+    "tests/test_sim_regression.py": "39b7f6baeb14358ccbd70213abd6e815a5d47097f08d701ef74e55c27f25f31a",
+    "docs/pitch_id_handoff.md": "d1a9e64ba839374427667b7f75aae6deba558c456c6fcf68b60a58178857b904",
+    "validation/simulation.log": "53eedfffefec9318bfdfe15ef6940e3f3dc92c25787df32d422eebff528da1e8",
+    "validation/summary.json": "5079ea681a5ac4004ab655152ac207b2bcfe54479ea4c9016da52985c79efce2"
+  },
+  "video_evidence": {
+    "file": "identification_demo.mp4",
+    "sha256": "a05b1852893d41f6e5a4ead01e6fabe5ebfc07a6638c5b04a63ea8db18dc030a",
+    "container_duration_s": 32.11,
+    "resolution": "1280x720",
+    "fps": 29.97,
+    "creation_time_embedded": "2026-09-25T13:23:47Z",
+    "visually_confirmed_content": [
+      "IDE 日志显示通过 OpenOCD + CMSIS-DAP 对 stm32f4x 执行 Program/Verify，Programming Finished / Verified OK",
+      "实物步兵云台 Pitch 轴机构特写（GM6020、碳板、线束），非仿真画面",
+      "RoboMaster 遥控器（摇杆+按键面板）操作画面，与 PRBS 激励所需的人工摇杆输入一致",
+      "IDE 内 Cortex Live Watch 面板，变量名 J、B；视频末段读数为 J=0.0336291976、B=0.693607688"
+    ],
+    "not_shown": [
+      "没有阶跃响应曲线、角度跟踪误差或超调幅值的屏显或叠加图",
+      "没有辨识前后的云台运动对比镜头",
+      "没有发生在修复之后的、针对陀螺仪/AHRS 问题的验证画面"
+    ],
+    "discrepancy_vs_handoff_doc": "视频读数 J≈0.0336、B≈0.694 与 docs/pitch_id_handoff.md 最终采信值 J=0.0349、B=0.310 不一致；B 的差异（0.694 对 0.310，约 2.2 倍）超出该文档记录的跨会话波动范围（0.281~0.4119）。无法确认视频对应的是最终采信轮次还是更早的中间轮次，本次未获得与该画面对应的原始辨识日志。"
+  },
+  "verification": {
+    "firmware_source_inspected": true,
+    "firmware_built_or_flashed_by_reviewer": false,
+    "hardware_timeseries_provided": false,
+    "hardware_ab_completed": false,
+    "overshoot_root_cause_confirmed_by_reviewer": false,
+    "overshoot_fix_source_reviewed": false,
+    "original_simulation_log": "simulation.log (included in archive, pre-existing FAIL on unrelated 甩杆前馈 settling-time criterion)",
+    "scope": "固件源码审查、辨识模块代码走读、仿真参数复核，以及对一段用户提供视频的逐帧视觉核验；不构成硬件 A/B 对照，不构成超调根因或修复效果的独立验证。"
+  },
+  "key_distinctions": [
+    "此 ZIP 的辨识开关 PITCH_ID_ENABLE 默认 0；归档代码本身即遥控/比赛固件，辨识模块在该配置下为纯直通（ApplyPrbs 原样返回力矩）。",
+    "归档代码中 k_pitch_leso_bandwidth 仍为 180（已用 grep 核实），即本仓库建议的“180→140 回退”从未进入过此归档；审查者此前对该回退的仿真验证只做在临时副本上，已随环境清理丢失，不代表最终上机固件状态。",
+    "用户最终将超调原因归于陀螺仪/AHRS 解算（与 docs/pitch_id_handoff.md §7.1 描述的加速度计污染问题吻合），而非 LQR/LESO 参数或辨识方法；该结论来自用户口头描述和确认，审查者未获得对应的原始波形或修复后源码。",
+    "“问题已解决”为用户原话转述；具体修复手段（AHRS 互补滤波改造、参数调整，或其它）未经本次审查确认，不能归因为某一具体代码改动。"
+  ]
+}
