@@ -104,15 +104,19 @@ static YawStatus reject(GimbalController *c, GimbalOutput *out, YawStatus reason
                                       out == NULL ? NULL : &out->control);
 }
 
-YawStatus gimbal_controller_step(GimbalController *c, const YawFeedback *f,
-                                 const YawReference *r, const GimbalPose *p,
-                                 float h, GimbalOutput *out)
+static YawStatus step(GimbalController *c, const YawFeedback *f,
+                      const YawReference *r, const GimbalPose *p,
+                      float h, bool external_gravity, float holding_torque_nm,
+                      GimbalOutput *out)
 {
     if (out != NULL) memset(out, 0, sizeof(*out));
     if (c == NULL || f == NULL || r == NULL || out == NULL)
         return reject(c, out, YAW_BAD_ARGUMENT);
     if (!c->initialized) return reject(c, out, YAW_BAD_CONFIG);
     if (c->core.fault != YAW_OK) return reject(c, out, c->core.fault);
+    if (external_gravity && (!c->config.pitch_enabled ||
+        c->config.gravity_cos_nm != 0.0f || c->config.gravity_sin_nm != 0.0f))
+        return reject(c, out, YAW_BAD_CONFIG);
     if (!c->config.pitch_enabled)
         return yaw_controller_step(&c->core, f, r, h, &out->control);
     if (p == NULL || !p->valid || !isfinite(p->joint_position_rad) ||
@@ -143,7 +147,8 @@ YawStatus gimbal_controller_step(GimbalController *c, const YawFeedback *f,
         (joint_reference <= low && joint_ref_velocity < 0.0) ||
         (joint_reference >= high && joint_ref_velocity > 0.0))
         return reject(c, out, YAW_POSITION_LIMIT);
-    const float gravity = cfg->gravity_cos_nm * cosf(p->gravity_angle_rad) +
+    const float gravity = external_gravity ? holding_torque_nm :
+        cfg->gravity_cos_nm * cosf(p->gravity_angle_rad) +
         cfg->gravity_sin_nm * sinf(p->gravity_angle_rad);
     if (!isfinite(gravity) || !isfinite(c->last_gravity_nm))
         return reject(c, out, YAW_NUMERIC_FAULT);
@@ -155,4 +160,19 @@ YawStatus gimbal_controller_step(GimbalController *c, const YawFeedback *f,
         if (status == YAW_OK) out->gravity_feedforward_nm = gravity;
     } else c->last_gravity_nm = 0.0f;
     return status;
+}
+
+YawStatus gimbal_controller_step(GimbalController *c, const YawFeedback *f,
+                                 const YawReference *r, const GimbalPose *p,
+                                 float h, GimbalOutput *out)
+{
+    return step(c, f, r, p, h, false, 0.0f, out);
+}
+
+YawStatus gimbal_controller_step_with_gravity(GimbalController *c,
+                                 const YawFeedback *f, const YawReference *r,
+                                 const GimbalPose *p, float h,
+                                 float holding_torque_nm, GimbalOutput *out)
+{
+    return step(c, f, r, p, h, true, holding_torque_nm, out);
 }

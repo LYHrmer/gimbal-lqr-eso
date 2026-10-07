@@ -2,6 +2,8 @@
 
 部署对象是 STM32 上运行的 C 算法。Python 仅负责离线设计、仿真和验证，不进入电机实时控制链。本仓库提供 [gimbal_periodic.c/.h](../examples/stm32/gimbal_periodic.c) 的 Yaw/Pitch 薄层示例，由实际工程提供回调；原 [yaw_periodic.c/.h](../examples/stm32/yaw_periodic.c) 接口继续兼容。公共库不绑定某一整车的 HAL 初始化、链接脚本和 CAN 引脚，不提供可直接烧录的整车固件。
 
+已有 C/C++ 混合工程可使用 [CMake 接入入口](../cmake/GimbalController.cmake)直接附加到现有固件目标，见[实际工程移植步骤](firmware_porting.md)。有私有标定重力曲线时，使用 `gimbal_controller_step_with_gravity()` 仍可保留 Pitch 机械检查；原周期示例继续使用内置正弦/余弦模型，回调接口不变。
+
 ## 接在官方例程的什么位置
 
 主参考为 RoboMaster 官方 [Development-Board-C-Examples，固定提交 `59d12b1adcd321dbf1f9e9166aef5eb95ab657bf`](https://github.com/RoboMaster/Development-Board-C-Examples/tree/59d12b1adcd321dbf1f9e9166aef5eb95ab657bf/19.gimbal_task)。它已有 HAL、FreeRTOS、CAN 接收和云台任务分层。本示例独立实现调用适配，未复制官方 GPL 源码；把现有板级工程作为外部集成对象。
@@ -41,7 +43,7 @@
 
 GM6020 的反馈是单圈 `0..8191` 计数，接入层应按输出轴方向、零位和跨圈计数形成连续角度。以最短跨圈差判断时，必须保证相邻有效反馈之间不会真实跨越半圈；丢帧后无法消除多圈歧义就应使反馈失效。DM4310 按实际驱动的反馈绕回规则处理，不能把 `[-PMAX,+PMAX]` 的协议数值跨度自动当成编码器一圈。电机角度、IMU 角度与参考必须统一到同一个轴和 rad 单位；有外部传动时还须换算输出轴参数。
 
-世界姿态跟踪量、机械关节角和重力倾角分别标定，不能在倾斜底座上把电机编码器零位直接当作水平。Pitch 便利适配假定单轴平面关系；复杂重力曲线或串联轴耦合由宿主计算后调用 `yaw_controller_step_with_load()`，详见 [Pitch 接入](pitch_integration.md)。Yaw 方向目标可选用 `gimbal_angle_near()` 提升到最近连续圈；明确多圈运动参考不要经过该转换。三实例支持的边界见 [多轴说明](multiaxis_integration.md)。
+世界姿态跟踪量、机械关节角和重力倾角分别标定，不能在倾斜底座上把电机编码器零位直接当作水平。Pitch 便利适配假定单轴平面关系；在此几何前提下，宿主自定义重力曲线使用 `gimbal_controller_step_with_gravity()`，保留机械边界与负载历史检查。若一般串联轴耦合需要直接调用 `yaw_controller_step_with_load()`，宿主须另行实现对应的运动学和机械检查，不能把基础接口当作 Pitch 适配层。详见 [Pitch 接入](pitch_integration.md)。Yaw 方向目标可选用 `gimbal_angle_near()` 提升到最近连续圈；明确多圈运动参考不要经过该转换。三实例支持的边界见 [多轴说明](multiaxis_integration.md)。
 
 ## 两种电机的提交路径
 

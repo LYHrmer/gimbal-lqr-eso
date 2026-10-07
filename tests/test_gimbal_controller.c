@@ -499,6 +499,112 @@ static void assert_same_control(const YawOutput *a, const YawOutput *b)
     assert(a->feedback_nm == b->feedback_nm);
 }
 
+static void test_external_gravity_matches_builtin_path(void)
+{
+    GimbalConfig builtin_cfg = config(), external_cfg = builtin_cfg;
+    external_cfg.gravity_cos_nm = external_cfg.gravity_sin_nm = 0.0f;
+    GimbalController builtin, external;
+    GimbalOutput a, b;
+    YawFeedback f = feedback();
+    YawReference r = reference();
+    GimbalPose p = pose();
+    assert(gimbal_controller_init(&builtin, &builtin_cfg));
+    assert(gimbal_controller_init(&external, &external_cfg));
+    for (int i = 0; i < 300; ++i) {
+        p.gravity_angle_rad = 0.2f * sinf((float)i * 0.01f);
+        const float hold = builtin_cfg.gravity_cos_nm * cosf(p.gravity_angle_rad) +
+            builtin_cfg.gravity_sin_nm * sinf(p.gravity_angle_rad);
+        assert(gimbal_controller_step(&builtin, &f, &r, &p, step_s, &a) ==
+               gimbal_controller_step_with_gravity(&external, &f, &r, &p, step_s, hold, &b));
+        assert_same_control(&a.control, &b.control);
+        assert(a.gravity_feedforward_nm == b.gravity_feedforward_nm);
+        assert(a.joint_reference_rad == b.joint_reference_rad);
+    }
+}
+
+static void test_external_gravity_limits_and_load_history(void)
+{
+    GimbalConfig cfg = config();
+    cfg.gravity_cos_nm = cfg.gravity_sin_nm = 0.0f;
+    cfg.control.damping_nm_s_rad = 0.0f;
+    GimbalController c;
+    GimbalOutput out;
+    YawFeedback f = feedback();
+    YawReference r = reference();
+    GimbalPose p = pose();
+    assert(gimbal_controller_init(&c, &cfg));
+    float previous_load = 0.4f;
+    assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s,
+                                               previous_load, &out) == YAW_WARMUP);
+    assert(out.control.torque_nm == 0.0f && out.gravity_feedforward_nm == 0.0f);
+    for (int i = 0; i < 300; ++i) {
+        const float acceleration = (out.control.torque_nm - previous_load) /
+            cfg.control.inertia_kg_m2;
+        f.position_rad += step_s * f.velocity_rad_s + 0.5f * step_s * step_s * acceleration;
+        f.velocity_rad_s += step_s * acceleration;
+        p.joint_position_rad = f.position_rad;
+        p.joint_velocity_rad_s = f.velocity_rad_s;
+        const float current_load = i % 2 == 0 ? -0.3f : 0.4f;
+        assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s,
+                                                   current_load, &out) == YAW_OK);
+        /* Subtracting today's load from yesterday's interval would pollute ESO. */
+        assert(fabsf(out.control.disturbance_nm) < 2e-5f);
+        previous_load = current_load;
+    }
+    disable_observer(&cfg);
+    cfg.control.k_integral = 2.0f;
+    cfg.control.torque_slew_nm_s = 20.0f;
+    assert(gimbal_controller_init(&c, &cfg));
+    f = feedback(); r = reference(); p = pose();
+    assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s, 4.0f, &out) == YAW_WARMUP);
+    assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s, 4.0f, &out) == YAW_OK);
+    assert(out.control.torque_nm <= 0.020001f);
+    assert((out.control.flags & YAW_SLEW_LIMITED) != 0u);
+    assert((out.control.flags & YAW_TORQUE_LIMITED) != 0u);
+    assert(c.core.integral_nm < 0.0f); /* Known load participates in back-calculation. */
+    for (int i = 0; i < 200; ++i)
+        assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s, 4.0f, &out) == YAW_OK);
+    assert(out.control.torque_nm <= cfg.control.torque_limit_nm);
+    assert(gimbal_controller_set_torque_limit(&c, 0.2f));
+    assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s, 4.0f, &out) == YAW_OK);
+    assert(out.control.torque_nm <= 0.2f);
+    gimbal_controller_reset(&c);
+    assert(c.last_gravity_nm == 0.0f);
+    assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s, 4.0f, &out) == YAW_WARMUP);
+    assert(out.control.torque_nm == 0.0f);
+}
+
+static void test_external_gravity_rejects_bad_inputs_and_keeps_guards(void)
+{
+    GimbalConfig cfg = config();
+    GimbalController c;
+    GimbalOutput out;
+    YawFeedback f = feedback();
+    YawReference r = reference();
+    GimbalPose p = pose();
+    assert(gimbal_controller_init(&c, &cfg));
+    assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s, 0.4f, &out) == YAW_BAD_CONFIG);
+    cfg.gravity_cos_nm = cfg.gravity_sin_nm = 0.0f;
+    cfg.pitch_enabled = false;
+    assert(gimbal_controller_init(&c, &cfg));
+    assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s, 0.4f, &out) == YAW_BAD_CONFIG);
+    cfg.pitch_enabled = true;
+    for (int trial = 0; trial < 5; ++trial) {
+        assert(gimbal_controller_init(&c, &cfg));
+        p = pose();
+        const float hold = trial == 0 ? NAN : (trial == 1 ? INFINITY : 0.4f);
+        if (trial == 2) p.joint_position_rad = 1.1f;
+        if (trial == 3) p.age_s = cfg.control.feedback_timeout_s + 0.001f;
+        const float h = trial == 4 ? 0.02f : step_s;
+        const YawStatus expected = trial < 2 ? YAW_NUMERIC_FAULT :
+            (trial == 2 ? YAW_POSITION_LIMIT : (trial == 3 ? YAW_STALE_FEEDBACK : YAW_BAD_TIMING));
+        assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, h, hold, &out) == expected);
+        assert(out.control.torque_nm == 0.0f && c.last_gravity_nm == 0.0f);
+        p = pose();
+        assert(gimbal_controller_step_with_gravity(&c, &f, &r, &p, step_s, 0.4f, &out) == expected);
+    }
+}
+
 static void test_yaw_compatibility_and_instance_isolation(void)
 {
     GimbalConfig cfg = config(); cfg.pitch_enabled = false;
@@ -550,7 +656,10 @@ int main(void)
     test_joint_limits_and_relative_velocity();
     test_representable_joint_reference_bounds();
     test_representable_endpoints_and_outward_velocity();
+    test_external_gravity_matches_builtin_path();
+    test_external_gravity_limits_and_load_history();
+    test_external_gravity_rejects_bad_inputs_and_keeps_guards();
     test_yaw_compatibility_and_instance_isolation();
-    puts("gimbal_controller: 11 behavior test groups passed");
+    puts("gimbal_controller: 14 behavior test groups passed");
     return 0;
 }

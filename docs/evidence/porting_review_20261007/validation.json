@@ -1,0 +1,160 @@
+{
+  "review_date": "2026-10-07",
+  "executed_at_utc": "2026-10-07T14:17:06.053443+00:00",
+  "public_repository_base": "fc5046a3e592c16c7dbff3d9466f9ff9e3e992b4",
+  "private_archive_sha256": "b7f3f5286007c13d8d02d180169b149189c7658cf5542396842feafafe1f9f5c",
+  "private_archive_or_source_published": false,
+  "hardware_usable": {
+    "axis": "GM6020 Pitch",
+    "status": "user_confirmed",
+    "date": "2026-10-07"
+  },
+  "scope": "Public C library and independent C++17 integration fixtures; no private firmware build, flashing or new hardware measurements.",
+  "checks": [
+    {
+      "name": "host_configure",
+      "command": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DGIMBAL_BUILD_RLS_EXPERIMENT=ON"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "host_build",
+      "command": [
+        "cmake",
+        "--build",
+        "build",
+        "--parallel",
+        "4"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "host_ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "sanitize_configure",
+      "command": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build-port-sanitize",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DYAW_SANITIZERS=ON",
+        "-DGIMBAL_BUILD_RLS_EXPERIMENT=ON"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "sanitize_build",
+      "command": [
+        "cmake",
+        "--build",
+        "build-port-sanitize",
+        "--parallel",
+        "4"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "sanitize_ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "build-port-sanitize",
+        "--output-on-failure"
+      ],
+      "exit_code": 8,
+      "environment_error": "LeakSanitizer does not work under sandbox ptrace"
+    },
+    {
+      "name": "sanitize_ctest_outside_sandbox",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "build-port-sanitize",
+        "--output-on-failure"
+      ],
+      "execution": "Approved exec_command outside sandbox; no test or sanitizer option changed",
+      "exit_code": 0,
+      "test_count": 8,
+      "passed_count": 8,
+      "result_source": "Observed tool stdout: 100% tests passed, 0 tests failed out of 8"
+    },
+    {
+      "name": "profile_headers",
+      "command": [
+        "python3",
+        "tools/generate_profile_headers.py",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "python_tests",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "legacy_evidence",
+      "command": [
+        "python3",
+        "tools/check_legacy_gm6020_evidence.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "arm_compile",
+      "command": [
+        "python3",
+        "tools/check_arm_build.py",
+        "--newlib-include",
+        "/usr/include/newlib",
+        "--include-experimental-rls",
+        "--output",
+        "build/port-review-arm",
+        "--report",
+        "build/port-review-arm.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_sha256": {
+    "include/gimbal_controller.h": "33bdd80eb5679014ffbe75994ec7ed8d758cc511c4a039c88c431c303bd1dce3",
+    "src/gimbal_controller.c": "b63eff4c4d2a542c17c13e6e0538b60479188b663c378f4dc9b29942290d562f",
+    "cmake/GimbalController.cmake": "179ecef1b873aebc7c393d2350bb405680521c9775e743c6414305240139cb57",
+    "tests/test_gimbal_controller.c": "1dbd3838f68f4f3ab7cd1e573b4cf4c6e72c9b9be7d0d0d1117a19758c1e40cf",
+    "tests/test_cmake_port.py": "4ee1dec9ccf2d9949816f6a8114d7a4dbaf05989784323622d17ab1f875c2aef",
+    "tests/cmake_port/CMakeLists.txt": "2b1a0c3489302dd1b77febf587e4ab8c4c07559554f0ec5374e9d8ce9577126e",
+    "tests/cmake_port/main.cpp": "01e368a2bbc8518e2c64cd7440da1cea009614a05841796f8c59b85d77a7530f"
+  },
+  "arm_target": "Cortex-M4F, Thumb, hard-float, fpv4-sp-d16",
+  "limitations": [
+    "Software success does not establish hardware performance or transplant the private PRBS implementation.",
+    "The original function and public struct layouts are preserved; the custom gravity API is opt-in.",
+    "Existing GM6020 Pitch synthetic development acceptance remains false; holdout acceptance is true."
+  ]
+}

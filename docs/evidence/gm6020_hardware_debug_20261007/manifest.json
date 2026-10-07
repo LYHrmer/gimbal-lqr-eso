@@ -1,0 +1,387 @@
+{
+  "received_date": "2026-10-07",
+  "data_type": "partial_hardware_debug_screenshots",
+  "user_scope": "这些是一部分测试数据",
+  "original_pixels_preserved": true,
+  "private_firmware_source_included": false,
+  "raw_timeseries_provided": false,
+  "metrics_computed_from_images": false,
+  "images": [
+    {
+      "id": "Y01",
+      "file": "yaw_01.png",
+      "axis": "yaw",
+      "sha256": "36ba8b21860ce7fc4b0bf3b87310f03647984186a7b5d3c3a77d8f61dd830863",
+      "bytes": 555073,
+      "width_px": 1596,
+      "height_px": 932,
+      "user_annotation": "yaw 400,1 无eso无速度反馈无acc前馈",
+      "visible_plot_role": "tracking_pair",
+      "angle_unit": "rad",
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "q_diagonal": [
+          400,
+          1
+        ],
+        "r": 1,
+        "eso_enabled": false,
+        "measured_angular_velocity_feedback_enabled": false,
+        "acceleration_feedforward_enabled": false,
+        "reference_velocity_feedforward_enabled": null
+      }
+    },
+    {
+      "id": "Y02",
+      "file": "yaw_02.png",
+      "axis": "yaw",
+      "sha256": "19a6a8eb2a0b6432fca6e10fea5b09951421b85ef42d9eea00a6ba67d37c6b41",
+      "bytes": 652145,
+      "width_px": 1584,
+      "height_px": 919,
+      "user_annotation": "yaw 400,1 无eso有速度反馈无acc前馈",
+      "visible_plot_role": "tracking_pair",
+      "angle_unit": "rad",
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "q_diagonal": [
+          400,
+          1
+        ],
+        "r": 1,
+        "eso_enabled": false,
+        "measured_angular_velocity_feedback_enabled": true,
+        "acceleration_feedforward_enabled": false,
+        "reference_velocity_feedforward_enabled": null
+      }
+    },
+    {
+      "id": "Y03",
+      "file": "yaw_03.png",
+      "axis": "yaw",
+      "sha256": "7842787832fbab1bf22661244ca8814eb2fe8135b65bcca810d217dc5d4b3f88",
+      "bytes": 634971,
+      "width_px": 1592,
+      "height_px": 912,
+      "user_annotation": "分割线",
+      "visible_plot_role": "error_plot_configuration_unassigned",
+      "angle_unit": "rad",
+      "firmware_commit": null,
+      "test_date": null
+    },
+    {
+      "id": "Y04",
+      "file": "yaw_04.png",
+      "axis": "yaw",
+      "sha256": "77fa48d415f4d56194331dc6461eeb8011f2d0e73990ea11ccee64c38ab3f742",
+      "bytes": 991511,
+      "width_px": 1604,
+      "height_px": 940,
+      "user_annotation": "yaw 600,2 无eso有速度反馈无acc前馈（与下一张同组）",
+      "visible_plot_role": "tracking_pair",
+      "angle_unit": "rad",
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "q_diagonal": [
+          600,
+          2
+        ],
+        "r": 1,
+        "eso_enabled": false,
+        "measured_angular_velocity_feedback_enabled": true,
+        "acceleration_feedforward_enabled": false,
+        "reference_velocity_feedforward_enabled": null
+      }
+    },
+    {
+      "id": "Y05",
+      "file": "yaw_05.png",
+      "axis": "yaw",
+      "sha256": "7f6513c14619f9bc0f7bca1122c32fd7b94ba5b0802299f43067604d13d43fc4",
+      "bytes": 705903,
+      "width_px": 1597,
+      "height_px": 921,
+      "user_annotation": "yaw 600,2 无eso有速度反馈无acc前馈",
+      "visible_plot_role": "error_plot",
+      "angle_unit": "rad",
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "q_diagonal": [
+          600,
+          2
+        ],
+        "r": 1,
+        "eso_enabled": false,
+        "measured_angular_velocity_feedback_enabled": true,
+        "acceleration_feedforward_enabled": false,
+        "reference_velocity_feedforward_enabled": null
+      }
+    },
+    {
+      "id": "Y06",
+      "file": "yaw_06.png",
+      "axis": "yaw",
+      "sha256": "1e40eedb0711bb144ff85ced897f7f3908b324be6124122cf63624e704988b6a",
+      "bytes": 553861,
+      "width_px": 1579,
+      "height_px": 888,
+      "user_annotation": "yaw 600,2 无eso有速度反馈有acc前馈（与下一张同组）",
+      "visible_plot_role": "error_plot",
+      "angle_unit": "rad",
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "q_diagonal": [
+          600,
+          2
+        ],
+        "r": 1,
+        "eso_enabled": false,
+        "measured_angular_velocity_feedback_enabled": true,
+        "acceleration_feedforward_enabled": true,
+        "reference_velocity_feedforward_enabled": null
+      }
+    },
+    {
+      "id": "Y07",
+      "file": "yaw_07.png",
+      "axis": "yaw",
+      "sha256": "0c6f8be9cbfa19f168b68bef492f79298dd802466189192509f0046efba15381",
+      "bytes": 990092,
+      "width_px": 1589,
+      "height_px": 899,
+      "user_annotation": "yaw 600,2 无eso有速度反馈有acc前馈",
+      "visible_plot_role": "tracking_pair",
+      "angle_unit": "rad",
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "q_diagonal": [
+          600,
+          2
+        ],
+        "r": 1,
+        "eso_enabled": false,
+        "measured_angular_velocity_feedback_enabled": true,
+        "acceleration_feedforward_enabled": true,
+        "reference_velocity_feedforward_enabled": null
+      }
+    },
+    {
+      "id": "P01",
+      "file": "pitch_01.png",
+      "axis": "pitch",
+      "sha256": "c38ef97193b66d5151c14dd074fe498b55dbe32eaf16d69fd42567af6b164f03",
+      "bytes": 377324,
+      "width_px": 1509,
+      "height_px": 641,
+      "user_annotation": "前三张共同注释：100,1000,0.03；60,900,0.08；（逐图对应待确认）",
+      "visible_plot_role": "pitch_reference_response",
+      "angle_unit": null,
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "parameter_family": "ESO",
+        "parameter_triplet_candidates": [
+          [
+            100,
+            1000,
+            0.03
+          ],
+          [
+            60,
+            900,
+            0.08
+          ]
+        ],
+        "mapping_to_image_confirmed": false,
+        "parameter_names_in_order": null,
+        "parameter_units_in_order": null
+      }
+    },
+    {
+      "id": "P02",
+      "file": "pitch_02.png",
+      "axis": "pitch",
+      "sha256": "a7809905b4ad68f0b82383b77c877c32a3f50f9a44ec4c273d9f2eee915c346c",
+      "bytes": 504949,
+      "width_px": 1600,
+      "height_px": 926,
+      "user_annotation": "前三张共同注释：100,1000,0.03；60,900,0.08；（逐图对应待确认）",
+      "visible_plot_role": "attitude_estimator_comparison",
+      "angle_unit": null,
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "parameter_family": "ESO",
+        "parameter_triplet_candidates": [
+          [
+            100,
+            1000,
+            0.03
+          ],
+          [
+            60,
+            900,
+            0.08
+          ]
+        ],
+        "mapping_to_image_confirmed": false,
+        "parameter_names_in_order": null,
+        "parameter_units_in_order": null
+      }
+    },
+    {
+      "id": "P03",
+      "file": "pitch_03.png",
+      "axis": "pitch",
+      "sha256": "a7f874deae96b1c7437fa2982053f058123ebc057fdf2083aa1a88420b0283d8",
+      "bytes": 285673,
+      "width_px": 1594,
+      "height_px": 894,
+      "user_annotation": "前三张共同注释：100,1000,0.03；60,900,0.08；（逐图对应待确认）",
+      "visible_plot_role": "pitch_reference_response",
+      "angle_unit": null,
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "parameter_family": "ESO",
+        "parameter_triplet_candidates": [
+          [
+            100,
+            1000,
+            0.03
+          ],
+          [
+            60,
+            900,
+            0.08
+          ]
+        ],
+        "mapping_to_image_confirmed": false,
+        "parameter_names_in_order": null,
+        "parameter_units_in_order": null
+      }
+    },
+    {
+      "id": "P04",
+      "file": "pitch_04.png",
+      "axis": "pitch",
+      "sha256": "a7bcd186026fe89276acb3ab53c3526bb377734b22535b26e09796708e6a1589",
+      "bytes": 319189,
+      "width_px": 1598,
+      "height_px": 896,
+      "user_annotation": "100,1000,0.03",
+      "visible_plot_role": "pitch_reference_response",
+      "angle_unit": null,
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "parameter_family": "ESO",
+        "parameter_triplet": [
+          100,
+          1000,
+          0.03
+        ],
+        "parameter_names_in_order": null,
+        "parameter_units_in_order": null
+      }
+    },
+    {
+      "id": "P05",
+      "file": "pitch_05.png",
+      "axis": "pitch",
+      "sha256": "47be27d47019302e72377b1ea1fddebeed2f3fc33fe5bfcc5777612569c1635a",
+      "bytes": 291673,
+      "width_px": 1511,
+      "height_px": 399,
+      "user_annotation": "100,2500,0.03",
+      "visible_plot_role": "pitch_reference_response",
+      "angle_unit": null,
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "parameter_family": "ESO",
+        "parameter_triplet": [
+          100,
+          2500,
+          0.03
+        ],
+        "parameter_names_in_order": null,
+        "parameter_units_in_order": null
+      }
+    },
+    {
+      "id": "P06",
+      "file": "pitch_06.png",
+      "axis": "pitch",
+      "sha256": "a3b980d07d3e2cd1e851e26e91cc129c1a915a2757d135d61606d88464bd3b97",
+      "bytes": 362835,
+      "width_px": 1589,
+      "height_px": 889,
+      "user_annotation": "lqg",
+      "visible_plot_role": "pitch_reference_response",
+      "angle_unit": null,
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "mode_label": "lqg",
+        "lqg_definition": "LQR + Kalman state estimation",
+        "eso_in_mode_label": false,
+        "kalman_parameters": null
+      }
+    },
+    {
+      "id": "P07",
+      "file": "pitch_07.png",
+      "axis": "pitch",
+      "sha256": "1519310330c5b1d890cf65605d1d93aa46817672553d46729c1da9e7a8ebeeb8",
+      "bytes": 420166,
+      "width_px": 1606,
+      "height_px": 864,
+      "user_annotation": "lqg+eso",
+      "visible_plot_role": "pitch_reference_response",
+      "angle_unit": null,
+      "firmware_commit": null,
+      "test_date": null,
+      "user_confirmed_config": {
+        "mode_label": "lqg+eso",
+        "lqg_definition": "LQR + Kalman state estimation",
+        "eso_in_mode_label": true,
+        "kalman_parameters": null
+      }
+    }
+  ],
+  "unresolved_fields": [
+    "Yaw reference velocity feedforward setting; model, sample period and actual K for each capture",
+    "Names, order and units of Pitch ESO parameter triplets; per-image mapping of P01-P03",
+    "LQG implementation and Kalman parameters; Pitch angle units; firmware/config for each capture"
+  ],
+  "limitations": [
+    "Original screenshots only; no digitized or reconstructed timeseries.",
+    "Different windows, trajectories and display scales cannot be treated as controlled paired A/B trials.",
+    "Monitor Hz values do not establish the firmware control period.",
+    "Debugger symbols differ from the supplied archive; its settings cannot be assigned to every screenshot."
+  ],
+  "user_clarifications": [
+    {
+      "scope": "yaw",
+      "text": "Q的两项，角速度反馈，rad",
+      "date": "2026-10-07"
+    },
+    {
+      "scope": "pitch",
+      "text": "eso，lqg是lqr+kalman",
+      "date": "2026-10-07"
+    },
+    {
+      "scope": "yaw",
+      "text": "回答之前的问题，R矩阵给1",
+      "date": "2026-10-07"
+    }
+  ]
+}

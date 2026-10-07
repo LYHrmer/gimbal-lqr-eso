@@ -40,6 +40,9 @@
 
 ## 接入 STM32 与 RoboMaster 框架
 
+- [实际工程移植步骤](firmware_porting.md)：C++17 宿主的 CMake 接入、自定义重力曲线、模式与辨识边界及信号映射。
+- [2026-10-07 移植核查记录](porting_review_20261007.md) · [空白记录模板](../examples/porting_record_template.md)：私有整机经验对应的公开改进、软件复跑与用户确认的实机可用状态。
+- [部分实机调试截图](hardware_debug_screenshots_20261007.md)：14 张 Yaw/Pitch 原图、用户确认的 Yaw Q 与单位、反馈/前馈开关及待补充的配置字段。
 - [STM32 周期接口](stm32_integration.md)：真实 `dt`、一致反馈快照、来源时间、提交回调和故障复位。
 - [官方 C 板例程接入位置](opensource_integration_notes.md)：按官方 `19.gimbal_task` 的任务与设备分层定位替换点。
 - [其他 RoboMaster 框架核对](rm_framework_porting.md)：已核对框架的接口与实际阅读范围。
@@ -65,4 +68,4 @@
 - [积分步长核验](integration_convergence.md)：Yaw 结果对 RK4 子步数从 4 增至 8 的敏感性。
 - [独立检查记录](independent_review.md)：交叉检查与 Claude 辅助分析的范围，以及对应运行证据。
 
-当前可复核的性能证据来自合成仿真与软件测试，尚无针对本仓库 C 内核的实机原始日志或已完成的硬件 A/B 报告；新增的[早期整机回顾](lqr-leso-testing.md)和[在线辨识跟进](gm6020_pitch_identification_followup.md)记录的是用户独立实现的下游整机固件，不改变这一范围。**GM6020 Yaw 的主要收益包含积分配置变化；GM6020 Pitch 开发组仍未通过，完整 Pitch 验收仍为 `false`。** 各项百分比与对照条件见 [首页结果表](../README.md#验证结果怎么读)；[实机前修复](prehardware_review.md) 证明的是工程可靠性改善，没有新增跟踪精度提升结论。
+用户已确认 GM6020 Pitch 在整机上实际可用，见[本次记录](porting_review_20261007.md)。针对本仓库 C 内核的可复核性能证据仍来自合成仿真与软件测试，尚无该内核的实机原始日志或硬件 A/B 报告；[早期整机回顾](lqr-leso-testing.md)和[在线辨识跟进](gm6020_pitch_identification_followup.md)记录下游整机的实现与操作。**GM6020 Yaw 的主要收益包含积分配置变化；GM6020 Pitch 合成开发组仍未通过，完整 Pitch 合成验收仍为 `false`。** 各项百分比与对照条件见 [首页结果表](../README.md#验证结果怎么读)；这些软件验收结果不否定用户确认的实机可用性。

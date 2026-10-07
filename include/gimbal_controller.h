@@ -68,6 +68,20 @@ YawStatus gimbal_controller_step(GimbalController *controller,
                                  const YawReference *reference,
                                  const GimbalPose *pose, float dt_s,
                                  GimbalOutput *output);
+/* Custom pitch gravity model, with the SAME pose/joint/fault/limiter checks.
+ * Requires pitch_enabled=true and both built-in gravity coefficients zero.
+ * holding_torque_nm is the signed motor torque needed to balance gravity:
+ * plant J*a = motor_torque - drag - holding_torque + residual.
+ * Pass the CURRENT model value; the adapter retains the previous value for ESO.
+ * Include all model input source ages in pose.age_s; retain valid pose fields.
+ * No extra gravity may be added after this call. This is not a PRBS/excitation
+ * input or a measured torque. Reset on deliberate control/model transitions.
+ * Existing struct layouts and the built-in-model step remain unchanged. */
+YawStatus gimbal_controller_step_with_gravity(GimbalController *controller,
+                                 const YawFeedback *feedback,
+                                 const YawReference *reference,
+                                 const GimbalPose *pose, float dt_s,
+                                 float holding_torque_nm, GimbalOutput *output);
 
 #ifdef __cplusplus
 }
