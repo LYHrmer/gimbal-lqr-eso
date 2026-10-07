@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="340" viewBox="0 0 1280 340" role="img" aria-labelledby="title desc">
+  <title id="title">Gimbal Control — LQR + ESO</title>
+  <desc id="desc">面向 STM32 的双轴云台控制项目。C11 内核，GM6020 与 DM4310 适配。右侧为 Yaw / Pitch 结构示意，不是实机照片或测试曲线。</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#243645" stroke-width="0.7"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="340" rx="8" fill="#101f2c"/>
+  <path d="M0 0H8V340H0Z" fill="#76d9ca"/>
+  <rect x="832" y="0" width="448" height="340" fill="url(#grid)"/>
+  <path d="M832 0V340" stroke="#304452"/>
+
+  <g font-family="'DejaVu Sans Mono', 'Liberation Mono', monospace">
+    <text x="54" y="49" fill="#76d9ca" font-size="15" letter-spacing="3">GIMBAL CONTROL / OPEN SOURCE</text>
+    <text x="50" y="143" fill="#f0f3f5" font-size="78" font-weight="700" letter-spacing="-4">LQR + ESO</text>
+    <text x="55" y="191" fill="#b4c4cf" font-size="21" letter-spacing="1">MODEL. CONTROL. VALIDATE.</text>
+    <path d="M54 228H774" stroke="#304452"/>
+    <text x="54" y="270" fill="#f0f3f5" font-size="17">STM32</text>
+    <text x="170" y="270" fill="#597383" font-size="17">/</text>
+    <text x="203" y="270" fill="#f0f3f5" font-size="17">C11 CORE</text>
+    <text x="352" y="270" fill="#597383" font-size="17">/</text>
+    <text x="385" y="270" fill="#f0f3f5" font-size="17">YAW + PITCH</text>
+    <text x="54" y="307" fill="#94aebb" font-size="13" letter-spacing="1">GM6020 CURRENT MODE</text>
+    <text x="273" y="307" fill="#597383" font-size="13">·</text>
+    <text x="297" y="307" fill="#94aebb" font-size="13" letter-spacing="1">DM4310 MIT MODE</text>
+  </g>
+
+  <g transform="translate(1050 157)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0-114V122M-143 0H146" stroke="#496171" stroke-dasharray="4 7"/>
+    <ellipse cy="80" rx="120" ry="31" stroke="#76d9ca" stroke-width="1.5"/>
+    <path d="M-105 65L-120 80L-104 84" stroke="#76d9ca" stroke-width="2"/>
+    <path d="M-66-39V58Q-66 69-55 69H55Q66 69 66 58V-39" stroke="#7e97a8" stroke-width="8"/>
+    <path d="M-16 73V92H16V73" stroke="#7e97a8" stroke-width="3"/>
+    <rect x="-37" y="-65" width="74" height="82" rx="11" stroke="#d7e3ea" stroke-width="2" transform="rotate(-18)"/>
+    <path d="M-47-40H-66M47-40H66" stroke="#d7e3ea" stroke-width="5"/>
+    <circle cy="-26" r="19" stroke="#f5b977" stroke-width="2"/>
+    <circle cy="-26" r="5" fill="#f5b977" stroke="none"/>
+    <path d="M52-93A78 78 0 0 1 74-9M65-19L74-9L82-20" stroke="#f5b977" stroke-width="1.5"/>
+    <path d="M82-72H127V-87M85 93H142V106" stroke="#6b8292"/>
+  </g>
+  <g font-family="'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" letter-spacing="1">
+    <text x="1100" y="58" fill="#f5b977">02 / PITCH</text>
+    <text x="1110" y="282" fill="#76d9ca">01 / YAW</text>
+    <text x="860" y="315" fill="#7893a3" font-size="10" letter-spacing="2">TWO AXES · ONE CONTROL CORE</text>
+  </g>
+</svg>

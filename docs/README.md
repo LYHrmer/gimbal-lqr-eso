@@ -1,18 +1,32 @@
 # 文档导航
 
-[返回项目首页](../README.md)
+[项目首页](../README.md) · [实机图册](hardware_debug_screenshots_20261007.md) · [移植指南](firmware_porting.md) · [快速开始](quickstart.md)
 
-第一次接入，按下面五步阅读；已有工程可以直接进入对应环节。仓库提供 C 控制器、协议适配和电脑端实验，宿主工程负责参考与坐标、模式管理及 CAN 调度。
+从你要完成的任务开始，先找到步骤，再查接口、模型和验证依据。
 
-**只想开始辨识：** [GM6020 电流模式](gm6020_identification.md) · [DM4310 MIT 模式](dm4310_identification.md)。两者有各自的记录入口，先按电机选路，再读共用原理。
+## 按任务找入口
 
-| 步骤 | 首选入口 | 要解决的问题 |
+| 现在要做什么 | 首选入口 | 下一步 |
 | --- | --- | --- |
-| 1. 选择电机 | [DM4310 MIT](../variants/dm4310/README.md) · [GM6020 电流版](../variants/gm6020/README.md) | 驱动模式、协议范围、所需文件是否匹配 |
-| 2. 跑通 C 测试 | [快速开始](quickstart.md) → [仿真说明](simulation.md) | 先编译实际 C 代码，再运行电脑端实验 |
-| 3. 辨识参数 | [GM6020](gm6020_identification.md) / [DM4310](dm4310_identification.md) → [共用原理](system_identification.md) | 如何校准各自反馈、得到每轴模型并验证候选参数 |
-| 4. 接入 STM32 | [周期接口](stm32_integration.md) → [实机前软件检查](prehardware_review.md) | 参考、反馈、力矩提交和故障恢复怎样接入 |
-| 5. 核对验证收益 | [Yaw 验证](validation_report.md) · [Pitch 验证](pitch_validation.md) | 改善来自哪里，哪些对照与工况仍未通过 |
+| **看项目进展** | [实机截图与配置](hardware_debug_screenshots_20261007.md) | [在线辨识与实机视频](gm6020_pitch_identification_followup.md) |
+| **第一次运行** | [快速开始](quickstart.md) | [仿真与调参](simulation.md) |
+| **接入已有固件** | [实际工程移植](firmware_porting.md) | [周期与回调](stm32_integration.md) → [移植记录模板](../examples/porting_record_template.md) |
+| **开始参数辨识** | [GM6020](gm6020_identification.md) / [DM4310](dm4310_identification.md) | [共用原理](system_identification.md) → [数据记录](test_data_recording.md) |
+| **理解算法** | [控制模型与 C 实现](control_design.md) | [原代码解读](original_code_review.md) |
+| **核对性能结论** | [Yaw 验证](validation_report.md) / [Pitch 验证](pitch_validation.md) | [验收口径](performance_acceptance.md) → [原始结果](../README.md#验证结果怎么读) |
+
+## 实机记录
+
+**GM6020 Pitch 已在整机上实际可用（2026-10-07 用户确认）。** 按材料类型选择入口：
+
+| 材料 | 内容 | 阅读入口 |
+| --- | --- | --- |
+| **14 张原始截图** | Yaw 的 Q/R、角速度反馈、加速度前馈；Pitch 的 ESO 与 LQG 记录 | [打开图册](hardware_debug_screenshots_20261007.md) |
+| **32 秒实机视频** | Pitch 在线辨识、实际机构与调试读数 | [视频与说明](gm6020_pitch_identification_followup.md#4-视频里看到了什么) |
+| **整机接入经验** | C++17、重力曲线、时序、方向与输出所有权 | [移植核查](porting_review_20261007.md) |
+| **早期测试回顾** | 尚未调定时的参数、旁路、仿真退化与排查过程 | [早期记录](lqr-leso-testing.md) |
+
+这些材料记录下游整机实现；公开 C 内核的性能结果另见本页末尾的软件验证资料。
 
 ## 选择电机与协议
 
@@ -41,8 +55,7 @@
 ## 接入 STM32 与 RoboMaster 框架
 
 - [实际工程移植步骤](firmware_porting.md)：C++17 宿主的 CMake 接入、自定义重力曲线、模式与辨识边界及信号映射。
-- [2026-10-07 移植核查记录](porting_review_20261007.md) · [空白记录模板](../examples/porting_record_template.md)：私有整机经验对应的公开改进、软件复跑与用户确认的实机可用状态。
-- [部分实机调试截图](hardware_debug_screenshots_20261007.md)：14 张 Yaw/Pitch 原图、用户确认的 Yaw Q 与单位、反馈/前馈开关及待补充的配置字段。
+- [空白移植记录](../examples/porting_record_template.md)：版本、信号映射、实际功能开关与验证结果。
 - [STM32 周期接口](stm32_integration.md)：真实 `dt`、一致反馈快照、来源时间、提交回调和故障复位。
 - [官方 C 板例程接入位置](opensource_integration_notes.md)：按官方 `19.gimbal_task` 的任务与设备分层定位替换点。
 - [其他 RoboMaster 框架核对](rm_framework_porting.md)：已核对框架的接口与实际阅读范围。
@@ -50,8 +63,6 @@
 - [实机前软件检查](prehardware_review.md)：编译选项、Pitch 端点、RLS 异常恢复的失败复现与修复证据，以及仍待硬件验证的项目。
 - [单轴实验步骤与记录](experiment_plan.md)：协议核对、负载辨识、逐项开启控制功能和硬件 A/B 测试。
 - [实机数据留存与空白模板](test_data_recording.md)：依据 Rudder 原版/移植版逐项核对已有反馈、软件量和取样位置。
-- [GM6020 早期整机测试回顾](lqr-leso-testing.md)：双轴参数、实际功能旁路、仿真退化复算、滤波配置差异及简历表述；该次测试尚未调定，无实机原始日志。
-- [GM6020 Pitch 在线辨识与超调跟进](gm6020_pitch_identification_followup.md)：PRBS + 批量最小二乘在线辨识、辨识后超调的两个假说（LESO 带宽 vs. AHRS 解算）、一段实机操作视频的逐帧核验结论，以及用户确认"问题已解决"但未提供修复后源码的范围说明。
 
 三轴方案另见 [多轴参考与连续角](multiaxis_integration.md)。目前已有独立实例状态与角度助手；**大 Yaw → 小 Yaw → Pitch 协调层及三轴耦合闭环尚未实现**。Pitch 的姿态、机械关节角与重力角依据见 [坐标资料](pitch_sources.md)。
 
