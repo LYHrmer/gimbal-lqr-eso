@@ -31,6 +31,13 @@ function(gimbal_add_to_target target motor)
         "${root}/examples/stm32/gimbal_periodic.c")
     target_include_directories("${target}" PRIVATE "${root}/include" "${root}/examples/stm32")
     target_compile_features("${target}" PRIVATE c_std_11)
-    target_link_libraries("${target}" PRIVATE m)
+    # Append without choosing the host's plain/keyword link signature.
+    set_property(TARGET "${target}" APPEND PROPERTY LINK_LIBRARIES m)
+    get_target_property(target_type "${target}" TYPE)
+    if(target_type STREQUAL "STATIC_LIBRARY" OR target_type STREQUAL "OBJECT_LIBRARY")
+        # Preserve PRIVATE dependency propagation to the final link step.
+        set_property(TARGET "${target}" APPEND PROPERTY
+            INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:m>")
+    endif()
     set_property(TARGET "${target}" PROPERTY GIMBAL_CONTROLLER_MOTOR "${motor}")
 endfunction()

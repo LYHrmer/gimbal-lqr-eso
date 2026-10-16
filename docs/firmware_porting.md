@@ -15,6 +15,8 @@ gimbal_add_to_target(your_firmware_target GM6020)
 
 DM4310 将第二个参数改为 `DM4310`。目标名换成已有 `add_executable()` 的目标；每目标调用一次。此入口加入基础核心、Pitch 适配、坐标助手、所选协议和 `gimbal_periodic.c`，设置 include 路径、C11 要求和 `libm` 链接。它不会配置本库的主机共享库、测试工程、实验 RLS 或仿真参数。宿主里的 `.c` 仍由 C 编译器处理，`.cpp` 可保持 C++17，公开头文件已有 `extern "C"`。
 
+宿主原有的 `target_link_libraries(target libraries...)` 与带 `PRIVATE/PUBLIC` 的写法均可保留；接入函数不会替宿主选择链接调用形式。若接到静态库或对象库，`libm` 依赖会随目标传到最终链接步骤。宿主自身对同一目标的链接调用仍须遵守 CMake 的形式一致规则。
+
 CPU/FPU/ABI、优化和链接选项沿用宿主，须覆盖新增 C 文件。不要只设置 `CMAKE_CXX_FLAGS`，遗漏 C 源码；不要给本库另开一套不一致的浮点 ABI。若旧工程以 GLOB 收集整个 `third_party/`，先排除本库，避免手工收集与此入口重复。原类实现可以保留作回退，但其输出不能再接到新闭环后面。
 
 使用 `-O2` 或经验证的 `-O3`，保留有限数检查；`-Ofast`、`-ffast-math`、`-ffinite-math-only` 不允许。入口不会悄悄覆盖整车编译选项，危险选项会触发源码编译错误；重关联等未必有宏可检测的选项仍须核查，详见 [编译契约](stm32_integration.md#c11fpu-和实际耗时)。
@@ -25,7 +27,7 @@ CPU/FPU/ABI、优化和链接选项沿用宿主，须覆盖新增 C 文件。不
 python3 -m unittest discover -s tests -p 'test_cmake_port.py'
 ```
 
-测试为 GM6020、DM4310 分别创建独立宿主工程，编译并运行公开 C API，检查只加入所选协议，以及重复接入、无效电机名和危险优化被拒绝。测试中的数值是合成 fixture，不是上机默认值。
+测试为 GM6020、DM4310 分别创建独立宿主工程，编译并运行公开 C API，检查只加入所选协议。覆盖两种宿主链接写法在接入前/后的调用，以及静态库、对象库的 `libm` 传播；同时检查重复接入、无效电机名和危险优化被拒绝。测试中的数值是合成 fixture，不是上机默认值。
 
 ## 2. 先固定信号、单位与所有权
 
