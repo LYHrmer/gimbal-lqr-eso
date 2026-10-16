@@ -249,6 +249,134 @@ static void test_velocity_error_filter(void)
     assert(c.velocity_error_filtered_rad_s == 1.0f);
 }
 
+static void test_acceleration_feedforward_observer_history(void)
+{
+    YawConfig cfg = config();
+    cfg.damping_nm_s_rad = 0.0f;
+    cfg.torque_slew_nm_s = 10000.0f;
+    YawController c;
+    YawFeedback f = feedback();
+    YawReference r = reference();
+    YawOutput out;
+    assert(yaw_controller_init(&c, &cfg));
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_WARMUP);
+    double position = 0.0, velocity = 0.0;
+    float previous_command = 0.0f;
+    for (int i = 0; i < 400; ++i) {
+        const float h = (i % 2 == 0) ? 0.001f : 0.002f;
+        /* Independent exact plant: the PREVIOUS total command acted over h.
+         * No physical disturbance; commanded acceleration must not become d. */
+        const double acceleration = (double)previous_command / cfg.inertia_kg_m2;
+        position += velocity * h + 0.5 * acceleration * h * h;
+        velocity += acceleration * h;
+        f.position_rad = r.position_rad = (float)position;
+        f.velocity_rad_s = r.velocity_rad_s = (float)velocity;
+        r.acceleration_rad_s2 = (i / 20) % 2 == 0 ? 4.0f : -4.0f;
+        assert(yaw_controller_step(&c, &f, &r, h, &out) == YAW_OK);
+        assert(fabsf(out.disturbance_nm) < 0.0001f);
+        assert(fabsf(out.torque_nm - cfg.inertia_kg_m2 * r.acceleration_rad_s2) < 0.0001f);
+        previous_command = out.torque_nm;
+    }
+    yaw_controller_reset(&c);
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_WARMUP);
+    assert(out.torque_nm == 0.0f && c.last_torque_nm == 0.0f);
+}
+
+static void test_acceleration_feedforward_limits(void)
+{
+    YawConfig cfg = config();
+    cfg.k_integral = 2.0f;
+    cfg.torque_limit_nm = 0.2f;
+    cfg.eso_bandwidth_rad_s = cfg.eso_gain = 0.0f;
+    YawController c;
+    YawFeedback f = feedback();
+    YawReference r = reference();
+    r.acceleration_rad_s2 = 25.0f;
+    YawOutput out;
+    assert(yaw_controller_init(&c, &cfg));
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_WARMUP);
+    assert(out.torque_nm == 0.0f);
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_OK);
+    assert((out.flags & YAW_TORQUE_LIMITED) && (out.flags & YAW_SLEW_LIMITED));
+    assert(fabsf(out.torque_nm - 0.1f) < 1e-6f);
+    /* Zero position error: negative integral is tracking the actual limited
+     * total command, including acceleration feedforward, not accumulating e. */
+    assert(c.integral_nm < 0.0f);
+    float previous = out.torque_nm;
+    for (int i = 0; i < 100; ++i) {
+        if (i == 50) r.acceleration_rad_s2 = -25.0f;
+        assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_OK);
+        assert(fabsf(out.torque_nm) <= cfg.torque_limit_nm);
+        assert(fabsf(out.torque_nm - previous) <= 0.100001f);
+        assert(fabsf(c.integral_nm) <= cfg.integral_limit_nm);
+        previous = out.torque_nm;
+    }
+    /* A stale acceleration packet is not made fresh by the periodic reader. */
+    r.age_s = cfg.reference_timeout_s + 0.001f;
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_STALE_REFERENCE);
+    assert(out.torque_nm == 0.0f && c.integral_nm == 0.0f);
+    r.age_s = 0.0f;
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_STALE_REFERENCE);
+    yaw_controller_reset(&c);
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_WARMUP);
+    assert(out.torque_nm == 0.0f);
+}
+
+static double acceleration_tracking_trial(bool acceleration_enabled, float h)
+{
+    /* Ideal, noise-free, independent ZOH plant. Only J*a_ref is switched;
+     * measured speed feedback and B*v_ref stay identical in both runs. */
+    YawConfig cfg = config();
+    cfg.eso_bandwidth_rad_s = cfg.eso_gain = 0.0f;
+    cfg.torque_slew_nm_s = 10000.0f; /* Isolate tracking from startup limiting. */
+    YawController c;
+    YawFeedback f = feedback();
+    YawReference r = reference();
+    YawOutput out;
+    const double amplitude = 0.08, omega = 4.0 * 3.14159265358979323846;
+    const double drag_time = (double)cfg.inertia_kg_m2 / cfg.damping_nm_s_rad;
+    const double one_minus_decay = -expm1(-(double)h / drag_time);
+    double position = 0.0, velocity = amplitude * omega, sum_squared_error = 0.0;
+    int samples = 0;
+    assert(yaw_controller_init(&c, &cfg));
+    for (int i = 0; (double)i * h < 4.0; ++i) {
+        const double t = (double)i * h;
+        r.position_rad = (float)(amplitude * sin(omega * t));
+        r.velocity_rad_s = (float)(amplitude * omega * cos(omega * t));
+        r.acceleration_rad_s2 = acceleration_enabled ?
+            (float)(-amplitude * omega * omega * sin(omega * t)) : 0.0f;
+        f.position_rad = (float)position;
+        f.velocity_rad_s = (float)velocity;
+        const YawStatus status = yaw_controller_step(&c, &f, &r, h, &out);
+        assert(status == (i == 0 ? YAW_WARMUP : YAW_OK));
+        assert(!(out.flags & (YAW_TORQUE_LIMITED | YAW_SLEW_LIMITED)));
+        if (t >= 0.5) {
+            const double error = (double)r.position_rad - position;
+            sum_squared_error += error * error;
+            ++samples;
+        }
+        const double equilibrium_velocity = (double)out.torque_nm / cfg.damping_nm_s_rad;
+        position += equilibrium_velocity * h +
+            (velocity - equilibrium_velocity) * drag_time * one_minus_decay;
+        velocity += (equilibrium_velocity - velocity) * one_minus_decay;
+    }
+    assert(samples > 0);
+    return sqrt(sum_squared_error / samples);
+}
+
+static void test_acceleration_tracking(void)
+{
+    const float periods[] = {0.001f, 0.002f};
+    for (unsigned i = 0; i < sizeof(periods) / sizeof(periods[0]); ++i) {
+        const double off = acceleration_tracking_trial(false, periods[i]);
+        const double on = acceleration_tracking_trial(true, periods[i]);
+        /* A wiring regression, not a hardware performance acceptance gate. */
+        assert(off > 0.001 && on < 0.1 * off);
+        printf("ideal acceleration A/B: dt=%.3f s, RMSE off=%.8f on=%.8f rad\n",
+               (double)periods[i], off, on);
+    }
+}
+
 int main(void)
 {
     test_invalid_config();
@@ -262,7 +390,10 @@ int main(void)
     assert(baseline_error > 0.015f && eso_error < 0.002f);
     assert(eso_error < 0.15f * baseline_error);
     test_jitter_and_output_invariants();
-    printf("yaw_controller: 8 test groups passed; synthetic load hold error %.7f -> %.7f rad\n",
+    test_acceleration_feedforward_observer_history();
+    test_acceleration_feedforward_limits();
+    test_acceleration_tracking();
+    printf("yaw_controller: all test groups passed; synthetic load hold error %.7f -> %.7f rad\n",
            (double)baseline_error, (double)eso_error);
     return 0;
 }

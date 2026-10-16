@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-16",
+  "kind": "private_source_review_and_public_synthetic_regression",
+  "public_baseline_commit": "d66b3deeed124b666bede2a0ed7f6bc023b49e0d",
+  "runtime_sources_and_api_unchanged": true,
+  "private_archive": {
+    "sha256": "f906a2df3e856dc291e066b82f61e798e111e7655322c3a98fc1bbdb8979ed2c",
+    "bytes": 9772086,
+    "archive_or_firmware_sources_published": false,
+    "archive_modified": false,
+    "inspection_only_not_a_hardware_run": true
+  },
+  "checks": [
+    {
+      "name": "release_ctest_with_opt_in_rls",
+      "passed": true,
+      "tests": 8,
+      "commands": [
+        "cmake -S . -B build/port-review-20261016 -DCMAKE_BUILD_TYPE=Release -DGIMBAL_BUILD_RLS_EXPERIMENT=ON",
+        "cmake --build build/port-review-20261016 --parallel 4",
+        "ctest --test-dir build/port-review-20261016 --output-on-failure -V"
+      ]
+    },
+    {
+      "name": "address_and_undefined_behavior_sanitizers_with_opt_in_rls",
+      "passed": true,
+      "tests": 8,
+      "commands": [
+        "cmake -S . -B build/port-review-20261016-sanitize -DCMAKE_BUILD_TYPE=Debug -DYAW_SANITIZERS=ON -DGIMBAL_BUILD_RLS_EXPERIMENT=ON",
+        "cmake --build build/port-review-20261016-sanitize --parallel 4",
+        "ctest --test-dir build/port-review-20261016-sanitize --output-on-failure"
+      ]
+    },
+    {
+      "name": "python_suite_including_cpp17_host",
+      "passed": true,
+      "tests": 60,
+      "commands": [
+        "python3 -m unittest discover -s tests -p 'test_*.py'"
+      ]
+    },
+    {
+      "name": "cpp17_gm6020_and_dm4310_consumer",
+      "passed": true,
+      "tests": 3,
+      "included_in_python_suite": true,
+      "commands": [
+        "python3 -m unittest discover -s tests -p 'test_cmake_port.py'"
+      ]
+    },
+    {
+      "name": "cortex_m4f_compile_and_archives",
+      "passed": true,
+      "objects": 8,
+      "compiler": "arm-none-eabi-gcc 10.3.1 20210621",
+      "scope": "C compilation and static archives; no private firmware link, board execution or timing claim",
+      "commands": [
+        "python3 tools/check_arm_build.py --newlib-include /usr/include/newlib --include-experimental-rls --output build/port-review-20261016-arm --report build/port-review-20261016-arm.json"
+      ]
+    }
+  ],
+  "acceleration_ablation": {
+    "implementation": "tests/test_yaw_controller.c: acceleration_tracking_trial",
+    "plant": "independent exact ZOH single-axis J/B model; ideal measurement; no extra actuator lag",
+    "inertia_kg_m2": 0.039,
+    "damping_nm_s_rad": 0.3,
+    "k_position": 10,
+    "k_velocity": 1,
+    "k_integral": 0,
+    "eso_bandwidth_rad_s": 0,
+    "eso_gain": 0,
+    "reference_amplitude_rad": 0.08,
+    "reference_frequency_hz": 2,
+    "duration_s": 4,
+    "metric_window_s": [
+      0.5,
+      4
+    ],
+    "torque_limit_nm": 7,
+    "torque_slew_nm_s": 10000,
+    "torque_and_slew_saturation_observed": false,
+    "only_changed_term": "J * reference.acceleration_rad_s2",
+    "target_velocity_and_measured_velocity_feedback_retained": true,
+    "rmse_unit": "rad",
+    "rows": [
+      {
+        "dt_s": 0.001,
+        "acceleration_off_rmse": 0.02089113,
+        "acceleration_on_rmse": 0.00015265
+      },
+      {
+        "dt_s": 0.002,
+        "acceleration_off_rmse": 0.02102407,
+        "acceleration_on_rmse": 0.00030476
+      }
+    ],
+    "results_rounded_to_printed_precision": true,
+    "interpretation": "wiring regression only; not GM6020 hardware or robust performance acceptance"
+  },
+  "tested_file_sha256": {
+    "tests/test_yaw_controller.c": "f7aa488e8c85c12b465a36114e3fe23d8b607575f71402173361c9d54051c8b5",
+    "tests/test_multiaxis.c": "6e8202f340f8df5fe9e71ac34a13e2d49a2873eea1fa93327991510fdb14fbb7",
+    "tests/cmake_port/main.cpp": "e4d962cc49ed9b9034e3ec6713d9f8199db65f2eccf6a258f2281ff85d9b276b",
+    "src/yaw_controller.c": "ea75061c12c08acbe64f64bb9e5c1e3c0a5a46ee64a2f23222267d4948ad42eb",
+    "src/gimbal_controller.c": "b63eff4c4d2a542c17c13e6e0538b60479188b663c378f4dc9b29942290d562f"
+  },
+  "limitations": [
+    "No motor operation, new hardware samples or private whole-firmware build.",
+    "Received archive feature switches are not assumed identical to previous screenshots or flashed firmware.",
+    "Existing development/holdout performance claims and thresholds are unchanged.",
+    "Full synthetic performance benchmarks were not rerun locally because runtime sources and profiles are unchanged; this record covers the stated checks."
+  ]
+}

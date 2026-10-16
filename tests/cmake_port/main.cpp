@@ -7,6 +7,7 @@
 #include "dm_mit.h"
 #endif
 #include <cassert>
+#include <cmath>
 
 int main()
 {
@@ -42,8 +43,12 @@ int main()
     GimbalOutput output{};
     assert(gimbal_controller_step_with_gravity(&axis, &feedback, &reference, &pose,
                                                0.001f, 0.3f, &output) == YAW_WARMUP);
+    reference.velocity_rad_s = 0.2f;
+    reference.acceleration_rad_s2 = 3.0f;
+    reference.age_s = 0.004f;
     assert(gimbal_controller_step_with_gravity(&axis, &feedback, &reference, &pose,
                                                0.001f, 0.3f, &output) == YAW_OK);
+    assert(std::fabs(output.control.feedforward_nm - 0.41f) < 1e-6f);
     assert(output.control.torque_nm > 0.0f && output.control.torque_nm <= 0.100001f);
     /* Opposite motor direction is an output mapping, not a negative inertia. */
 #if PORT_MOTOR_GM6020
@@ -61,6 +66,13 @@ int main()
     assert(dm_mit_encode_torque(&drive, output.control.torque_nm, &command) != DM_MIT_OK);
     assert(!command.valid); /* Unconfigured drive must not produce a command. */
 #endif
+    /* Acceleration-only ablation: retain target speed and the packet age. */
+    reference.acceleration_rad_s2 = 0.0f;
+    assert(gimbal_controller_step_with_gravity(&axis, &feedback, &reference, &pose,
+                                               0.001f, 0.3f, &output) == YAW_OK);
+    assert(std::fabs(output.control.feedforward_nm - 0.32f) < 1e-6f);
+    assert(std::fabs(output.control.feedback_nm - 0.1f) < 1e-6f);
+    assert(reference.age_s == 0.004f);
     Stm32GimbalPeriodic periodic{};
     Stm32GimbalHooks hooks{};
     assert(!stm32_gimbal_periodic_init(&periodic, &cfg, hooks));

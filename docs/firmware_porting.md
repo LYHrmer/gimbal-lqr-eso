@@ -1,6 +1,6 @@
 # 从实际整机工程接入公开 C 库
 
-[项目首页](../README.md) · [STM32 周期与回调](stm32_integration.md) · [本次核查记录](porting_review_20261007.md)
+[项目首页](../README.md) · [STM32 周期与回调](stm32_integration.md) · [重力接入核查](porting_review_20261007.md) · [新快照核查](porting_review_20261016.md)
 
 这份说明来自对用户私有整机归档的接口核查。整机源码继续由宿主维护，公开库只提供控制核心、协议编码和接入工具。迁移时先接一轴、一种模式，保留明确的旧/新控制选择；每周期只有被选中的控制器更新状态并提交命令。
 
@@ -45,6 +45,8 @@ python3 -m unittest discover -s tests -p 'test_cmake_port.py'
 反馈、参考、有效位和源戳必须成组发布/读取。分别看见“新时间”和“旧角度”仍是无效快照。DWT 只用于实际间隔或耗时测量；越窗周期不能回填 1 ms 后继续输出。`stm32_gimbal_periodic_step()` 已有周期、源时间和停止锁存处理；直接调用核心时，由宿主提供这些年龄、授权和停机动作。
 
 GM6020 输出方向反转时，先将 SI 力矩按方向映射，再调用 `gm6020_torque_to_word()`。只有 `GM6020_OK && word.valid` 才能更新所属组的槽位；由已有唯一 CAN 所有者发布完整 4 槽，保留其他电机的新鲜命令。不要在这里增加第二个发送任务。
+
+加速度前馈通过 `YawReference.acceleration_rad_s2` 接入，核心已有 `Jαr`。完整示例和单变量开关方法见 [加速度前馈接入](acceleration_feedforward.md)。核查顺序要从参考接收一直追到最终 CAN 槽位：保存了加速度、更新了 ESO 或算出了内存中的力矩，都不代表该分项已经进入电机命令。
 
 控制器力矩上限应不大于协议层的有效应用限值 `min(torque_limit_nm, current_limit_a * Kt)`；运行中降额先调用 `gimbal_controller_set_torque_limit()`。编码后的 `torque_wire_nm` 是量化命令的名义值，不是电机实测力矩。`applied_torque_valid` 只用于确有上一完整周期平均执行力矩的情况，不能拿本帧 CAN 命令或瞬时电流冒充它。
 

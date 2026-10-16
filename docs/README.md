@@ -11,6 +11,7 @@
 | **看项目进展** | [实机截图与配置](hardware_debug_screenshots_20261007.md) | [在线辨识与实机视频](gm6020_pitch_identification_followup.md) |
 | **第一次运行** | [快速开始](quickstart.md) | [仿真与调参](simulation.md) |
 | **接入已有固件** | [实际工程移植](firmware_porting.md) | [周期与回调](stm32_integration.md) → [移植记录模板](../examples/porting_record_template.md) |
+| **接入加速度前馈** | [信号映射与开关对照](acceleration_feedforward.md) | [新整机快照核查](porting_review_20261016.md) |
 | **开始参数辨识** | [GM6020](gm6020_identification.md) / [DM4310](dm4310_identification.md) | [共用原理](system_identification.md) → [数据记录](test_data_recording.md) |
 | **理解算法** | [控制模型与 C 实现](control_design.md) | [原代码解读](original_code_review.md) |
 | **核对性能结论** | [Yaw 验证](validation_report.md) / [Pitch 验证](pitch_validation.md) | [验收口径](performance_acceptance.md) → [原始结果](../README.md#验证结果怎么读) |
@@ -24,6 +25,7 @@
 | **14 张原始截图** | Yaw 的 Q/R、角速度反馈、加速度前馈；Pitch 的 ESO 与 LQG 记录 | [打开图册](hardware_debug_screenshots_20261007.md) |
 | **32 秒实机视频** | Pitch 在线辨识、实际机构与调试读数 | [视频与说明](gm6020_pitch_identification_followup.md#4-视频里看到了什么) |
 | **整机接入经验** | C++17、重力曲线、时序、方向与输出所有权 | [移植核查](porting_review_20261007.md) |
+| **新整机快照** | 加速度有效路径、轴间积分、输入单位与最终 CAN 命令 | [2026-10-16 核查](porting_review_20261016.md) |
 | **早期测试回顾** | 尚未调定时的参数、旁路、仿真退化与排查过程 | [早期记录](lqr-leso-testing.md) |
 
 这些材料记录下游整机实现；公开 C 内核的性能结果另见本页末尾的软件验证资料。
@@ -55,6 +57,7 @@
 ## 接入 STM32 与 RoboMaster 框架
 
 - [实际工程移植步骤](firmware_porting.md)：C++17 宿主的 CMake 接入、自定义重力曲线、模式与辨识边界及信号映射。
+- [加速度前馈接入](acceleration_feedforward.md)：目标加速度、实测速度、限幅、ESO 输入历史及可运行的单变量回归。
 - [空白移植记录](../examples/porting_record_template.md)：版本、信号映射、实际功能开关与验证结果。
 - [STM32 周期接口](stm32_integration.md)：真实 `dt`、一致反馈快照、来源时间、提交回调和故障复位。
 - [官方 C 板例程接入位置](opensource_integration_notes.md)：按官方 `19.gimbal_task` 的任务与设备分层定位替换点。

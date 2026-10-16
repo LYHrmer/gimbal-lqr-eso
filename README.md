@@ -106,6 +106,8 @@ gimbal_add_to_target(your_firmware_target GM6020)
 
 DM4310 将第二个参数替换为 `DM4310`。完整接入顺序、自定义重力曲线及模式切换见[移植指南](docs/firmware_porting.md)；周期与回调定义见 [STM32 接口](docs/stm32_integration.md)。
 
+**接入加速度前馈：** 将目标加速度写入 `YawReference.acceleration_rad_s2`，核心已包含 `Jαr`。新增[接线与开关对照指南](docs/acceleration_feedforward.md)，覆盖前馈限幅、ESO 输入历史和轴间隔离；依据见 [10 月 16 日整机快照核查](docs/porting_review_20261016.md)。
+
 ```mermaid
 flowchart LR
     R["宿主参考与坐标"] --> C["前馈 + LQR + ESO"]

@@ -7,8 +7,49 @@
 
 static void close_to(float a, float b, float tolerance) { assert(fabsf(a-b) < tolerance); }
 
+static void test_integral_and_feedforward_axis_isolation(void)
+{
+    YawConfig cfg = dm4310_simulation_config();
+    cfg.eso_bandwidth_rad_s = cfg.eso_gain = 0.0f;
+    cfg.k_integral = 2.0f;
+    cfg.integral_limit_nm = 0.2f;
+    cfg.antiwindup_rate_s = 10.0f;
+    cfg.torque_slew_nm_s = 10000.0f; /* No antiwindup transient in this isolation test. */
+    YawController yaw, pitch;
+    YawFeedback f = {.valid=true};
+    YawReference yaw_ref = {.position_rad=0.01f, .valid=true};
+    YawReference pitch_ref = {.valid=true};
+    YawOutput yaw_out, pitch_out;
+    assert(yaw_controller_init(&yaw, &cfg));
+    assert(yaw_controller_init(&pitch, &cfg));
+    assert(yaw_controller_step(&yaw, &f, &yaw_ref, 0.001f, &yaw_out) == YAW_WARMUP);
+    assert(yaw_controller_step(&pitch, &f, &pitch_ref, 0.001f, &pitch_out) == YAW_WARMUP);
+    for (int i = 0; i < 100; ++i) {
+        yaw_ref.acceleration_rad_s2 = i % 2 == 0 ? 1.0f : -1.0f;
+        assert(yaw_controller_step(&yaw, &f, &yaw_ref, 0.001f, &yaw_out) == YAW_OK);
+        assert(yaw_controller_step(&pitch, &f, &pitch_ref, 0.001f, &pitch_out) == YAW_OK);
+        assert(yaw_out.integral_nm > 0.0f);
+        assert(pitch_out.torque_nm == 0.0f && pitch_out.integral_nm == 0.0f);
+    }
+    yaw_controller_reset(&yaw);
+    yaw_ref.position_rad = yaw_ref.acceleration_rad_s2 = 0.0f;
+    pitch_ref.position_rad = -0.01f;
+    pitch_ref.acceleration_rad_s2 = -1.0f;
+    assert(yaw_controller_step(&yaw, &f, &yaw_ref, 0.001f, &yaw_out) == YAW_WARMUP);
+    for (int i = 0; i < 100; ++i) {
+        assert(yaw_controller_step(&pitch, &f, &pitch_ref, 0.001f, &pitch_out) == YAW_OK);
+        assert(yaw_controller_step(&yaw, &f, &yaw_ref, 0.001f, &yaw_out) == YAW_OK);
+        assert(pitch_out.integral_nm < 0.0f && pitch_out.torque_nm < 0.0f);
+        assert(yaw_out.torque_nm == 0.0f && yaw_out.integral_nm == 0.0f);
+    }
+    const float pitch_integral = pitch.integral_nm;
+    assert(yaw_controller_latch_fault(&yaw, YAW_BAD_TIMING, &yaw_out) == YAW_BAD_TIMING);
+    assert(pitch.fault == YAW_OK && pitch.integral_nm == pitch_integral);
+}
+
 int main(void)
 {
+    test_integral_and_feedforward_axis_isolation();
     const float pi = 3.14159265358979323846f;
     float lifted = 0.0f;
     for (int turn = -100; turn <= 100; ++turn) {
