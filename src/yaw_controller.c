@@ -187,10 +187,12 @@ YawStatus yaw_controller_step_with_load(YawController *c, const YawFeedback *f,
                               float previous_load_nm, YawOutput *out)
 {
     if (out != NULL) memset(out, 0, sizeof(*out));
-    if (c == NULL || f == NULL || r == NULL || out == NULL)
-        return fault(c, out, YAW_BAD_ARGUMENT);
+    if (c == NULL) return fault(c, out, YAW_BAD_ARGUMENT);
     if (!c->initialized) return fault(c, out, YAW_BAD_CONFIG);
+    /* A later caller error must not replace the latched root cause. */
     if (c->fault != YAW_OK) return fault(c, out, c->fault);
+    if (f == NULL || r == NULL || out == NULL)
+        return fault(c, out, YAW_BAD_ARGUMENT);
     if (!isfinite(current_load_nm) || !isfinite(previous_load_nm))
         return fault(c, out, YAW_NUMERIC_FAULT);
     const YawConfig *cfg = &c->config;

@@ -120,6 +120,30 @@ static void test_input_faults(void)
     assert(out.torque_nm == 0.0f);
 }
 
+static void test_first_fault_survives_bad_arguments(void)
+{
+    YawController c;
+    YawConfig cfg = config();
+    YawFeedback f = feedback();
+    YawReference r = reference();
+    YawOutput out;
+    assert(yaw_controller_init(&c, &cfg));
+    assert(yaw_controller_step(&c, &f, &r, 0.02f, &out) == YAW_BAD_TIMING);
+    assert(yaw_controller_step(&c, NULL, &r, 0.001f, &out) == YAW_BAD_TIMING);
+    assert(out.status == YAW_BAD_TIMING && out.torque_nm == 0.0f);
+    assert(yaw_controller_step(&c, &f, NULL, 0.001f, &out) == YAW_BAD_TIMING);
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, NULL) == YAW_BAD_TIMING);
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_BAD_TIMING);
+    yaw_controller_reset(&c);
+    assert(yaw_controller_step(&c, NULL, &r, 0.001f, &out) == YAW_BAD_ARGUMENT);
+    assert(yaw_controller_step(NULL, &f, &r, 0.001f, &out) == YAW_BAD_ARGUMENT);
+    cfg.inertia_kg_m2 = 0.0f;
+    assert(!yaw_controller_init(&c, &cfg));
+    assert(yaw_controller_step(&c, NULL, &r, 0.001f, &out) == YAW_BAD_CONFIG);
+    assert(out.status == YAW_BAD_CONFIG && out.torque_nm == 0.0f);
+    assert(yaw_controller_step(&c, &f, &r, 0.001f, NULL) == YAW_BAD_CONFIG);
+}
+
 static void test_derating_and_stop(void)
 {
     YawConfig cfg = config();
@@ -383,6 +407,7 @@ int main(void)
     test_velocity_error_filter();
     test_timing_and_latched_fault();
     test_input_faults();
+    test_first_fault_survives_bad_arguments();
     test_derating_and_stop();
     test_antiwindup();
     const float baseline_error = disturbance_trial(0.0f);

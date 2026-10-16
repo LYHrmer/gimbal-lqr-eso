@@ -53,7 +53,7 @@ typedef struct {
     float position_rad;
     float velocity_rad_s;
     float acceleration_rad_s2;
-    float age_s;                     /* Timestamp of source, not of loop readout. */
+    float age_s;                     /* Seconds since source sample, not loop readout. */
     bool valid;
 } YawReference;
 

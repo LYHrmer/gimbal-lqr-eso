@@ -3,6 +3,7 @@
 import argparse
 import csv
 import ctypes as ct
+from collections import deque
 from dataclasses import asdict, dataclass, replace
 import hashlib
 import json
@@ -29,7 +30,8 @@ from tools.tune_lqr import design_lqr
 
 DURATION = 6.
 EXTRA_COLUMNS = ["transmitted_command_nm", "following_interval_envelope_limited",
-                 "following_interval_envelope_limit_eval_fraction", "integral_nm"]
+                 "following_interval_envelope_limit_eval_fraction", "integral_nm",
+                 "feedback_age_s"]
 TEAM_COMMIT = "f67ef28a8a6aedb047f1e65837330034313e0be8"
 
 
@@ -178,8 +180,17 @@ def step_allow_latched_fault(core, controller, feedback, reference):
 
 
 def run_trial(core, scenario, gain, seed=SEED, duration=DURATION, substeps=4,
-              limiter=None, quantizer=None, controller_config=None):
-    """One common plant loop. Optional limiter/quantizer support motor-specific profiles."""
+              limiter=None, quantizer=None, controller_config=None,
+              feedback_period_samples=1, feedback_delay_samples=0):
+    """One common plant loop; optional synchronous feedback sampling/transport.
+
+    The first snapshot is already available at t=0 (startup synchronization).
+    Later samples arrive after the specified delay. Held snapshots retain their
+    source timestamp and noise; reading them does not make them fresh again.
+    """
+    if (type(feedback_period_samples) is not int or feedback_period_samples < 1 or
+            type(feedback_delay_samples) is not int or feedback_delay_samples < 0):
+        raise ValueError("feedback period/delay must be positive/nonnegative integer samples")
     plant = scenario.plant
     config = Config(**controller_config) if controller_config is not None else make_config(gain, .8)
     config.torque_limit_nm = scenario.torque_cap_nm
@@ -192,19 +203,30 @@ def run_trial(core, scenario, gain, seed=SEED, duration=DURATION, substeps=4,
     data = np.zeros((round(duration/DT)+1, len(COLUMNS)+len(EXTRA_COLUMNS)))
     p = v = torque = 0.
     pending = [0.]*plant.command_delay_samples
+    feedback_pending = deque()
+    held_feedback = None
     completed, failure, first_fault = True, None, None
     actual_count = 0
     for index in range(len(data)):
         time_s = index*DT
         rp, rv, ra = reference_at(time_s, scenario.frequency_hz, math.radians(scenario.amplitude_deg))
-        noise = rng.normal(size=2)
-        mp = p + noise[0]*plant.position_noise_std_rad
-        mv = v + noise[1]*plant.velocity_noise_std_rad_s
-        if plant.position_quantum_rad:
-            mp = float(np.round(mp/plant.position_quantum_rad)*plant.position_quantum_rad)
-        if plant.velocity_quantum_rad_s:
-            mv = float(np.round(mv/plant.velocity_quantum_rad_s)*plant.velocity_quantum_rad_s)
-        out = step_allow_latched_fault(core, controller, Feedback(mp, mv, 0., 0., True, False),
+        if index % feedback_period_samples == 0:
+            noise = rng.normal(size=2)
+            mp = p + noise[0]*plant.position_noise_std_rad
+            mv = v + noise[1]*plant.velocity_noise_std_rad_s
+            if plant.position_quantum_rad:
+                mp = float(np.round(mp/plant.position_quantum_rad)*plant.position_quantum_rad)
+            if plant.velocity_quantum_rad_s:
+                mv = float(np.round(mv/plant.velocity_quantum_rad_s)*plant.velocity_quantum_rad_s)
+            sample = (index, mp, mv)
+            feedback_pending.append((index + feedback_delay_samples, sample))
+            if index == 0:
+                held_feedback = sample
+        while feedback_pending and feedback_pending[0][0] <= index:
+            _, held_feedback = feedback_pending.popleft()
+        source_index, mp, mv = held_feedback
+        age_s = (index - source_index)*DT
+        out = step_allow_latched_fault(core, controller, Feedback(mp, mv, age_s, 0., True, False),
                                        Reference(rp, rv, ra, 0., True))
         if not all(math.isfinite(value) for value in (out.torque_nm, out.unconstrained_torque_nm,
                 out.compensation_nm, out.disturbance_nm)):
@@ -218,6 +240,7 @@ def run_trial(core, scenario, gain, seed=SEED, duration=DURATION, substeps=4,
             out.flags, out.status]
         data[index, len(COLUMNS)] = sent
         data[index, len(COLUMNS)+3] = out.integral_nm
+        data[index, len(COLUMNS)+4] = age_s
         actual_count = index+1
         if index+1 == len(data):
             break
@@ -257,7 +280,11 @@ def run_trial(core, scenario, gain, seed=SEED, duration=DURATION, substeps=4,
     metrics = {"completed": completed, "failure": failure, "first_latched_fault": first_fault,
                "evaluation_start_s": RAMP, "evaluation_end_s": duration,
                "actual_last_sample_s": float(data[-1, 0]) if len(data) else None,
-               "actual_c_config": config_dict(config)}
+               "actual_c_config": config_dict(config),
+               "feedback_timing": {"period_samples": feedback_period_samples,
+                   "transport_delay_samples": feedback_delay_samples,
+                   "startup": "initial snapshot synchronized at t=0; subsequent samples delayed",
+                   "max_age_s": float(np.max(data[:, len(COLUMNS)+4])) if len(data) else None}}
     if len(window):
         error = np.rad2deg(window[:, IX["error_rad"]])
         metrics.update(position_rmse_deg=float(np.sqrt(np.mean(error**2))),

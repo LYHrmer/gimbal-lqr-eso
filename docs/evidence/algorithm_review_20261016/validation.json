@@ -1,0 +1,254 @@
+{
+  "date": "2026-10-16",
+  "baseline_commit": "ce4c20385a819f6c5c0e15a59107d1eee564574e",
+  "scope": "Local validation of formal fault fix and feedback timing experiments; numerical ESO candidate rejected; no hardware claim",
+  "current_source_sha256": {
+    "src/yaw_controller.c": "a8a2ea5af54da60d6390e7df271f6828ee09dfcbca9debc4739e3691e6233748",
+    "include/yaw_controller.h": "a3f419993cdbb8b87776b16d0bc7f1da0cd5ed47b9dbab738ea11d63c2a76291",
+    "sim/run_sensitivity.py": "82672a25c6a37bfc586e2ee6115385ea333d648da38adb65aeda9556406becdb",
+    "sim/run_feedback_timing.py": "92b07fcebe1f7c685b974c74c1fc9abbb828bcfa332790ed430b543eb3b55f48",
+    "tests/test_yaw_controller.c": "e212d9d4ae7ba34957edfc96cfa4a58821549d7bcea6351f02a8eacae1ddf24a",
+    "tests/test_feedback_timing.py": "a155e5ea52ccd42ef5dd8225a819d900f10be63706fa3294bf5a7f929d5636f7"
+  },
+  "release_ctest": {
+    "passed": true,
+    "tests": 8,
+    "experimental_rls_enabled": true
+  },
+  "asan_ubsan_ctest": {
+    "passed": true,
+    "tests": 8
+  },
+  "python_unittest": {
+    "passed": true,
+    "tests": 64
+  },
+  "arm_compile": {
+    "passed": true,
+    "target": "Cortex-M4F, Thumb, hard-float, fpv4-sp-d16",
+    "scope": "C compilation and static archives only; no board-specific linking/execution or timing claim",
+    "compiler": "arm-none-eabi-gcc (15:10.3-2021.07-4) 10.3.1 20210621 (release)",
+    "compiler_reported_assembler": "/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/as",
+    "flags": [
+      "-std=c11",
+      "-O2",
+      "-fno-fast-math",
+      "-ffreestanding",
+      "-mthumb",
+      "-mcpu=cortex-m4",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Wconversion",
+      "-Wshadow",
+      "-Werror",
+      "-I",
+      "/home/lyh/gimbal-lqr-eso/include",
+      "-I",
+      "/home/lyh/gimbal-lqr-eso/examples/stm32",
+      "-I",
+      "/home/lyh/gimbal-lqr-eso"
+    ],
+    "object_count": 8,
+    "objects": {
+      "yaw_controller": {
+        "bytes": 7932,
+        "sha256": "5e330628a916767a79d74cb3a312957d07e832245d637ee78a5c0b90aed94222"
+      },
+      "gimbal_controller": {
+        "bytes": 6064,
+        "sha256": "859681dee230c61ae6c3712b039436cb188761ad8cafa45704c02056d48e7eb5"
+      },
+      "gimbal_coordinates": {
+        "bytes": 1380,
+        "sha256": "afeb9fd1c425f7eebca462c66d1d781784d410a3a684a712fa5aa05774e3940b"
+      },
+      "dm_mit": {
+        "bytes": 3540,
+        "sha256": "2b36cd6c4a5c61ea5329feb1184748f3aa4f89e2d26f73a789ef904a3bfbc8a1"
+      },
+      "gm6020": {
+        "bytes": 3580,
+        "sha256": "e26f6220bec812efc8cbee6c412eb3af4714a679fa6565faef32265012936383"
+      },
+      "yaw_periodic": {
+        "bytes": 2472,
+        "sha256": "f650afe0bdea107f8e16bfcb49304341cf1891ef26b091029ccb0c1f015cf205"
+      },
+      "gimbal_periodic": {
+        "bytes": 2780,
+        "sha256": "25ad8207137dabfd4d1a8470922ecc5efd47bcbc1e9532b4aee84b7aa5454aee"
+      },
+      "profile_probe": {
+        "bytes": 2124,
+        "sha256": "de25490d1255c9bcd1fdcdd1472c4bce01a6e567b3db250881dd87112d4dff0b"
+      }
+    },
+    "source_sha256": {
+      "src/yaw_controller.c": "a8a2ea5af54da60d6390e7df271f6828ee09dfcbca9debc4739e3691e6233748",
+      "src/gimbal_controller.c": "b63eff4c4d2a542c17c13e6e0538b60479188b663c378f4dc9b29942290d562f",
+      "src/gimbal_coordinates.c": "f74dd8fc35b014fd1167ede2f60bbe5d80c524e0ca0270a4b2704297f84514ea",
+      "src/dm_mit.c": "45438303da2922daefde45332a2aaebbb65175bef3acb3fcb408bc47bccee8f2",
+      "src/gm6020.c": "93eed62315a2671640a0fe176d96fdf7e652e7b0cd6fc230428c6322863382b5",
+      "examples/stm32/yaw_periodic.c": "2ec5b1d006d66dc2271101907237056a0197700b91333c8ca0f747ac7796eb06",
+      "examples/stm32/gimbal_periodic.c": "141cd1a5366963ea99f5c09a94f19b4def8353952f60e3523396935e9672ee7d",
+      "include/yaw_controller.h": "a3f419993cdbb8b87776b16d0bc7f1da0cd5ed47b9dbab738ea11d63c2a76291",
+      "include/gimbal_controller.h": "33bdd80eb5679014ffbe75994ec7ed8d758cc511c4a039c88c431c303bd1dce3",
+      "include/gimbal_coordinates.h": "79b6bbc8928f1f78371b105fe30fcc1cb4269bd96e5637fdd2a74cefc92ef16c",
+      "include/dm_mit.h": "ffca3ce125afeb5c143e5863b8f7f54fe8e82beddfe4f191b9d9d6343f7957ea",
+      "include/gm6020.h": "f4eccad8d36e35f920f4605905bc876f7803af0ecbbfeea51407134854b3f136",
+      "examples/stm32/gimbal_periodic.h": "10d5c00ee0be46fd13c7b87f51d824f8aad44c97d61563460e5bc55265036fbc",
+      "examples/stm32/yaw_periodic.h": "aa9fb4f14a9c3bfef576e2812abed2b5c233e2144b4b7655231ef394b7cf2ce1",
+      "variants/dm4310/simulation_config.h": "f58de887c86778d97cda6ad8592709eeab461ab980f23ad1d5b2bbbf21201017",
+      "variants/gm6020/simulation_config.h": "9117a5fc8909110fc4ffd72d7c8dd0a26a3c02ea3f756ec89b79e01ea1bd5122",
+      "variants/dm4310/pitch_simulation_config.h": "083756567feda588cf2f9ddf272e9c2f6605d2654a15d70f1f1437ae35e05e87",
+      "variants/gm6020/pitch_simulation_config.h": "077ad2cb1d616ff8aef676f117880e16aac3f1d89659893ab75b783d3f2fe0f4",
+      "tools/check_arm_build.py": "93e821c3faba1d6060530685cccf81837cec8e38d817e238122aa950ad9ee43e"
+    },
+    "experimental_rls": {
+      "passed": true,
+      "scope": "Separate experimental object only; no archive integration or STM32 execution. Stack entries are compiler estimates per function, not a call-chain/WCET bound.",
+      "flags": [
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffreestanding",
+        "-mthumb",
+        "-mcpu=cortex-m4",
+        "-mfpu=fpv4-sp-d16",
+        "-mfloat-abi=hard",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wshadow",
+        "-Werror",
+        "-I",
+        "/home/lyh/gimbal-lqr-eso/include",
+        "-I",
+        "/home/lyh/gimbal-lqr-eso/examples/stm32",
+        "-I",
+        "/home/lyh/gimbal-lqr-eso",
+        "-I",
+        "/home/lyh/gimbal-lqr-eso/experimental/online_rls/include",
+        "-fstack-usage"
+      ],
+      "object": {
+        "name": "rls_shadow.o",
+        "bytes": 3596,
+        "sha256": "7f13a0821013975387e77b86478b39e3324641c837f13d83e51d64f576f392c0"
+      },
+      "stack_usage": [
+        {
+          "function": "config_valid",
+          "bytes": 0,
+          "qualifier": "static"
+        },
+        {
+          "function": "covariance_valid",
+          "bytes": 208,
+          "qualifier": "static"
+        },
+        {
+          "function": "rls_shadow_init",
+          "bytes": 112,
+          "qualifier": "static"
+        },
+        {
+          "function": "rls_shadow_update",
+          "bytes": 680,
+          "qualifier": "static"
+        }
+      ],
+      "source_sha256": {
+        "src/rls_shadow.c": "7826c53ab332cd8b12a99c0f03d9621cef1e17faaa0610316428addf5ff05a10",
+        "include/rls_shadow.h": "7cdcd94843412a863cacf6fc70d281b4f18223fa9c8c79de1d44d80e04e993d7"
+      }
+    }
+  },
+  "yaw_declared_performance_gate_passed": true,
+  "yaw_profile_results_match_published_except_added_timing_metadata": true,
+  "pitch_profile_results_exactly_match_published": true,
+  "pitch_complete_performance_acceptance": false,
+  "pitch_acceptance": {
+    "dm4310_24v_pitch": {
+      "development": {
+        "passed": true,
+        "failures": [],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "holdout": {
+        "passed": true,
+        "failures": [],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "integration_convergence_passed": true
+    },
+    "gm6020_current_v1_4_pitch": {
+      "development": {
+        "passed": false,
+        "failures": [
+          "Original C (same Ki): mean paired RMSE improvement below fixed threshold",
+          "Original C (same Ki): insufficient improved seeds",
+          "New C, gravity off: mean paired RMSE improvement below fixed threshold",
+          "New C, gravity off: insufficient improved seeds",
+          "New C, gravity off: mean position_max_abs_error_deg exceeds comparison limit"
+        ],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "holdout": {
+        "passed": true,
+        "failures": [],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "integration_convergence_passed": true
+    }
+  },
+  "feedback_timing": {
+    "trials": 60,
+    "all_completed": true,
+    "non_timeout_trials": 48,
+    "retained_timeout_trials": 12,
+    "scope": "synchronous Yaw feedback only"
+  },
+  "candidate_adopted": false,
+  "candidate_reason": "GM Pitch predeclared holdout failed; did not retune or relax thresholds",
+  "evidence_sha256": {
+    "candidate_pitch_metrics.json": "b1fc65171b6514a4b9aea1f026043a84439fe4df06acca3edec5474eeeb90c27",
+    "candidate_yaw_acceptance.json": "de7b69c235937aa9d3363c3bc03116838b72b117b988043b5bd60427843ced07",
+    "feedback_timing.json": "ae87bc1368bc7912c9d3622f66abb69b02af55af9eb693820328c52cb4288ef1",
+    "final_yaw_acceptance.json": "0641aed895a3d92fb8aa873fa3ec2ee199a7e68543134d08f08b0eb851e4f132",
+    "observer_precision_candidate.patch": "e3914ed0a9705543951dfaba2b5ef6a6eb934234daa3399b09cf84d7b1d0b29e",
+    "precision_probe.json": "cca4ca843385731a7e690db68aeda7c3646add3dc6ab2c54a029d1d24d5c8161"
+  }
+}

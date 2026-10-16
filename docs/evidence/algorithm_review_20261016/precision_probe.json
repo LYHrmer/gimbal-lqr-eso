@@ -1,0 +1,255 @@
+{
+  "data_type": "SYNTHETIC deterministic constant-velocity numerical probe, not closed-loop hardware performance",
+  "baseline_commit": "ce4c20385a819f6c5c0e15a59107d1eee564574e",
+  "baseline_controller_sha256": "ea75061c12c08acbe64f64bb9e5c1e3c0a5a46ee64a2f23222267d4948ad42eb",
+  "candidate_patch_sha256": "e3914ed0a9705543951dfaba2b5ef6a6eb934234daa3399b09cf84d7b1d0b29e",
+  "candidate_adopted": false,
+  "reason": "GM6020 Pitch predeclared holdout performance gate failed; no retuning against observed holdout",
+  "window": "k=0..5000, k>1000 used for 4000 samples; h and velocity converted to float at API",
+  "cases": [
+    {
+      "variant": "baseline",
+      "offset_rad": -1000.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 0.006455226691072599,
+      "observer_velocity_bias_rad_s": -0.011516840796917676
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": -1000.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 0.006455226691072599,
+      "observer_velocity_bias_rad_s": 0.011516840796917676
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": -1000.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 0.005272411591057543,
+      "observer_velocity_bias_rad_s": 0.0014667442813515663
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": -1000.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 0.005272411591057543,
+      "observer_velocity_bias_rad_s": -0.0014667442813515663
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": 0.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 6.799677094020735e-06,
+      "observer_velocity_bias_rad_s": 2.687796950340271e-08
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": 0.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 6.799677094020735e-06,
+      "observer_velocity_bias_rad_s": -2.687796950340271e-08
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": 0.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 8.464565508559132e-06,
+      "observer_velocity_bias_rad_s": 1.3650692999362945e-06
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": 0.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 8.464565508559132e-06,
+      "observer_velocity_bias_rad_s": -1.3650692999362945e-06
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": 1000.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 0.006455226691072599,
+      "observer_velocity_bias_rad_s": -0.011516840796917676
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": 1000.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 0.006455226691072599,
+      "observer_velocity_bias_rad_s": 0.011516840796917676
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": 1000.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 0.005272411591057543,
+      "observer_velocity_bias_rad_s": 0.0014667442813515663
+    },
+    {
+      "variant": "baseline",
+      "offset_rad": 1000.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 0.005272411591057543,
+      "observer_velocity_bias_rad_s": -0.0014667442813515663
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": -1000.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 0.001570652638432431,
+      "observer_velocity_bias_rad_s": -4.1939318180084225e-08
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": -1000.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 0.001570652638432431,
+      "observer_velocity_bias_rad_s": 4.1939318180084225e-08
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": -1000.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 0.002710921799762516,
+      "observer_velocity_bias_rad_s": 4.949159920215607e-07
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": -1000.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 0.002710921799762516,
+      "observer_velocity_bias_rad_s": -4.949159920215607e-07
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": 0.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 1.6044563953721858e-06,
+      "observer_velocity_bias_rad_s": 1.361452043056488e-06
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": 0.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 1.6044563953721858e-06,
+      "observer_velocity_bias_rad_s": -1.361452043056488e-06
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": 0.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 4.4559868859827504e-06,
+      "observer_velocity_bias_rad_s": -1.601874828338623e-09
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": 0.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 4.4559868859827504e-06,
+      "observer_velocity_bias_rad_s": 1.601874828338623e-09
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": 1000.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 0.001570652638432431,
+      "observer_velocity_bias_rad_s": -4.1939318180084225e-08
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": 1000.0,
+      "dt_s": 0.0010000000474974513,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 0.001570652638432431,
+      "observer_velocity_bias_rad_s": 4.1939318180084225e-08
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": 1000.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": -0.20000000298023224,
+      "disturbance_rms_nm": 0.002710921799762516,
+      "observer_velocity_bias_rad_s": 4.949159920215607e-07
+    },
+    {
+      "variant": "candidate",
+      "offset_rad": 1000.0,
+      "dt_s": 0.0020000000949949026,
+      "velocity_rad_s": 0.20000000298023224,
+      "disturbance_rms_nm": 0.002710921799762516,
+      "observer_velocity_bias_rad_s": -4.949159920215607e-07
+    }
+  ],
+  "config_binary32": {
+    "inertia_kg_m2": 0.039000000804662704,
+    "damping_nm_s_rad": 0.0,
+    "k_position": 10.0,
+    "k_velocity": 1.0,
+    "k_integral": 0.0,
+    "integral_limit_nm": 0.5,
+    "antiwindup_rate_s": 30.0,
+    "coulomb_nm": 0.0,
+    "coulomb_velocity_rad_s": 0.05000000074505806,
+    "eso_bandwidth_rad_s": 140.0,
+    "eso_gain": 0.0,
+    "disturbance_limit_nm": 2.0,
+    "compensation_limit_nm": 1.0,
+    "compensation_slew_nm_s": 20.0,
+    "torque_limit_nm": 7.0,
+    "torque_slew_nm_s": 100.0,
+    "dt_min_s": 0.0005000000237487257,
+    "dt_max_s": 0.003000000026077032,
+    "feedback_timeout_s": 0.004999999888241291,
+    "reference_timeout_s": 0.05000000074505806,
+    "position_min_rad": -2000.0,
+    "position_max_rad": 2000.0,
+    "velocity_limit_rad_s": 30.0,
+    "tracking_error_limit_rad": 3.0,
+    "velocity_error_filter_tau_s": 0.0
+  },
+  "candidate_pitch_provenance": {
+    "source_sha256": {
+      "sim/run_pitch_profiles.py": "ac9617cc57aa44ed05a4e4babfbec5e6d32dd9cb8f36a13c1a9acc655e6cad20",
+      "sim/pitch_core.py": "2c479bb4918082ced84f2a99aaeccd04950888aa514bfaac67324cfa27549caa",
+      "sim/run_benchmarks.py": "6f53d7d5eb2ec7ec2ecc13bb5d00a07d695a69bd7bb2d967ba5fbafae4a2da4e",
+      "sim/run_motor_profiles.py": "c88642ab143955b3f826feb57d24835944ffa377677502d70e8db0cb2fb251e0",
+      "sim/motor_envelope.py": "fdda80370b79633b96689edbe91896155652226f2057a8afb36d294258942d0a",
+      "sim/c_core.py": "d089b251f9eef8535d23c6f1c6af27127ff61a92337b01c7eeda54c04929c476",
+      "sim/upstream_reference.py": "c43adbf471f186ca7bdefeb017cc2b34c5c8cd82d53a3bb26c295ecbca89d0a1",
+      "src/yaw_controller.c": "32694d0e7739b218bc87a4bde891f146851e8baea9fe58d40cae74fc4e3cebc4",
+      "include/yaw_controller.h": "a3f419993cdbb8b87776b16d0bc7f1da0cd5ed47b9dbab738ea11d63c2a76291",
+      "src/gimbal_controller.c": "b63eff4c4d2a542c17c13e6e0538b60479188b663c378f4dc9b29942290d562f",
+      "include/gimbal_controller.h": "33bdd80eb5679014ffbe75994ec7ed8d758cc511c4a039c88c431c303bd1dce3",
+      "src/dm_mit.c": "45438303da2922daefde45332a2aaebbb65175bef3acb3fcb408bc47bccee8f2",
+      "src/gm6020.c": "93eed62315a2671640a0fe176d96fdf7e652e7b0cd6fc230428c6322863382b5",
+      "include/dm_mit.h": "ffca3ce125afeb5c143e5863b8f7f54fe8e82beddfe4f191b9d9d6343f7957ea",
+      "include/gm6020.h": "f4eccad8d36e35f920f4605905bc876f7803af0ecbbfeea51407134854b3f136",
+      "tools/fetch_upstream.py": "e998edd7c3e3fcf42705b885c6c2421d4f7a53998703cc04a9d690a119d76d97",
+      "profiles/dm4310_24v.json": "2248e2d4d7af9c3e2ae6537cf3e5ed5c0305809874c7e0e24e6d5e23e8908f4b",
+      "profiles/gm6020_current.json": "0b384280635cef0c3422d0cd00482c04f6365f786a7f2968f4b581d78230530a",
+      "profiles/dm4310_24v_pitch.json": "cce88adcc145a5fadb11039b2665e4c6dc9d2e1cce8d8ae00f36f36bae054c7f",
+      "profiles/gm6020_current_pitch.json": "58152a315fdd489df9cc62493e0cef44dcf13d895cada8964b08e9642a9beb18"
+    },
+    "shared_library_sha256": "dab22d63a5469c1035ef1becc8256beac88ed12d6932eef7412de4bc98ebf57e"
+  }
+}

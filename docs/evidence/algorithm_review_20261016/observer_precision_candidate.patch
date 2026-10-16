@@ -1,0 +1,138 @@
+--- a/src/yaw_controller.c
++++ b/src/yaw_controller.c
+@@ -157,8 +157,10 @@
+         friction(cfg, c->last_velocity_rad_s) + c->observer_disturbance_nm - previous_load_nm;
+     const float acceleration = net / cfg->inertia_kg_m2;
+-    const float pred_p = c->observer_position_rad + h * c->observer_velocity_rad_s +
+-        0.5f * h * h * acceleration;
++    const float delta_p = h * c->observer_velocity_rad_s + 0.5f * h * h * acceleration;
+     const float pred_v = c->observer_velocity_rad_s + h * acceleration;
+-    const float innovation = f->position_rad - pred_p;
++    /* Subtract nearby angles before applying the small prediction increment.
++     * Rounding an absolute predicted angle first creates a fictitious residual
++     * when unwrapped yaw is large. Input/state float quantization still exists. */
++    const float innovation = (f->position_rad - c->observer_position_rad) - delta_p;
+     const float wh = cfg->eso_bandwidth_rad_s * h;
+     const float q = -expm1f(-wh); /* 1-exp(-wh), accurate for small wh. */
+@@ -167,5 +169,5 @@
+     const float l3 = cfg->inertia_kg_m2 * q * q * q / (h * h);
+     const float next_d = c->observer_disturbance_nm + l3 * innovation;
+-    c->observer_position_rad = pred_p + l1 * innovation;
++    c->observer_position_rad += delta_p + l1 * innovation;
+     c->observer_velocity_rad_s = pred_v + l2 * innovation;
+     if (!isfinite(next_d) || !isfinite(c->observer_position_rad) ||
+@@ -188,8 +190,10 @@
+ {
+     if (out != NULL) memset(out, 0, sizeof(*out));
++    /* A later caller error must not replace the latched root cause. */
++    if (c != NULL && c->initialized && c->fault != YAW_OK)
++        return fault(c, out, c->fault);
+     if (c == NULL || f == NULL || r == NULL || out == NULL)
+         return fault(c, out, YAW_BAD_ARGUMENT);
+     if (!c->initialized) return fault(c, out, YAW_BAD_CONFIG);
+-    if (c->fault != YAW_OK) return fault(c, out, c->fault);
+     if (!isfinite(current_load_nm) || !isfinite(previous_load_nm))
+         return fault(c, out, YAW_NUMERIC_FAULT);
+--- a/tests/test_yaw_controller.c
++++ b/tests/test_yaw_controller.c
+@@ -121,4 +121,79 @@
+ }
+
++static void test_first_fault_survives_bad_arguments(void)
++{
++    YawController c;
++    YawConfig cfg = config();
++    YawFeedback f = feedback();
++    YawReference r = reference();
++    YawOutput out;
++    assert(yaw_controller_init(&c, &cfg));
++    assert(yaw_controller_step(&c, &f, &r, 0.02f, &out) == YAW_BAD_TIMING);
++    assert(yaw_controller_step(&c, NULL, &r, 0.001f, &out) == YAW_BAD_TIMING);
++    assert(out.status == YAW_BAD_TIMING && out.torque_nm == 0.0f);
++    assert(yaw_controller_step(&c, &f, NULL, 0.001f, &out) == YAW_BAD_TIMING);
++    assert(yaw_controller_step(&c, &f, &r, 0.001f, NULL) == YAW_BAD_TIMING);
++    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_BAD_TIMING);
++    yaw_controller_reset(&c);
++    assert(yaw_controller_step(&c, NULL, &r, 0.001f, &out) == YAW_BAD_ARGUMENT);
++    assert(yaw_controller_step(NULL, &f, &r, 0.001f, &out) == YAW_BAD_ARGUMENT);
++}
++
++static void test_observer_large_continuous_angle(void)
++{
++    /* Zero torque + zero drag implies constant velocity and zero disturbance.
++     * Generate positions in double, then quantize once at the actual C API.
++     * Do not accumulate the fixture's trajectory in float like the observer. */
++    const float offsets[] = {-1000.0f, 0.0f, 1000.0f};
++    const float periods[] = {0.001f, 0.002f};
++    const float speeds[] = {-0.2f, 0.2f};
++    for (unsigned oi = 0; oi < sizeof(offsets) / sizeof(offsets[0]); ++oi)
++    for (unsigned hi = 0; hi < sizeof(periods) / sizeof(periods[0]); ++hi)
++    for (unsigned vi = 0; vi < sizeof(speeds) / sizeof(speeds[0]); ++vi) {
++        YawConfig cfg = config();
++        cfg.damping_nm_s_rad = cfg.eso_gain = 0.0f;
++        cfg.eso_bandwidth_rad_s = 140.0f;
++        cfg.position_min_rad = -2000.0f; cfg.position_max_rad = 2000.0f;
++        YawController c;
++        YawFeedback f = feedback();
++        YawReference r = reference();
++        YawOutput out;
++        double squared_disturbance = 0.0, velocity_error = 0.0;
++        const float h = periods[hi], speed = speeds[vi];
++        assert(yaw_controller_init(&c, &cfg));
++        for (int k = 0; k <= 5000; ++k) {
++            f.position_rad = (float)((double)offsets[oi] + (double)k * h * speed);
++            f.velocity_rad_s = speed;
++            r.position_rad = f.position_rad; r.velocity_rad_s = speed;
++            assert(yaw_controller_step(&c, &f, &r, h, &out) ==
++                   (k == 0 ? YAW_WARMUP : YAW_OK));
++            assert(out.flags == 0 && out.torque_nm == 0.0f);
++            if (k > 1000) {
++                squared_disturbance += (double)out.disturbance_nm * out.disturbance_nm;
++                velocity_error += (double)c.observer_velocity_rad_s - speed;
++            }
++        }
++        const double rms = sqrt(squared_disturbance / 4000.0);
++        const double bias = velocity_error / 4000.0;
++        printf("ESO precision: offset=%g h=%g speed=%g d_rms=%.9g velocity_bias=%.9g\n",
++               (double)offsets[oi], (double)h, (double)speed, rms, bias);
++        /* Fixture-specific numerical bounds, not a motor performance gate.
++         * Allow float input quantization; reject the old ~0.0115 rad/s bias. */
++        assert(rms < 0.0035 && fabs(bias) < 0.0002);
++    }
++    /* A numerically equivalent rewrite must also preserve tiny corrections. */
++    YawConfig cfg = config();
++    cfg.eso_gain = 0.0f; cfg.eso_bandwidth_rad_s = 1e-6f;
++    YawController c;
++    YawFeedback f = feedback();
++    YawReference r = reference();
++    YawOutput out;
++    assert(yaw_controller_init(&c, &cfg));
++    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_WARMUP);
++    f.position_rad = r.position_rad = 1.0f;
++    assert(yaw_controller_step(&c, &f, &r, 0.001f, &out) == YAW_OK);
++    assert(fabsf(c.observer_position_rad - 3e-9f) < 1e-14f);
++}
++
+ static void test_derating_and_stop(void)
+ {
+@@ -384,4 +459,5 @@
+     test_timing_and_latched_fault();
+     test_input_faults();
++    test_first_fault_survives_bad_arguments();
+     test_derating_and_stop();
+     test_antiwindup();
+@@ -394,4 +470,5 @@
+     test_acceleration_feedforward_limits();
+     test_acceleration_tracking();
++    test_observer_large_continuous_angle();
+     printf("yaw_controller: all test groups passed; synthetic load hold error %.7f -> %.7f rad\n",
+            (double)baseline_error, (double)eso_error);
+--- a/include/yaw_controller.h
++++ b/include/yaw_controller.h
+@@ -54,5 +54,5 @@
+     float velocity_rad_s;
+     float acceleration_rad_s2;
+-    float age_s;                     /* Timestamp of source, not of loop readout. */
++    float age_s;                     /* Seconds since source sample, not loop readout. */
+     bool valid;
+ } YawReference;
