@@ -1,0 +1,1439 @@
+{
+  "date": "2026-10-17",
+  "baseline_commit": "e9d34ca23a3823be86d676562df7cff2ffbc953d",
+  "scope": "Offline feedback timing and development diagnosis; no hardware performance claim",
+  "formal_c_headers_profiles_cmake_unchanged": true,
+  "candidate_adopted": false,
+  "python_unittest": {
+    "passed": 74,
+    "failed": 0
+  },
+  "release_ctest": {
+    "passed": 8,
+    "failed": 0,
+    "includes_optional_rls": true
+  },
+  "multirate": {
+    "planned_runs": 240,
+    "complete_nonfaulted": 216,
+    "stale_faults": 24,
+    "pitch_post_fault_physical_crossings": 12
+  },
+  "pitch_diagnosis_runs": 78,
+  "candidate_runs": 240,
+  "candidate_screening_passed": false,
+  "yaw_performance_gate_passed": true,
+  "pitch_profiles_equal_excluding_added_timing_metadata": true,
+  "yaw_profiles_equal_excluding_added_timing_metadata_and_linear_diagnostics": true,
+  "yaw_linear_diagnostics_note": "Only floating roundoff in matrix eigenvalue/frequency diagnostics differs from the archived run; controller/plant performance metrics match exactly.",
+  "pitch_all_primary_acceptance_passed": false,
+  "pitch_acceptance": {
+    "dm4310_24v_pitch": {
+      "development_acceptance": {
+        "passed": true,
+        "failures": [],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "holdout_acceptance": {
+        "passed": true,
+        "failures": [],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "integration_convergence": {
+        "seed": 5308,
+        "selected_before_run": true,
+        "thresholds": {
+          "maximum_metric_difference_percent": 1.0,
+          "maximum_position_difference_deg": 0.01
+        },
+        "variants": {
+          "Original C (same Ki)": {
+            "four_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": null,
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.00038147554741741054,
+                "velocity_quantum_rad_s": 0.014652014652014652,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 2052,
+                "raw_code_max": 2208,
+                "wire_torque_peak_abs_nm": 0.7838827838827839
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": null,
+              "startup_peak_error_deg": 0.14149635440745267,
+              "position_rmse_deg": 0.05710757071613736,
+              "position_max_abs_error_deg": 0.09817982936542465,
+              "command_rms_nm": 0.4536706292651555,
+              "actual_torque_rms_nm": 0.4525924691276056,
+              "command_peak_abs_nm": 0.7846825122833252,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.047988002999250184,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.0,
+              "disturbance_mean_nm": -0.40623528705302314,
+              "minimum_joint_clearance_deg": 20.05550325113955
+            },
+            "eight_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": null,
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.00038147554741741054,
+                "velocity_quantum_rad_s": 0.014652014652014652,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 2052,
+                "raw_code_max": 2208,
+                "wire_torque_peak_abs_nm": 0.7838827838827839
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": null,
+              "startup_peak_error_deg": 0.14149635413965952,
+              "position_rmse_deg": 0.05710757007595138,
+              "position_max_abs_error_deg": 0.09817982850217759,
+              "command_rms_nm": 0.4536706292651555,
+              "actual_torque_rms_nm": 0.452592469990554,
+              "command_peak_abs_nm": 0.7846825122833252,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.047988002999250184,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.0,
+              "disturbance_mean_nm": -0.40623528705302314,
+              "minimum_joint_clearance_deg": 20.055503250970855
+            },
+            "absolute_relative_metric_difference_percent": {
+              "position_rmse_deg": 1.1210177210561826e-06,
+              "position_max_abs_error_deg": 8.792509320292477e-07,
+              "command_rms_nm": 0.0,
+              "actual_torque_rms_nm": 1.906678727885321e-07
+            },
+            "maximum_position_trace_difference_deg": 1.4234127199234565e-09,
+            "passed": true
+          },
+          "New C, gravity off": {
+            "four_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": {
+                "cos_nm": 0.0,
+                "sin_nm": 0.0
+              },
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.00038147554741741054,
+                "velocity_quantum_rad_s": 0.014652014652014652,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 2054,
+                "raw_code_max": 2209,
+                "wire_torque_peak_abs_nm": 0.7887667887667887
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": 0,
+              "startup_peak_error_deg": 0.13947084513065866,
+              "position_rmse_deg": 0.05702840336575362,
+              "position_max_abs_error_deg": 0.09627126862144646,
+              "command_rms_nm": 0.453694498496439,
+              "actual_torque_rms_nm": 0.4525735729056983,
+              "command_peak_abs_nm": 0.7893158197402954,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.045238690327418146,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.0,
+              "disturbance_mean_nm": -0.4060879542704851,
+              "minimum_joint_clearance_deg": 20.055056536188182
+            },
+            "eight_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": {
+                "cos_nm": 0.0,
+                "sin_nm": 0.0
+              },
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.00038147554741741054,
+                "velocity_quantum_rad_s": 0.014652014652014652,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 2054,
+                "raw_code_max": 2209,
+                "wire_torque_peak_abs_nm": 0.7887667887667887
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": 0,
+              "startup_peak_error_deg": 0.13947084491737705,
+              "position_rmse_deg": 0.05702840288983626,
+              "position_max_abs_error_deg": 0.0962712678625343,
+              "command_rms_nm": 0.453694498496439,
+              "actual_torque_rms_nm": 0.45257357376194496,
+              "command_peak_abs_nm": 0.7893158197402954,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.045238690327418146,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.0,
+              "disturbance_mean_nm": -0.4060879542704851,
+              "minimum_joint_clearance_deg": 20.055056536130063
+            },
+            "absolute_relative_metric_difference_percent": {
+              "position_rmse_deg": 8.345268970535942e-07,
+              "position_max_abs_error_deg": 7.883059735169398e-07,
+              "command_rms_nm": 0.0,
+              "actual_torque_rms_nm": 1.8919502470036083e-07
+            },
+            "maximum_position_trace_difference_deg": 1.2310018839136395e-09,
+            "passed": true
+          },
+          "New C, gravity on": {
+            "four_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": {
+                "cos_nm": 0.44999998807907104,
+                "sin_nm": 0.10000000149011612
+              },
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.00038147554741741054,
+                "velocity_quantum_rad_s": 0.014652014652014652,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 2052,
+                "raw_code_max": 2212,
+                "wire_torque_peak_abs_nm": 0.8034188034188035
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": 0,
+              "startup_peak_error_deg": 0.04265833000044388,
+              "position_rmse_deg": 0.015013612533387625,
+              "position_max_abs_error_deg": 0.0449945152307072,
+              "command_rms_nm": 0.4535667885826549,
+              "actual_torque_rms_nm": 0.45246728064230574,
+              "command_peak_abs_nm": 0.8033413290977478,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.05023744063984004,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.0,
+              "disturbance_mean_nm": 0.050227672940228806,
+              "minimum_joint_clearance_deg": 19.996326478211515
+            },
+            "eight_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 0.0,
+                "integral_limit_nm": 0.0,
+                "antiwindup_rate_s": 20.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 3.0,
+                "compensation_limit_nm": 2.0,
+                "compensation_slew_nm_s": 100.0,
+                "torque_limit_nm": 3.0,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 20.899999618530273,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": {
+                "cos_nm": 0.44999998807907104,
+                "sin_nm": 0.10000000149011612
+              },
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.00038147554741741054,
+                "velocity_quantum_rad_s": 0.014652014652014652,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "dm_mit",
+                "raw_code_min": 2052,
+                "raw_code_max": 2212,
+                "wire_torque_peak_abs_nm": 0.8034188034188035
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": 0,
+              "startup_peak_error_deg": 0.042658331923884324,
+              "position_rmse_deg": 0.01501361369788271,
+              "position_max_abs_error_deg": 0.04499451743860691,
+              "command_rms_nm": 0.4535667885826549,
+              "actual_torque_rms_nm": 0.45246728149276927,
+              "command_peak_abs_nm": 0.8033413290977478,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.05023744063984004,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.0,
+              "disturbance_mean_nm": 0.050227672940228806,
+              "minimum_joint_clearance_deg": 19.996326475567223
+            },
+            "absolute_relative_metric_difference_percent": {
+              "position_rmse_deg": 7.756261143132727e-06,
+              "position_max_abs_error_deg": 4.907041648563411e-06,
+              "command_rms_nm": 0.0,
+              "actual_torque_rms_nm": 1.8796133283386062e-07
+            },
+            "maximum_position_trace_difference_deg": 5.011377372754361e-09,
+            "passed": true
+          }
+        },
+        "passed": true,
+        "scope": "Numerical step refinement, not hardware validation or formal convergence order for a quantized nonlinear loop."
+      }
+    },
+    "gm6020_current_v1_4_pitch": {
+      "development_acceptance": {
+        "passed": false,
+        "failures": [
+          "Original C (same Ki): mean paired RMSE improvement below fixed threshold",
+          "Original C (same Ki): insufficient improved seeds",
+          "New C, gravity off: mean paired RMSE improvement below fixed threshold",
+          "New C, gravity off: insufficient improved seeds",
+          "New C, gravity off: mean position_max_abs_error_deg exceeds comparison limit"
+        ],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "holdout_acceptance": {
+        "passed": true,
+        "failures": [],
+        "thresholds": {
+          "minimum_mean_paired_rmse_improvement_percent": 2.0,
+          "minimum_improved_holdout_seeds": 4,
+          "maximum_mean_command_rms_ratio": 1.05,
+          "no_faults_or_physical_limit_crossings": true,
+          "mean_peak_error_must_not_increase": true
+        }
+      },
+      "integration_convergence": {
+        "seed": 5308,
+        "selected_before_run": true,
+        "thresholds": {
+          "maximum_metric_difference_percent": 1.0,
+          "maximum_position_difference_deg": 0.01
+        },
+        "variants": {
+          "Original C (same Ki)": {
+            "four_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 171.75392150878906,
+                "integral_limit_nm": 0.20000000298023224,
+                "antiwindup_rate_s": 2.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": null,
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.0007669903939428206,
+                "velocity_quantum_rad_s": 0.10471975511965977,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -892,
+                "raw_code_max": 6701,
+                "wire_torque_peak_abs_nm": 0.9091994018554688,
+                "wire_current_peak_abs_a": 1.22698974609375,
+                "wire_current_rms_a": 0.6236098795385058
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": null,
+              "startup_peak_error_deg": 0.14954426398411488,
+              "position_rmse_deg": 0.027351809013255193,
+              "position_max_abs_error_deg": 0.0663108327898359,
+              "command_rms_nm": 0.4620945726490422,
+              "actual_torque_rms_nm": 0.4594448649162347,
+              "command_peak_abs_nm": 0.9091682434082031,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.16145963509122718,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.08127619705906185,
+              "disturbance_mean_nm": -0.4062067459625353,
+              "minimum_joint_clearance_deg": 19.979450294852217
+            },
+            "eight_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 171.75392150878906,
+                "integral_limit_nm": 0.20000000298023224,
+                "antiwindup_rate_s": 2.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": null,
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.0007669903939428206,
+                "velocity_quantum_rad_s": 0.10471975511965977,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -892,
+                "raw_code_max": 6701,
+                "wire_torque_peak_abs_nm": 0.9091994018554688,
+                "wire_current_peak_abs_a": 1.22698974609375,
+                "wire_current_rms_a": 0.6236098795385058
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": null,
+              "startup_peak_error_deg": 0.14954426347563962,
+              "position_rmse_deg": 0.02735180803926474,
+              "position_max_abs_error_deg": 0.06631082418652136,
+              "command_rms_nm": 0.4620945726490422,
+              "actual_torque_rms_nm": 0.45944487017332425,
+              "command_peak_abs_nm": 0.9091682434082031,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.16145963509122718,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.08127619705906185,
+              "disturbance_mean_nm": -0.4062067459625353,
+              "minimum_joint_clearance_deg": 19.979450287230666
+            },
+            "absolute_relative_metric_difference_percent": {
+              "position_rmse_deg": 3.560972835373083e-06,
+              "position_max_abs_error_deg": 1.2974223518448145e-05,
+              "command_rms_nm": 0.0,
+              "actual_torque_rms_nm": 1.144226409467335e-06
+            },
+            "maximum_position_trace_difference_deg": 1.633308655294619e-08,
+            "passed": true
+          },
+          "New C, gravity off": {
+            "four_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 171.75392150878906,
+                "integral_limit_nm": 0.20000000298023224,
+                "antiwindup_rate_s": 2.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": {
+                "cos_nm": 0.0,
+                "sin_nm": 0.0
+              },
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.0007669903939428206,
+                "velocity_quantum_rad_s": 0.10471975511965977,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -855,
+                "raw_code_max": 6571,
+                "wire_torque_peak_abs_nm": 0.8915608520507813,
+                "wire_current_peak_abs_a": 1.20318603515625,
+                "wire_current_rms_a": 0.6233022506113985
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": 0,
+              "startup_peak_error_deg": 0.1409041952801451,
+              "position_rmse_deg": 0.026989055104102103,
+              "position_max_abs_error_deg": 0.06797442374285738,
+              "command_rms_nm": 0.46186635890213157,
+              "actual_torque_rms_nm": 0.4594216592812024,
+              "command_peak_abs_nm": 0.8915220499038696,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.15821044738815296,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.08215527197914521,
+              "disturbance_mean_nm": -0.40587156594648743,
+              "minimum_joint_clearance_deg": 19.981848161700338
+            },
+            "eight_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 171.75392150878906,
+                "integral_limit_nm": 0.20000000298023224,
+                "antiwindup_rate_s": 2.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": {
+                "cos_nm": 0.0,
+                "sin_nm": 0.0
+              },
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.0007669903939428206,
+                "velocity_quantum_rad_s": 0.10471975511965977,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -855,
+                "raw_code_max": 6571,
+                "wire_torque_peak_abs_nm": 0.8915608520507813,
+                "wire_current_peak_abs_a": 1.20318603515625,
+                "wire_current_rms_a": 0.6233022506113985
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": 0,
+              "startup_peak_error_deg": 0.14090419483604424,
+              "position_rmse_deg": 0.02698905394839244,
+              "position_max_abs_error_deg": 0.06797443714907983,
+              "command_rms_nm": 0.46186635890213157,
+              "actual_torque_rms_nm": 0.4594216644481894,
+              "command_peak_abs_nm": 0.8915220499038696,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.15821044738815296,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": 0.08215527197914521,
+              "disturbance_mean_nm": -0.40587156594648743,
+              "minimum_joint_clearance_deg": 19.981848152772
+            },
+            "absolute_relative_metric_difference_percent": {
+              "position_rmse_deg": 4.282142181034593e-06,
+              "position_max_abs_error_deg": 1.972244716378318e-05,
+              "command_rms_nm": 0.0,
+              "actual_torque_rms_nm": 1.124672039819713e-06
+            },
+            "maximum_position_trace_difference_deg": 2.0045334560509963e-08,
+            "passed": true
+          },
+          "New C, gravity on": {
+            "four_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 171.75392150878906,
+                "integral_limit_nm": 0.20000000298023224,
+                "antiwindup_rate_s": 2.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": {
+                "cos_nm": 0.44999998807907104,
+                "sin_nm": 0.10000000149011612
+              },
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.0007669903939428206,
+                "velocity_quantum_rad_s": 0.10471975511965977,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -540,
+                "raw_code_max": 6537,
+                "wire_torque_peak_abs_nm": 0.8869476928710938,
+                "wire_current_peak_abs_a": 1.19696044921875,
+                "wire_current_rms_a": 0.6233560023980835
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": 0,
+              "startup_peak_error_deg": 0.05981611455993179,
+              "position_rmse_deg": 0.028387803945516987,
+              "position_max_abs_error_deg": 0.06350004799729575,
+              "command_rms_nm": 0.4619058283942197,
+              "actual_torque_rms_nm": 0.45927580871320495,
+              "command_peak_abs_nm": 0.8869540691375732,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.16020994751312173,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": -0.012105211590153871,
+              "disturbance_mean_nm": 0.049960276662147196,
+              "minimum_joint_clearance_deg": 19.97841735295724
+            },
+            "eight_substeps": {
+              "completed": true,
+              "failure": null,
+              "first_latched_fault": null,
+              "first_physical_limit_crossing": null,
+              "evaluation_start_s": 2.0,
+              "evaluation_end_s": 6.0,
+              "actual_last_sample_s": 6.0,
+              "actual_c_config": {
+                "inertia_kg_m2": 0.039000000804662704,
+                "damping_nm_s_rad": 0.30000001192092896,
+                "k_position": 85.87696075439453,
+                "k_velocity": 3.078768730163574,
+                "k_integral": 171.75392150878906,
+                "integral_limit_nm": 0.20000000298023224,
+                "antiwindup_rate_s": 2.0,
+                "coulomb_nm": 0.0,
+                "coulomb_velocity_rad_s": 0.03999999910593033,
+                "eso_bandwidth_rad_s": 80.0,
+                "eso_gain": 0.800000011920929,
+                "disturbance_limit_nm": 1.2000000476837158,
+                "compensation_limit_nm": 0.4000000059604645,
+                "compensation_slew_nm_s": 40.0,
+                "torque_limit_nm": 1.2000000476837158,
+                "torque_slew_nm_s": 100.0,
+                "dt_min_s": 0.0005000000237487257,
+                "dt_max_s": 0.0020000000949949026,
+                "feedback_timeout_s": 0.004999999888241291,
+                "reference_timeout_s": 0.004999999888241291,
+                "position_min_rad": -3.1415927410125732,
+                "position_max_rad": 3.1415927410125732,
+                "velocity_limit_rad_s": 33.5,
+                "tracking_error_limit_rad": 0.4363323152065277,
+                "velocity_error_filter_tau_s": 0.0
+              },
+              "actual_c_gravity_model": {
+                "cos_nm": 0.44999998807907104,
+                "sin_nm": 0.10000000149011612
+              },
+              "actual_plant": {
+                "inertia_kg_m2": 0.039,
+                "damping_nm_s_rad": 0.3,
+                "external_torque_nm": 0.05,
+                "coulomb_nm": 0.06,
+                "coulomb_velocity_rad_s": 0.04,
+                "torque_lag_s": 0.002,
+                "command_delay_samples": 1,
+                "position_quantum_rad": 0.0007669903939428206,
+                "velocity_quantum_rad_s": 0.10471975511965977,
+                "position_noise_std_rad": 7e-05,
+                "velocity_noise_std_rad_s": 0.01,
+                "gravity_cos_nm": 0.45,
+                "gravity_sin_nm": 0.1
+              },
+              "wire_codec": {
+                "kind": "gm6020_current_v1_4",
+                "raw_code_min": -540,
+                "raw_code_max": 6537,
+                "wire_torque_peak_abs_nm": 0.8869476928710938,
+                "wire_current_peak_abs_a": 1.19696044921875,
+                "wire_current_rms_a": 0.6233560023980835
+              },
+              "feedback_timing": {
+                "position": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "velocity": {
+                  "period_samples": 1,
+                  "delay_samples": 0,
+                  "phase_samples": 0,
+                  "delay_jitter_samples": [],
+                  "drop_every": 0
+                },
+                "startup": "synchronized t=0 snapshot; later acquisitions follow independent clocks",
+                "max_position_age_s": 0.0,
+                "max_velocity_age_s": 0.0,
+                "dropped_acquisitions": [
+                  0,
+                  0
+                ],
+                "discarded_out_of_order": [
+                  0,
+                  0
+                ],
+                "api_age_policy": "max(position age, velocity age); preserves the oldest input age"
+              },
+              "fault_sample_count": 0,
+              "startup_peak_error_deg": 0.05981610442933716,
+              "position_rmse_deg": 0.02838780250843351,
+              "position_max_abs_error_deg": 0.06350006386528025,
+              "command_rms_nm": 0.4619058283942197,
+              "actual_torque_rms_nm": 0.4592758137255857,
+              "command_peak_abs_nm": 0.8869540691375732,
+              "command_at_limit_fraction": 0.0,
+              "controller_slew_limit_fraction": 0.16020994751312173,
+              "envelope_limited_interval_fraction": 0.0,
+              "integral_mean_nm": -0.012105211590153871,
+              "disturbance_mean_nm": 0.049960276662147196,
+              "minimum_joint_clearance_deg": 19.978417340158742
+            },
+            "absolute_relative_metric_difference_percent": {
+              "position_rmse_deg": 5.0623273009502525e-06,
+              "position_max_abs_error_deg": 2.498892682924849e-05,
+              "command_rms_nm": 0.0,
+              "actual_torque_rms_nm": 1.0913661427180923e-06
+            },
+            "maximum_position_trace_difference_deg": 2.3264084523143175e-08,
+            "passed": true
+          }
+        },
+        "passed": true,
+        "scope": "Numerical step refinement, not hardware validation or formal convergence order for a quantized nonlinear loop."
+      }
+    }
+  },
+  "current_source_sha256": {
+    "sim/run_pitch_profiles.py": "4c297cde62c83343c2b2648c60ffdb913b532d41cfc861b8d62d4bf43c9babdb",
+    "sim/pitch_core.py": "2c479bb4918082ced84f2a99aaeccd04950888aa514bfaac67324cfa27549caa",
+    "sim/run_benchmarks.py": "6f53d7d5eb2ec7ec2ecc13bb5d00a07d695a69bd7bb2d967ba5fbafae4a2da4e",
+    "sim/run_motor_profiles.py": "eb2bf62f6efe2f3e3c9bcace1e4c1eaf4db629d9ad6206d0bca8da9c91105567",
+    "sim/motor_envelope.py": "fdda80370b79633b96689edbe91896155652226f2057a8afb36d294258942d0a",
+    "sim/c_core.py": "d089b251f9eef8535d23c6f1c6af27127ff61a92337b01c7eeda54c04929c476",
+    "sim/upstream_reference.py": "c43adbf471f186ca7bdefeb017cc2b34c5c8cd82d53a3bb26c295ecbca89d0a1",
+    "sim/feedback_timing.py": "e5ed78a045a07f23ec4c4ac7ec4e54840510768db1b239682b00d7accd8f19c6",
+    "src/yaw_controller.c": "a8a2ea5af54da60d6390e7df271f6828ee09dfcbca9debc4739e3691e6233748",
+    "include/yaw_controller.h": "a3f419993cdbb8b87776b16d0bc7f1da0cd5ed47b9dbab738ea11d63c2a76291",
+    "src/gimbal_controller.c": "b63eff4c4d2a542c17c13e6e0538b60479188b663c378f4dc9b29942290d562f",
+    "include/gimbal_controller.h": "33bdd80eb5679014ffbe75994ec7ed8d758cc511c4a039c88c431c303bd1dce3",
+    "src/dm_mit.c": "45438303da2922daefde45332a2aaebbb65175bef3acb3fcb408bc47bccee8f2",
+    "src/gm6020.c": "93eed62315a2671640a0fe176d96fdf7e652e7b0cd6fc230428c6322863382b5",
+    "include/dm_mit.h": "ffca3ce125afeb5c143e5863b8f7f54fe8e82beddfe4f191b9d9d6343f7957ea",
+    "include/gm6020.h": "f4eccad8d36e35f920f4605905bc876f7803af0ecbbfeea51407134854b3f136",
+    "tools/fetch_upstream.py": "e998edd7c3e3fcf42705b885c6c2421d4f7a53998703cc04a9d690a119d76d97",
+    "profiles/dm4310_24v.json": "2248e2d4d7af9c3e2ae6537cf3e5ed5c0305809874c7e0e24e6d5e23e8908f4b",
+    "profiles/gm6020_current.json": "0b384280635cef0c3422d0cd00482c04f6365f786a7f2968f4b581d78230530a",
+    "profiles/dm4310_24v_pitch.json": "cce88adcc145a5fadb11039b2665e4c6dc9d2e1cce8d8ae00f36f36bae054c7f",
+    "profiles/gm6020_current_pitch.json": "58152a315fdd489df9cc62493e0cef44dcf13d895cada8964b08e9642a9beb18",
+    "sim/run_multirate.py": "2d56bcd2ee41dc435e4bc622300fafb3decdee5955ca7659e568440d0f4e307e",
+    "sim/run_sensitivity.py": "5ecdbc26dfc662ec41df05d6bd28448e9822b06af9dc7e0964a68b2a32942080"
+  },
+  "full_regression_report_sha256": {
+    "pitch": "b9bea6d84e4a17c2ca247b6d87ff13bbd14ce9a143f87f435ad8052d15b23432",
+    "motor": "0ec1d20569ed8cd68059885d7bf6a0ea4c99698edd0c660442bcaf53794f5f43"
+  },
+  "evidence_sha256": {
+    "multirate.json": "79dcd8d73c27ee6057ee610ba693d4dd383a016711119e064e9cdd158401f62e",
+    "pitch_diagnosis.json": "8c51b1aec60194fa5fe39cb9e57d1c852aab82dfb765c7a8a667272ebec12b60",
+    "pitch_configured.csv.gz": "240e267cfb779fbf3dbbdb3958717c341f65610b9cb86352c47ae78e580ad0dd",
+    "candidate/metrics.json": "b5035369170cfb7ac6a4699d7d31305faeba2bbd41af21b213a8c3f98722da0e",
+    "candidate/assessment.json": "bebe31eaec58b7a91b336e295347f0d45fa2919e5001cbe951ba0ec7347173da",
+    "yaw_acceptance.json": "0641aed895a3d92fb8aa873fa3ec2ee199a7e68543134d08f08b0eb851e4f132",
+    "yaw_gm_angle500_gyro1000.csv.gz": "a38950203eedc36140a41252a5dfba020ba23fd7e173d28a51ca82946e5678ab",
+    "pitch_gm_angle500_gyro1000.csv.gz": "3bd5de0ffd0fe7516bc449b27bb6e20841bc3244829cd4c87debe4a23eb82eb7",
+    "candidate/yaw_gm_angle500_gyro1000.csv.gz": "76da91063b317b467d608f4eef34a0c41619be6226f338e43d93341ae93d3d41",
+    "candidate/pitch_gm_angle500_gyro1000.csv.gz": "88717c9bbaf127373ec9eae05dc2a27fef5911db30260b8618c7d0780dc23965"
+  },
+  "review": {
+    "standards": "two evaluator omissions fixed; source-clock consecutive-tick contract enforced",
+    "spec": "no substantive issue; explicitly retain partial pitch timeout trajectories"
+  }
+}

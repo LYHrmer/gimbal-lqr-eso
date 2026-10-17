@@ -249,6 +249,7 @@ def main():
         "shared_library_sha256": file_hash(new.path), "codec_abi_sizes_bytes": verify_codec_layout(),
         "source_sha256": {name: file_hash(ROOT/name) for name in (
             "sim/run_motor_profiles.py", "sim/run_sensitivity.py", "sim/motor_envelope.py",
+            "sim/feedback_timing.py",
             "src/dm_mit.c", "src/gm6020.c", "include/dm_mit.h", "include/gm6020.h",
             "include/yaw_controller.h", "sim/c_core.py", "sim/upstream_reference.py", "tools/fetch_upstream.py",
             "profiles/dm4310_24v.json", "profiles/gm6020_current.json")},

@@ -3,7 +3,6 @@
 import argparse
 import csv
 import ctypes as ct
-from collections import deque
 from dataclasses import asdict, dataclass, replace
 import hashlib
 import json
@@ -23,6 +22,7 @@ import scipy
 from scipy.signal import cont2discrete
 
 from sim.c_core import Config, Core, Feedback, Output, Reference
+from sim.feedback_timing import ChannelTiming, FeedbackSampler
 from sim.motor_envelope import DM4310_24V_REFERENCE, actuator_limit
 from sim.run_benchmarks import COLUMNS, DT, IX, RAMP, SEED, Plant, config_dict, make_config, reference_at
 from sim.upstream_reference import UpstreamCore
@@ -31,7 +31,7 @@ from tools.tune_lqr import design_lqr
 DURATION = 6.
 EXTRA_COLUMNS = ["transmitted_command_nm", "following_interval_envelope_limited",
                  "following_interval_envelope_limit_eval_fraction", "integral_nm",
-                 "feedback_age_s"]
+                 "feedback_age_s", "position_source_time_s", "velocity_source_time_s"]
 TEAM_COMMIT = "f67ef28a8a6aedb047f1e65837330034313e0be8"
 
 
@@ -181,7 +181,7 @@ def step_allow_latched_fault(core, controller, feedback, reference):
 
 def run_trial(core, scenario, gain, seed=SEED, duration=DURATION, substeps=4,
               limiter=None, quantizer=None, controller_config=None,
-              feedback_period_samples=1, feedback_delay_samples=0):
+              feedback_period_samples=1, feedback_delay_samples=0, feedback_clocks=None):
     """One common plant loop; optional synchronous feedback sampling/transport.
 
     The first snapshot is already available at t=0 (startup synchronization).
@@ -199,33 +199,21 @@ def run_trial(core, scenario, gain, seed=SEED, duration=DURATION, substeps=4,
     if limiter is None:
         limiter = (lambda u, v: actuator_limit(u, v, envelope)) if scenario.speed_envelope else (
             lambda u, v: min(max(u, -scenario.torque_cap_nm), scenario.torque_cap_nm))
-    rng = np.random.default_rng(seed)
+    clocks = ((ChannelTiming(feedback_period_samples, feedback_delay_samples),)*2
+              if feedback_clocks is None else feedback_clocks)
+    sampler = FeedbackSampler(*clocks, seed,
+        (plant.position_noise_std_rad, plant.velocity_noise_std_rad_s),
+        (plant.position_quantum_rad, plant.velocity_quantum_rad_s))
     data = np.zeros((round(duration/DT)+1, len(COLUMNS)+len(EXTRA_COLUMNS)))
     p = v = torque = 0.
     pending = [0.]*plant.command_delay_samples
-    feedback_pending = deque()
-    held_feedback = None
     completed, failure, first_fault = True, None, None
     actual_count = 0
     for index in range(len(data)):
         time_s = index*DT
         rp, rv, ra = reference_at(time_s, scenario.frequency_hz, math.radians(scenario.amplitude_deg))
-        if index % feedback_period_samples == 0:
-            noise = rng.normal(size=2)
-            mp = p + noise[0]*plant.position_noise_std_rad
-            mv = v + noise[1]*plant.velocity_noise_std_rad_s
-            if plant.position_quantum_rad:
-                mp = float(np.round(mp/plant.position_quantum_rad)*plant.position_quantum_rad)
-            if plant.velocity_quantum_rad_s:
-                mv = float(np.round(mv/plant.velocity_quantum_rad_s)*plant.velocity_quantum_rad_s)
-            sample = (index, mp, mv)
-            feedback_pending.append((index + feedback_delay_samples, sample))
-            if index == 0:
-                held_feedback = sample
-        while feedback_pending and feedback_pending[0][0] <= index:
-            _, held_feedback = feedback_pending.popleft()
-        source_index, mp, mv = held_feedback
-        age_s = (index - source_index)*DT
+        (mp, mv), sources = sampler.read(index, p, v)
+        age_s = (index - min(sources))*DT
         out = step_allow_latched_fault(core, controller, Feedback(mp, mv, age_s, 0., True, False),
                                        Reference(rp, rv, ra, 0., True))
         if not all(math.isfinite(value) for value in (out.torque_nm, out.unconstrained_torque_nm,
@@ -241,6 +229,7 @@ def run_trial(core, scenario, gain, seed=SEED, duration=DURATION, substeps=4,
         data[index, len(COLUMNS)] = sent
         data[index, len(COLUMNS)+3] = out.integral_nm
         data[index, len(COLUMNS)+4] = age_s
+        data[index, len(COLUMNS)+5:] = [source*DT for source in sources]
         actual_count = index+1
         if index+1 == len(data):
             break
@@ -281,10 +270,11 @@ def run_trial(core, scenario, gain, seed=SEED, duration=DURATION, substeps=4,
                "evaluation_start_s": RAMP, "evaluation_end_s": duration,
                "actual_last_sample_s": float(data[-1, 0]) if len(data) else None,
                "actual_c_config": config_dict(config),
-               "feedback_timing": {"period_samples": feedback_period_samples,
-                   "transport_delay_samples": feedback_delay_samples,
+               "feedback_timing": {"period_samples": feedback_period_samples if feedback_clocks is None else None,
+                   "transport_delay_samples": feedback_delay_samples if feedback_clocks is None else None,
                    "startup": "initial snapshot synchronized at t=0; subsequent samples delayed",
-                   "max_age_s": float(np.max(data[:, len(COLUMNS)+4])) if len(data) else None}}
+                   "max_age_s": float(np.max(data[:, len(COLUMNS)+4])) if len(data) else None,
+                   "channels": sampler.metrics(DT)}}
     if len(window):
         error = np.rad2deg(window[:, IX["error_rad"]])
         metrics.update(position_rmse_deg=float(np.sqrt(np.mean(error**2))),
@@ -406,6 +396,7 @@ def main():
         "new_library_sha256": file_hash(new.path), "sensitivity_source_sha256": file_hash(Path(__file__)),
         "motor_envelope_source_sha256": file_hash(ROOT / "sim/motor_envelope.py"),
         "source_sha256": {name: file_hash(ROOT/name) for name in (
+            "sim/feedback_timing.py",
             "include/yaw_controller.h", "sim/c_core.py", "sim/upstream_reference.py",
             "tools/fetch_upstream.py", "tools/tune_lqr.py", "sim/run_benchmarks.py")},
         "lqr_design": design,

@@ -32,6 +32,7 @@ def analyze(core):
         "source_sha256": {name: file_hash(ROOT/name) for name in (
             "src/yaw_controller.c", "include/yaw_controller.h", "sim/c_core.py",
             "sim/run_sensitivity.py", "sim/run_motor_profiles.py", "sim/run_feedback_timing.py",
+            "sim/feedback_timing.py",
             "profiles/dm4310_24v.json", "profiles/gm6020_current.json")},
         "library_sha256": file_hash(core.path), "profiles": {},
     }

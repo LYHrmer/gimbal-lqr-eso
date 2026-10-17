@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "scope": "paired synthetic engineering acceptance; no hardware claim",
+  "failures": [],
+  "summaries": {
+    "dm4310_24v/primary_paired_seeds": {
+      "mean_paired_rmse_change_percent": -7.498458304279376,
+      "improved_pair_count": 5,
+      "paired_count": 5,
+      "means": {
+        "Original core": {
+          "position_rmse_deg": 0.027626301454006966,
+          "position_max_abs_error_deg": 0.06599329476521071,
+          "command_rms_nm": 0.5029491527011651,
+          "command_at_limit_fraction": 0.0,
+          "envelope_limited_interval_fraction": 0.0
+        },
+        "New core": {
+          "position_rmse_deg": 0.02555650297819909,
+          "position_max_abs_error_deg": 0.05998504375053682,
+          "command_rms_nm": 0.5024486864898828,
+          "command_at_limit_fraction": 0.0,
+          "envelope_limited_interval_fraction": 0.0
+        }
+      }
+    },
+    "dm4310_24v/validation_paired_seeds": {
+      "mean_paired_rmse_change_percent": -6.903705202384294,
+      "improved_pair_count": 5,
+      "paired_count": 5,
+      "means": {
+        "Original core": {
+          "position_rmse_deg": 0.027343182712848964,
+          "position_max_abs_error_deg": 0.06568347646882743,
+          "command_rms_nm": 0.5029262192375636,
+          "command_at_limit_fraction": 0.0,
+          "envelope_limited_interval_fraction": 0.0
+        },
+        "New core": {
+          "position_rmse_deg": 0.02545455250311949,
+          "position_max_abs_error_deg": 0.05954112072127966,
+          "command_rms_nm": 0.5024421331060098,
+          "command_at_limit_fraction": 0.0,
+          "envelope_limited_interval_fraction": 0.0
+        }
+      }
+    },
+    "gm6020_current_v1_4/primary_paired_seeds": {
+      "mean_paired_rmse_change_percent": -34.640164219521,
+      "improved_pair_count": 5,
+      "paired_count": 5,
+      "means": {
+        "Original core": {
+          "position_rmse_deg": 0.025012111687200383,
+          "position_max_abs_error_deg": 0.05998954007326011,
+          "command_rms_nm": 0.5080845668505641,
+          "command_at_limit_fraction": 0.0,
+          "envelope_limited_interval_fraction": 0.0
+        },
+        "New core": {
+          "position_rmse_deg": 0.01632213901056768,
+          "position_max_abs_error_deg": 0.04295304159406509,
+          "command_rms_nm": 0.5077081971813592,
+          "command_at_limit_fraction": 0.0,
+          "envelope_limited_interval_fraction": 0.0
+        }
+      }
+    },
+    "gm6020_current_v1_4/validation_paired_seeds": {
+      "mean_paired_rmse_change_percent": -33.67985981833898,
+      "improved_pair_count": 5,
+      "paired_count": 5,
+      "means": {
+        "Original core": {
+          "position_rmse_deg": 0.025382852214113277,
+          "position_max_abs_error_deg": 0.06008325269346902,
+          "command_rms_nm": 0.5082757643219338,
+          "command_at_limit_fraction": 0.0,
+          "envelope_limited_interval_fraction": 0.0
+        },
+        "New core": {
+          "position_rmse_deg": 0.016805635204669486,
+          "position_max_abs_error_deg": 0.04569719170293905,
+          "command_rms_nm": 0.5078169327606183,
+          "command_at_limit_fraction": 0.0,
+          "envelope_limited_interval_fraction": 0.0
+        }
+      }
+    }
+  }
+}

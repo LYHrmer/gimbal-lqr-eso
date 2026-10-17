@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from sim.c_core import Config, Feedback, Reference
+from sim.feedback_timing import ChannelTiming, FeedbackSampler
 from sim.motor_envelope import MotorEnvelope, actuator_limit
 from sim.pitch_core import GimbalConfig, PitchCore, Pose
 from sim.run_benchmarks import COLUMNS, DT, IX, RAMP, Plant, config_dict, reference_at
@@ -36,7 +37,8 @@ HOLDOUT_SEEDS = (5303, 5304, 5305, 5306, 5307)
 LABELS = ("Original C (same Ki)", "New C, gravity off", "New C, gravity on")
 DURATION = 6.
 PITCH_COLUMNS = COLUMNS + ["wire_torque_nm", "gravity_load_nm", "gravity_feedforward_nm",
-    "joint_position_rad", "joint_reference_rad", "integral_nm", "envelope_limited_interval"]
+    "joint_position_rad", "joint_reference_rad", "integral_nm", "envelope_limited_interval",
+    "feedback_age_s", "position_source_time_s", "velocity_source_time_s"]
 PIX = {name: i for i, name in enumerate(PITCH_COLUMNS)}
 
 
@@ -130,7 +132,8 @@ def physical_parameters(profile, case):
     return plant, ga, gb, envelope
 
 
-def run_trial(profile, case, label, seed, original, new, duration=DURATION, substeps=4):
+def run_trial(profile, case, label, seed, original, new, duration=DURATION, substeps=4,
+              feedback_clocks=None):
     if label not in LABELS or substeps < 1:
         raise ValueError("unknown implementation or invalid RK4 substeps")
     cfg = Config(**profile["controller"])
@@ -143,7 +146,10 @@ def run_trial(profile, case, label, seed, original, new, duration=DURATION, subs
         minimum, maximum, profile["joint_margin_rad"], True)
     controller = original.init(cfg) if label == LABELS[0] else new.init(gcfg)
     codec = WireCodec(profile["motor_base"], new.lib)
-    rng = np.random.default_rng(seed)
+    clocks = (ChannelTiming(),)*2 if feedback_clocks is None else feedback_clocks
+    sampler = FeedbackSampler(*clocks, seed,
+        (plant.position_noise_std_rad, plant.velocity_noise_std_rad_s),
+        (plant.position_quantum_rad, plant.velocity_quantum_rad_s))
     data = np.zeros((round(duration/DT)+1, len(PITCH_COLUMNS)))
     base_angle = math.radians(case.base_tilt_deg)
     p, v, torque = math.radians(case.center_deg)+base_angle, 0., 0.
@@ -153,23 +159,18 @@ def run_trial(profile, case, label, seed, original, new, duration=DURATION, subs
     for index in range(len(data)):
         time_s = index*DT
         rp, rv, ra = pitch_reference(time_s, case)
-        noise = rng.normal(size=2)
         # Assumed calibrated joint encoder + exactly known constant chassis tilt.
         # This is neither a raw feedback CAN replay nor an IMU estimation model.
-        mp = p-base_angle+noise[0]*plant.position_noise_std_rad
-        mv = v+noise[1]*plant.velocity_noise_std_rad_s
-        if plant.position_quantum_rad:
-            mp = float(np.round(mp/plant.position_quantum_rad)*plant.position_quantum_rad)
-        if plant.velocity_quantum_rad_s:
-            mv = float(np.round(mv/plant.velocity_quantum_rad_s)*plant.velocity_quantum_rad_s)
+        (mp, mv), sources = sampler.read(index, p-base_angle, v)
+        age_s = (index-min(sources))*DT
         measured_joint = mp
         mp += base_angle
-        feedback, reference = Feedback(mp, mv, 0., 0., True, False), Reference(rp, rv, ra, 0., True)
+        feedback, reference = Feedback(mp, mv, age_s, 0., True, False), Reference(rp, rv, ra, 0., True)
         if label == LABELS[0]:
             out = original.step(controller, feedback, reference, DT)
             gravity_ff, joint_ref = 0., rp-base_angle
         else:
-            gout = new.step(controller, feedback, reference, Pose(measured_joint, mv, mp, 0., True), DT)
+            gout = new.step(controller, feedback, reference, Pose(measured_joint, mv, mp, age_s, True), DT)
             out, gravity_ff, joint_ref = gout.control, gout.gravity_feedforward_nm, gout.joint_reference_rad
         if not all(math.isfinite(value) for value in (out.torque_nm, out.unconstrained_torque_nm,
                 out.compensation_nm, out.disturbance_nm, gravity_ff)):
@@ -181,7 +182,7 @@ def run_trial(profile, case, label, seed, original, new, duration=DURATION, subs
         data[index] = [time_s, rp, rv, ra, p, v, mp, mv, out.torque_nm, torque, rp-p,
             out.compensation_nm, out.disturbance_nm, out.unconstrained_torque_nm,
             out.flags, out.status, sent, gravity_load(p, ga, gb), gravity_ff,
-            p-base_angle, joint_ref, out.integral_nm, 0.]
+            p-base_angle, joint_ref, out.integral_nm, 0., age_s, sources[0]*DT, sources[1]*DT]
         actual_count = index+1
         if index+1 == len(data):
             break
@@ -233,6 +234,7 @@ def run_trial(profile, case, label, seed, original, new, duration=DURATION, subs
             if label != LABELS[0] else None,
         "actual_plant": dict(asdict(plant), gravity_cos_nm=ga, gravity_sin_nm=gb),
         "wire_codec": codec.metrics(),
+        "feedback_timing": sampler.metrics(DT),
         "fault_sample_count": int(np.count_nonzero(data[:, IX["status"]] > 1)) if label != LABELS[0] else None,
         "startup_peak_error_deg": float(np.max(np.abs(np.rad2deg(data[data[:, 0] < RAMP, IX["error_rad"]]))))
             if len(data) else None}
@@ -388,6 +390,7 @@ def plot_trace(path, traces, case):
 def provenance(new):
     names = ["sim/run_pitch_profiles.py", "sim/pitch_core.py", "sim/run_benchmarks.py",
         "sim/run_motor_profiles.py", "sim/motor_envelope.py", "sim/c_core.py", "sim/upstream_reference.py",
+        "sim/feedback_timing.py",
         "src/yaw_controller.c", "include/yaw_controller.h", "src/gimbal_controller.c", "include/gimbal_controller.h",
         "src/dm_mit.c", "src/gm6020.c", "include/dm_mit.h", "include/gm6020.h",
         "tools/fetch_upstream.py", "profiles/dm4310_24v.json", "profiles/gm6020_current.json",

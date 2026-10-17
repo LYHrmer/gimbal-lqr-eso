@@ -78,6 +78,7 @@ def main():
                                  "selection": "prescribed engineering candidate, no grid search"} if args.integral_profile_check else None,
         "dependency_source_sha256": {name: file_hash(ROOT/name) for name in (
             "sim/run_sensitivity.py", "sim/run_motor_profiles.py", "sim/motor_envelope.py",
+            "sim/feedback_timing.py",
             "sim/c_core.py", "sim/upstream_reference.py", "include/yaw_controller.h")},
         "cases": {}}
     args.output.parent.mkdir(parents=True, exist_ok=True)

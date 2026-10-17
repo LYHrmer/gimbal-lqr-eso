@@ -86,6 +86,8 @@ jobs:
           python sim/run_sensitivity.py --output build/ci-sensitivity
           python sim/analyze_local_dynamics.py --output build/ci-local-dynamics.json
           python sim/run_feedback_timing.py --output build/ci-feedback-timing.json
+          python sim/run_multirate.py --output build/ci-multirate
+          python sim/diagnose_pitch.py --output build/ci-pitch-diagnosis
           python sim/run_motor_profiles.py --output build/ci-motor-profiles
           python tools/check_performance.py --report build/ci-motor-profiles/metrics.json --output build/ci-performance.json
           python tools/check_integration_convergence.py --output build/ci-convergence.json

@@ -1,0 +1,114 @@
+--- a/include/yaw_controller.h
++++ b/include/yaw_controller.h
+@@ -48,4 +48,9 @@
+     bool valid;
+     bool applied_torque_valid;       /* false: observer uses last limited command. */
++    /* Experimental metadata; source time belongs to POSITION, not oldest channel. */
++    float position_age_s;
++    float position_interval_s;
++    bool position_is_new;
++    bool source_time_valid;
+ } YawFeedback;
+
+--- a/sim/c_core.py
++++ b/sim/c_core.py
+@@ -24,5 +24,7 @@
+     _fields_ = [(name, ct.c_float) for name in (
+         "position_rad velocity_rad_s age_s applied_torque_nm").split()] + [
+-        ("valid", ct.c_bool), ("applied_torque_valid", ct.c_bool)]
++        ("valid", ct.c_bool), ("applied_torque_valid", ct.c_bool),
++        ("position_age_s", ct.c_float), ("position_interval_s", ct.c_float),
++        ("position_is_new", ct.c_bool), ("source_time_valid", ct.c_bool)]
+
+
+--- a/src/yaw_controller.c
++++ b/src/yaw_controller.c
+@@ -160,13 +160,31 @@
+         0.5f * h * h * acceleration;
+     const float pred_v = c->observer_velocity_rad_s + h * acceleration;
+-    const float innovation = f->position_rad - pred_p;
+-    const float wh = cfg->eso_bandwidth_rad_s * h;
++    float observed_h = h;
++    float age = 0.0f;
++    if (f->source_time_valid) {
++        if (!f->position_is_new) {
++            c->observer_position_rad = pred_p;
++            c->observer_velocity_rad_s = pred_v;
++            return isfinite(pred_p) && isfinite(pred_v);
++        }
++        observed_h = f->position_interval_s;
++        age = f->position_age_s;
++    }
++    /* Back-project under constant acceleration, then propagate the correction.
++     * Approximation only: this does not replay past command/load history. */
++    const float predicted_sample = age == 0.0f ? pred_p :
++        pred_p - age * pred_v + 0.5f * age * age * acceleration;
++    const float innovation = f->position_rad - predicted_sample;
++    const float wh = cfg->eso_bandwidth_rad_s * observed_h;
+     const float q = -expm1f(-wh); /* 1-exp(-wh), accurate for small wh. */
+     const float l1 = -expm1f(-3.0f * wh);
+-    const float l2 = 1.5f * q * q * (2.0f - q) / h;
+-    const float l3 = cfg->inertia_kg_m2 * q * q * q / (h * h);
++    const float l2 = 1.5f * q * q * (2.0f - q) / observed_h;
++    const float l3 = cfg->inertia_kg_m2 * q * q * q / (observed_h * observed_h);
++    const float current_l1 = age == 0.0f ? l1 :
++        l1 + age * l2 + 0.5f * age * age * l3 / cfg->inertia_kg_m2;
++    const float current_l2 = age == 0.0f ? l2 : l2 + age * l3 / cfg->inertia_kg_m2;
+     const float next_d = c->observer_disturbance_nm + l3 * innovation;
+-    c->observer_position_rad = pred_p + l1 * innovation;
+-    c->observer_velocity_rad_s = pred_v + l2 * innovation;
++    c->observer_position_rad = pred_p + current_l1 * innovation;
++    c->observer_velocity_rad_s = pred_v + current_l2 * innovation;
+     if (!isfinite(next_d) || !isfinite(c->observer_position_rad) ||
+         !isfinite(c->observer_velocity_rad_s)) return false;
+@@ -202,4 +220,10 @@
+         !isfinite(f->age_s) || f->age_s < 0.0f ||
+         (f->applied_torque_valid && !isfinite(f->applied_torque_nm)))
++        return fault(c, out, YAW_BAD_FEEDBACK);
++    if (f->source_time_valid && (!isfinite(f->position_age_s) ||
++        f->position_age_s < 0.0f || f->position_age_s > f->age_s ||
++        (f->position_is_new && (!isfinite(f->position_interval_s) ||
++            f->position_interval_s < 1e-6f || f->position_interval_s > 0.05f ||
++            cfg->eso_bandwidth_rad_s * f->position_interval_s > 1.0f))))
+         return fault(c, out, YAW_BAD_FEEDBACK);
+     if (f->age_s > cfg->feedback_timeout_s)
+--- a/sim/run_sensitivity.py
++++ b/sim/run_sensitivity.py
+@@ -210,4 +210,5 @@
+     completed, failure, first_fault = True, None, None
+     actual_count = 0
++    previous_position_source = -1
+     for index in range(len(data)):
+         time_s = index*DT
+@@ -215,6 +216,11 @@
+         (mp, mv), sources = sampler.read(index, p, v)
+         age_s = (index - min(sources))*DT
+-        out = step_allow_latched_fault(core, controller, Feedback(mp, mv, age_s, 0., True, False),
+-                                       Reference(rp, rv, ra, 0., True))
++        feedback = Feedback(mp, mv, age_s, 0., True, False)
++        feedback.source_time_valid = True
++        feedback.position_age_s = (index-sources[0])*DT
++        feedback.position_is_new = sources[0] != previous_position_source
++        feedback.position_interval_s = max(1, sources[0]-previous_position_source)*DT
++        previous_position_source = sources[0]
++        out = step_allow_latched_fault(core, controller, feedback, Reference(rp, rv, ra, 0., True))
+         if not all(math.isfinite(value) for value in (out.torque_nm, out.unconstrained_torque_nm,
+                 out.compensation_nm, out.disturbance_nm)):
+--- a/sim/run_pitch_profiles.py
++++ b/sim/run_pitch_profiles.py
+@@ -157,4 +157,5 @@
+     first_fault = first_crossing = failure = None
+     actual_count = 0
++    previous_position_source = -1
+     for index in range(len(data)):
+         time_s = index*DT
+@@ -167,4 +168,9 @@
+         mp += base_angle
+         feedback, reference = Feedback(mp, mv, age_s, 0., True, False), Reference(rp, rv, ra, 0., True)
++        feedback.source_time_valid = True
++        feedback.position_age_s = (index-sources[0])*DT
++        feedback.position_is_new = sources[0] != previous_position_source
++        feedback.position_interval_s = max(1, sources[0]-previous_position_source)*DT
++        previous_position_source = sources[0]
+         if label == LABELS[0]:
+             out = original.step(controller, feedback, reference, DT)

@@ -1,0 +1,235 @@
+{
+  "passed": false,
+  "failures": [
+    "gm6020_current_v1_4/sync_2_0: improvement <10%",
+    "gm6020_current_v1_4/angle500_gyro1000: improvement <10%",
+    "gm6020_current_v1_4_pitch/sync_2_0: regression >5% or incomplete pairs",
+    "gm6020_current_v1_4_pitch/sync_2_0: improvement <10%",
+    "gm6020_current_v1_4_pitch/sync_2_2: regression >5% or incomplete pairs",
+    "gm6020_current_v1_4_pitch/angle500_gyro1000: improvement <10%"
+  ],
+  "comparisons": [
+    {
+      "profile": "dm4310_24v",
+      "clock": "sync_1_0",
+      "mean_paired_rmse_change_percent": 0.0,
+      "mean_paired_peak_change_percent": 0.0
+    },
+    {
+      "profile": "dm4310_24v",
+      "clock": "sync_2_0",
+      "mean_paired_rmse_change_percent": 2.742625002990451,
+      "mean_paired_peak_change_percent": 2.729255651837
+    },
+    {
+      "profile": "dm4310_24v",
+      "clock": "sync_1_2",
+      "mean_paired_rmse_change_percent": 3.4544044437502177,
+      "mean_paired_peak_change_percent": 2.593740123398214
+    },
+    {
+      "profile": "dm4310_24v",
+      "clock": "sync_2_2",
+      "mean_paired_rmse_change_percent": 2.6731699545574856,
+      "mean_paired_peak_change_percent": 2.638049123609032
+    },
+    {
+      "profile": "dm4310_24v",
+      "clock": "angle500_gyro1000",
+      "mean_paired_rmse_change_percent": 1.3650582175294061,
+      "mean_paired_peak_change_percent": 1.8151627372038461
+    },
+    {
+      "profile": "dm4310_24v",
+      "clock": "angle500_phase1_gyro1000_delay1",
+      "mean_paired_rmse_change_percent": 0.7243386533130206,
+      "mean_paired_peak_change_percent": 1.2431528046276379
+    },
+    {
+      "profile": "dm4310_24v",
+      "clock": "transport_jitter",
+      "mean_paired_rmse_change_percent": 3.395426461608294,
+      "mean_paired_peak_change_percent": 2.230432377223327
+    },
+    {
+      "profile": "dm4310_24v",
+      "clock": "drop_every_second_angle",
+      "mean_paired_rmse_change_percent": 2.378801556998781,
+      "mean_paired_peak_change_percent": 0.7510064036478951
+    },
+    {
+      "profile": "dm4310_24v",
+      "clock": "out_of_order_angle",
+      "mean_paired_rmse_change_percent": 1.3650582175294061,
+      "mean_paired_peak_change_percent": 1.8151627372038461
+    },
+    {
+      "profile": "gm6020_current_v1_4",
+      "clock": "sync_1_0",
+      "mean_paired_rmse_change_percent": 0.0,
+      "mean_paired_peak_change_percent": 0.0
+    },
+    {
+      "profile": "gm6020_current_v1_4",
+      "clock": "sync_2_0",
+      "mean_paired_rmse_change_percent": 3.797950861004973,
+      "mean_paired_peak_change_percent": -3.9773804509361668
+    },
+    {
+      "profile": "gm6020_current_v1_4",
+      "clock": "sync_1_2",
+      "mean_paired_rmse_change_percent": 3.9671783223528863,
+      "mean_paired_peak_change_percent": 2.3827338192470147
+    },
+    {
+      "profile": "gm6020_current_v1_4",
+      "clock": "sync_2_2",
+      "mean_paired_rmse_change_percent": 3.13703004471928,
+      "mean_paired_peak_change_percent": 0.5417370278728314
+    },
+    {
+      "profile": "gm6020_current_v1_4",
+      "clock": "angle500_gyro1000",
+      "mean_paired_rmse_change_percent": 0.2031761532978645,
+      "mean_paired_peak_change_percent": 0.7509582913425147
+    },
+    {
+      "profile": "gm6020_current_v1_4",
+      "clock": "angle500_phase1_gyro1000_delay1",
+      "mean_paired_rmse_change_percent": 4.86703608520079,
+      "mean_paired_peak_change_percent": 2.9530700338370757
+    },
+    {
+      "profile": "gm6020_current_v1_4",
+      "clock": "transport_jitter",
+      "mean_paired_rmse_change_percent": 2.5174810129074,
+      "mean_paired_peak_change_percent": 4.468543785927555
+    },
+    {
+      "profile": "gm6020_current_v1_4",
+      "clock": "drop_every_second_angle",
+      "mean_paired_rmse_change_percent": 3.318912301175795,
+      "mean_paired_peak_change_percent": 3.0944084885617436
+    },
+    {
+      "profile": "gm6020_current_v1_4",
+      "clock": "out_of_order_angle",
+      "mean_paired_rmse_change_percent": 0.2031761532978645,
+      "mean_paired_peak_change_percent": 0.7509582913425147
+    },
+    {
+      "profile": "dm4310_24v_pitch",
+      "clock": "sync_1_0",
+      "mean_paired_rmse_change_percent": 0.0,
+      "mean_paired_peak_change_percent": 0.0
+    },
+    {
+      "profile": "dm4310_24v_pitch",
+      "clock": "sync_2_0",
+      "mean_paired_rmse_change_percent": 0.1259955930119109,
+      "mean_paired_peak_change_percent": -1.1936102007930272
+    },
+    {
+      "profile": "dm4310_24v_pitch",
+      "clock": "sync_1_2",
+      "mean_paired_rmse_change_percent": 1.5027632638949795,
+      "mean_paired_peak_change_percent": 1.8275643049272834
+    },
+    {
+      "profile": "dm4310_24v_pitch",
+      "clock": "sync_2_2",
+      "mean_paired_rmse_change_percent": 0.7728239761354505,
+      "mean_paired_peak_change_percent": -0.5516624652357471
+    },
+    {
+      "profile": "dm4310_24v_pitch",
+      "clock": "angle500_gyro1000",
+      "mean_paired_rmse_change_percent": 0.05668122700450325,
+      "mean_paired_peak_change_percent": -0.09595241575639142
+    },
+    {
+      "profile": "dm4310_24v_pitch",
+      "clock": "angle500_phase1_gyro1000_delay1",
+      "mean_paired_rmse_change_percent": 0.9717745811815984,
+      "mean_paired_peak_change_percent": 2.6155030687811145
+    },
+    {
+      "profile": "dm4310_24v_pitch",
+      "clock": "transport_jitter",
+      "mean_paired_rmse_change_percent": 0.05546263004466331,
+      "mean_paired_peak_change_percent": -1.3518176668610142
+    },
+    {
+      "profile": "dm4310_24v_pitch",
+      "clock": "drop_every_second_angle",
+      "mean_paired_rmse_change_percent": -0.8044040504008124,
+      "mean_paired_peak_change_percent": -0.9077049494715809
+    },
+    {
+      "profile": "dm4310_24v_pitch",
+      "clock": "out_of_order_angle",
+      "mean_paired_rmse_change_percent": 0.05668122700450325,
+      "mean_paired_peak_change_percent": -0.09595241575639142
+    },
+    {
+      "profile": "gm6020_current_v1_4_pitch",
+      "clock": "sync_1_0",
+      "mean_paired_rmse_change_percent": 0.0,
+      "mean_paired_peak_change_percent": 0.0
+    },
+    {
+      "profile": "gm6020_current_v1_4_pitch",
+      "clock": "sync_2_0",
+      "mean_paired_rmse_change_percent": 5.902674402539539,
+      "mean_paired_peak_change_percent": 1.9998580850551846
+    },
+    {
+      "profile": "gm6020_current_v1_4_pitch",
+      "clock": "sync_1_2",
+      "mean_paired_rmse_change_percent": -0.9415539425019714,
+      "mean_paired_peak_change_percent": -2.2807818937542614
+    },
+    {
+      "profile": "gm6020_current_v1_4_pitch",
+      "clock": "sync_2_2",
+      "mean_paired_rmse_change_percent": 5.392748165528748,
+      "mean_paired_peak_change_percent": 3.3897007789061426
+    },
+    {
+      "profile": "gm6020_current_v1_4_pitch",
+      "clock": "angle500_gyro1000",
+      "mean_paired_rmse_change_percent": -3.4578130743681803,
+      "mean_paired_peak_change_percent": -4.773963199805908
+    },
+    {
+      "profile": "gm6020_current_v1_4_pitch",
+      "clock": "angle500_phase1_gyro1000_delay1",
+      "mean_paired_rmse_change_percent": 0.8533370467215806,
+      "mean_paired_peak_change_percent": 0.47410436844971215
+    },
+    {
+      "profile": "gm6020_current_v1_4_pitch",
+      "clock": "transport_jitter",
+      "mean_paired_rmse_change_percent": 4.088455618241034,
+      "mean_paired_peak_change_percent": 1.399967136655259
+    },
+    {
+      "profile": "gm6020_current_v1_4_pitch",
+      "clock": "drop_every_second_angle",
+      "mean_paired_rmse_change_percent": 0.7509628447917138,
+      "mean_paired_peak_change_percent": 1.5007281226314524
+    },
+    {
+      "profile": "gm6020_current_v1_4_pitch",
+      "clock": "out_of_order_angle",
+      "mean_paired_rmse_change_percent": -3.4578130743681803,
+      "mean_paired_peak_change_percent": -4.773963199805908
+    }
+  ],
+  "scope": "development screening only, not full acceptance or hardware validation",
+  "patch_sha256": "e4ecbc94a375b1dceb49665cea2497164f0d46db0b1c8a4ee177942ef43312ae",
+  "evaluator_sha256": "a8b557508c230175b62e6f6f9b2b4f855b7cb5b0ea5e5e5b9a58d99a2d83dbfa",
+  "baseline_sha256": "79dcd8d73c27ee6057ee610ba693d4dd383a016711119e064e9cdd158401f62e",
+  "candidate_sha256": "b5035369170cfb7ac6a4699d7d31305faeba2bbd41af21b213a8c3f98722da0e",
+  "experiment_exit_code": 0
+}

@@ -4,6 +4,9 @@ import unittest
 import numpy as np
 
 from sim.c_core import Core
+from sim.feedback_timing import ChannelTiming, FeedbackSampler
+from sim.pitch_core import PitchCore
+from sim.run_pitch_profiles import LABELS, PIX, PitchCase, load_profiles, run_trial as pitch_trial
 from sim.run_benchmarks import COLUMNS, DT, IX, Plant, make_config, config_dict
 from sim.run_sensitivity import Scenario, run_trial
 
@@ -52,6 +55,57 @@ class FeedbackTimingTests(unittest.TestCase):
             with self.subTest(period=period, delay=delay):
                 with self.assertRaises(ValueError):
                     self.trial(period, delay)
+
+
+class IndependentClockTests(unittest.TestCase):
+    def sampler(self, position, velocity):
+        return FeedbackSampler(position, velocity, 23, (0., 0.), (0., 0.))
+
+    def test_asynchronous_acquisitions_keep_distinct_source_times(self):
+        sampler = self.sampler(ChannelTiming(2, phase_samples=1), ChannelTiming(1, 1))
+        for tick, expected in enumerate(((0, 0), (1, 0), (1, 1), (3, 2), (3, 3))):
+            values, sources = sampler.read(tick, 10.+tick, 20.+tick)
+            self.assertEqual(sources, expected)
+            self.assertEqual(values, (10.+expected[0], 20.+expected[1]))
+
+    def test_jitter_does_not_let_an_old_packet_replace_a_newer_one(self):
+        sampler = self.sampler(ChannelTiming(1, delay_jitter_samples=(3, 0)), ChannelTiming())
+        sources = [sampler.read(t, float(t), 0.)[1][0] for t in range(6)]
+        self.assertEqual(sources, [0, 0, 2, 2, 4, 4])
+        self.assertEqual(sampler.discarded_old[0], 1)
+
+    def test_drops_keep_last_value_and_age_without_resetting_clock(self):
+        sampler = self.sampler(ChannelTiming(2, drop_every=2), ChannelTiming())
+        sources = [sampler.read(t, float(t), 0.)[1][0] for t in range(9)]
+        self.assertEqual(sources, [0, 0, 2, 2, 2, 2, 6, 6, 6])
+        self.assertEqual(sampler.metrics(DT)["max_position_age_s"], .003)
+        self.assertEqual(sampler.dropped, [2, 0])
+        with self.assertRaises(ValueError):
+            sampler.read(8, 0., 0.)
+        with self.assertRaises(ValueError):
+            sampler.read(10, 0., 0.)
+
+    def test_pitch_uses_oldest_channel_age_in_actual_c_guard(self):
+        profile = load_profiles()[1]
+        data, metrics = pitch_trial(profile, PitchCase(), LABELS[2], 5300, None,
+            PitchCore(), duration=.012,
+            feedback_clocks=(ChannelTiming(1), ChannelTiming(2, 6)))
+        self.assertEqual(metrics["first_latched_fault"], {"time_s": .006, "status": 6})
+        np.testing.assert_array_equal(data[6:, PIX["command_nm"]], 0.)
+        self.assertEqual(data[6, PIX["position_source_time_s"]], .006)
+        self.assertEqual(data[6, PIX["velocity_source_time_s"]], 0.)
+
+    def test_pitch_holds_noisy_quantized_position_at_its_source_timestamp(self):
+        from dataclasses import replace
+        case = replace(PitchCase(), base_tilt_deg=15.)
+        data, metrics = pitch_trial(load_profiles()[1], case, LABELS[2], 5300, None,
+            PitchCore(), duration=.012,
+            feedback_clocks=(ChannelTiming(2, 1), ChannelTiming()))
+        for tick in (2, 4, 6, 8, 10, 12):
+            self.assertEqual(data[tick, PIX["measured_position_rad"]],
+                             data[tick-1, PIX["measured_position_rad"]])
+            self.assertAlmostEqual(data[tick, PIX["feedback_age_s"]], .002)
+        self.assertIsNone(metrics["first_latched_fault"])
 
 
 if __name__ == "__main__":
