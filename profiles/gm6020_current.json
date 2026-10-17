@@ -65,6 +65,8 @@
     "source_version": "v1.4 2023.10",
     "scope": "Linear speed/torque approximation plus application limit; not a thermal model. Maximum continuous torque is not continuous stall torque."
   },
+  "feedback_source": "motor_can",
+  "feedback_scope": "GM6020 CAN mechanical angle and signed integer RPM; 1 kHz nominal frame rate per v1.4. Noise is synthetic. Joint zero/direction calibration is assumed; not an IMU model or raw CAN replay.",
   "sensor": {
     "position_quantum_rad": 0.0007669903939428206,
     "velocity_quantum_rad_s": 0.10471975511965977,

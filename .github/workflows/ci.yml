@@ -78,6 +78,7 @@ jobs:
           python -m pip install -r requirements.txt
           python tools/fetch_upstream.py
           python tools/generate_profile_headers.py --check
+          python tools/check_motor_profiles.py --output build/ci-motor-profile-contract.json
           python -m unittest discover -s tests -p 'test_*.py'
       - name: Recompute synthetic benchmarks
         run: |
@@ -88,6 +89,7 @@ jobs:
           python sim/run_feedback_timing.py --output build/ci-feedback-timing.json
           python sim/run_multirate.py --output build/ci-multirate
           python sim/diagnose_pitch.py --output build/ci-pitch-diagnosis
+          python experimental/pitch_eso/run_experiment.py --phase development --output build/ci-pitch-eso
           python sim/run_motor_profiles.py --output build/ci-motor-profiles
           python tools/check_performance.py --report build/ci-motor-profiles/metrics.json --output build/ci-performance.json
           python tools/check_integration_convergence.py --output build/ci-convergence.json

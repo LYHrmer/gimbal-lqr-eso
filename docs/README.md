@@ -36,6 +36,7 @@
 - [GM6020 接入](gm6020_integration.md)：电流模式前提、力矩换算、完整 CAN 组帧与反馈比例。
 - [参数来源与假设](parameter_sources.md)：区分厂商规格、开源参考值与未实测的负载假设。
 - [两电机 Yaw 仿真配置](motor_profiles.md)：参数、协议量化、执行器近似，以及 GM6020 积分配置收益的归因。
+- [电机配置协议检查](../tools/check_motor_profiles.py)：原生 CAN 量化与生产 C 解码器一致性，保留 motor-CAN / 外部 IMU 的来源边界。
 
 ## 跑通测试与理解控制器
 
@@ -44,6 +45,7 @@
 - [控制模型与 C 实现](control_design.md)：动力学前馈、离散 LQR、ESO、积分和限幅对应哪些代码。
 - [算法与代码复核](algorithm_review_20261016.md)：反馈时序敏感性、首个故障保留，以及未通过完整门槛的数值候选。
 - [两轴反馈时序与 GM Pitch 诊断](feedback_review_20261017.md)：异步采样、抖动/丢帧、固定参数消融，以及未采用的源时刻 ESO 候选。
+- [协议约束下的 Pitch ESO 参数实验](../experimental/pitch_eso/README.md)：同帧角度/RPM、9 组参数及 7 种工况的固定筛选，合格后才运行新保留组。
 - [原代码解读](original_code_review.md)：固定版本上游的控制结构，以及本库各项改动的依据。
 
 ## 模型辨识与参数整定

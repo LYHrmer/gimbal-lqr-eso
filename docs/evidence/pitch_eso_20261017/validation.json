@@ -1,0 +1,62 @@
+{
+  "base_commit": "cf475fb105f085e13dc4e55e563f3b710c193733",
+  "data_type": "SYNTHETIC; software and protocol verification only",
+  "checks": [
+    {
+      "command": "python3 -m unittest discover -s tests -p 'test_*.py'",
+      "passed": true,
+      "test_count": 83
+    },
+    {
+      "command": "cmake -S . -B build/protocol-review -DCMAKE_BUILD_TYPE=Release -DGIMBAL_BUILD_RLS_EXPERIMENT=ON; cmake --build build/protocol-review -j 2; ctest --test-dir build/protocol-review --output-on-failure",
+      "passed": true,
+      "test_count": 8
+    },
+    {
+      "command": "python3 tools/generate_profile_headers.py --check",
+      "passed": true,
+      "headers": 4
+    },
+    {
+      "command": "python3 tools/check_motor_profiles.py",
+      "passed": true,
+      "profiles": 2
+    },
+    {
+      "command": "python3 experimental/pitch_eso/run_experiment.py --phase full --output build/pitch-eso-20261017-final",
+      "passed": true,
+      "meaning": "Experiment completed; performance acceptance is reported separately."
+    }
+  ],
+  "formal_c_and_generated_headers_unchanged": true,
+  "motor_profile_existing_values_unchanged": true,
+  "planned_development_runs": 189,
+  "completed_unfaulted_runs": 189,
+  "eligible_candidates": 0,
+  "holdout_runs": 0,
+  "candidate_assessments_recomputed_from_archived_metrics": true,
+  "baseline_matches_original_pitch_report": {
+    "seeds": [
+      5300,
+      5301,
+      5302
+    ],
+    "all_original_metric_keys_exactly_equal": true,
+    "additional_metadata": [
+      "feedback_timing"
+    ],
+    "reference": "results/pitch/metrics.json",
+    "reference_sha256": "f0b33529f38654dc1a1b35badc1a62d4308f692f982c0e2995f27ed8f6257cd7"
+  },
+  "reviews": {
+    "standards": "Two findings fixed: frozen plant/gravity verification and GM Kt numeric range; no remaining substantive issue in follow-up.",
+    "spec": "Frozen model verification fixed; original sensor/C values and same-frame native CAN timing preserved."
+  },
+  "evidence_sha256": {
+    "protocol_check.json": "bfa41ae7693ef88a33db0faf8314f01b340edfd68dc59b2ba62d2808eef5ddf0",
+    "selection.json": "b76909958f8f80d90385ba96bbc8c947e2c90424c6287fbf47ce9150c35d18c2",
+    "metrics.json": "a880e72d0815330c33d5601c6e4abede7d56f567ae33f25653e53b3695c568e0",
+    "plan.json": "c2b5bfe82214d7cdda86ce1fc3ab6059f8bca55cc2774916c617f83d8f90be06",
+    "baseline_primary.csv.gz": "67332bc8808c573192257f1cdd3737ecbd6a8b79673ff157ad7e183569c4813a"
+  }
+}

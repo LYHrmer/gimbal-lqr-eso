@@ -65,6 +65,8 @@
     "scope": "24 V reference: piecewise approximation through (zero speed, assumed peak 7 N.m), (120 rpm, rated 3 N.m), (200 rpm, zero torque). Passing rated point does not establish a measured full curve or thermal model.",
     "rated_speed_rad_s": 12.56637061435917
   },
+  "feedback_source": "motor_can",
+  "feedback_scope": "DM MIT 16-bit position and 12-bit velocity under the configured PMAX/VMAX. Noise is synthetic; calibrated uniform quantization is not a raw CAN replay or an IMU model.",
   "sensor": {
     "position_quantum_rad": 0.00038147554741741054,
     "velocity_quantum_rad_s": 0.014652014652014652,

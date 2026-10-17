@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "scope": "offline shipped motor-CAN profile and C decoder consistency; no traffic or hardware claim",
+  "profiles": {
+    "dm4310_24v.json": {
+      "expected": {
+        "position_quantum_rad": 0.00038147554741741054,
+        "velocity_quantum_rad_s": 0.014652014652014652
+      },
+      "c_decoder_steps": [
+        0.0003814755474174106,
+        0.01465201465201465
+      ]
+    },
+    "gm6020_current.json": {
+      "expected": {
+        "position_quantum_rad": 0.0007669903939428206,
+        "velocity_quantum_rad_s": 0.10471975511965977
+      },
+      "c_decoder_steps": [
+        0.0007669903939428206,
+        0.10471975511965977
+      ]
+    }
+  },
+  "source_sha256": {
+    "tools/check_motor_profiles.py": "e663cc52b881091dfe7a9826fa8888d3374b9daf971a5771be9847866b8e8f0f",
+    "src/gm6020.c": "93eed62315a2671640a0fe176d96fdf7e652e7b0cd6fc230428c6322863382b5",
+    "src/dm_mit.c": "45438303da2922daefde45332a2aaebbb65175bef3acb3fcb408bc47bccee8f2",
+    "include/gm6020.h": "f4eccad8d36e35f920f4605905bc876f7803af0ecbbfeea51407134854b3f136",
+    "include/dm_mit.h": "ffca3ce125afeb5c143e5863b8f7f54fe8e82beddfe4f191b9d9d6343f7957ea",
+    "profiles/dm4310_24v.json": "5a10e8b2d369dc53219c40d2cd7b11a5e9724b95695043cd991ac6877fc020ff",
+    "profiles/gm6020_current.json": "ab13cc1bbbd0dd6967fb2b8fb3a7169513dd791c0e92061ae6a88d593fb95327"
+  }
+}

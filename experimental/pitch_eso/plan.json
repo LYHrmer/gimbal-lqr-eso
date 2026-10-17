@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "simulation_only": true,
+  "profile": "gm6020_current_pitch.json",
+  "scope": "Pitch-only ESO parameter experiment; preserve native GM6020 CAN quantization, paired angle/RPM packet delivery, all LQR/Ki gains, gravity, actuator model and limits. No IMU assumptions or firmware parameter adoption.",
+  "eso_bandwidth_rad_s": [40.0, 60.0, 80.0],
+  "eso_gain": [0.0, 0.4, 0.8],
+  "baseline": {"eso_bandwidth_rad_s": 80.0, "eso_gain": 0.8},
+  "primary_case": "fresh",
+  "development_seeds": [5300, 5301, 5302],
+  "holdout_seeds": [6400, 6401, 6402, 6403, 6404, 6405, 6406, 6407, 6408, 6409, 6410, 6411, 6412, 6413, 6414, 6415, 6416, 6417, 6418, 6419],
+  "cases": [
+    {"name": "fresh", "pitch": {}, "can_clock": {}},
+    {"name": "can_delay_2ms", "pitch": {}, "can_clock": {"delay_samples": 2}},
+    {"name": "can_transport_jitter", "pitch": {}, "can_clock": {"delay_jitter_samples": [0, 1, 2]}},
+    {"name": "can_drop_every_fourth", "pitch": {}, "can_clock": {"drop_every": 4}},
+    {"name": "command_delay_2ms", "pitch": {"delay_samples": 2}, "can_clock": {}},
+    {"name": "inertia_x0.75", "pitch": {"inertia_factor": 0.75}, "can_clock": {}},
+    {"name": "inertia_x1.25", "pitch": {"inertia_factor": 1.25}, "can_clock": {}}
+  ],
+  "criteria": {
+    "minimum_primary_mean_paired_rmse_improvement_percent": 2.0,
+    "minimum_development_primary_win_fraction": 1.0,
+    "minimum_holdout_primary_win_fraction": 0.8,
+    "maximum_primary_mean_peak_ratio": 1.0,
+    "maximum_other_mean_metric_ratio": 1.05,
+    "complete_unfaulted_runs_required": true
+  },
+  "selection": "Among development-eligible candidates, minimize the worst case mean paired RMSE change, then primary mean paired RMSE change, then candidate ID. Freeze the winner before opening fresh holdout seeds; do not fall back to another candidate after holdout failure.",
+  "interpretation": "This is tuning versus the current new-C gravity-on configuration. It does not replace the original same-Ki / gravity-off acceptance or establish hardware improvement. All rejected candidates remain in the report."
+}

@@ -1,0 +1,6 @@
+{
+  "candidate_id": null,
+  "plan_sha256": "6771e1fda5f60bef6bcedf960b9a13bade7902342c4ebabfd749bc87dcaaa04f",
+  "development_sha256": "6385fa9801a16ae3d248718b5c568b30d2f524f292e87a3c055cba4401df9a45",
+  "scope": "frozen before holdout; no replacement winner after holdout failure"
+}
